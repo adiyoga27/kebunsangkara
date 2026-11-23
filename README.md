@@ -1,58 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌳 Durian Bali Asli
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Website penjualan **durian asli Bali** yang dioptimasi untuk SEO Google, dengan pemesanan langsung via **WhatsApp**, panel admin untuk mengelola konten, dan **log aktivitas pengguna**.
 
-## About Laravel
+Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaScript tambahan.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Fitur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Website publik
+- **Beranda** dengan hero animasi, daftar harga, produk unggulan + profil rasa, cara pesan, testimoni, artikel, dan FAQ.
+- **Harga Durian** (`/durian`) dan halaman detail tiap produk (`/durian/{slug}`).
+- **Artikel / blog** (`/artikel`) dengan konten Markdown, mendukung jadwal terbit.
+- **Tentang Kami** dan **Kontak** (dengan peta lokasi).
+- **Tombol WhatsApp** di setiap halaman dengan pesan otomatis berisi nama produk, harga, dan link. Setiap klik tercatat sebagai calon pembeli.
+- Animasi modern (scroll reveal, kartu 3D, parallax, marquee) yang otomatis dimatikan untuk pengguna dengan pengaturan *reduce motion*.
 
-## Learning Laravel
+### SEO
+- Title, meta description, canonical, Open Graph & Twitter Card di setiap halaman.
+- Data terstruktur Schema.org (JSON-LD): `Store` (Local Business), `Product` + `Offer`, `FAQPage`, `BlogPosting`, `BreadcrumbList`, `ItemList`.
+- `sitemap.xml` otomatis dan `robots.txt` dinamis (memblokir crawler di luar mode production).
+- Meta lokasi Bali (`geo.region`, `geo.position`), bahasa `id-ID`.
+- Font di-host sendiri, gambar *lazy-load*, HTML semantik dengan satu `<h1>` per halaman.
+- Kode verifikasi Google Search Console dan Google Analytics bisa diisi dari admin.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Panel admin (`/admin`)
+| Menu | Editor | Administrator |
+| --- | :---: | :---: |
+| Dashboard (statistik & grafik klik WhatsApp) | ✅ | ✅ |
+| Produk Durian (harga, stok, foto, SEO) | ✅ | ✅ |
+| Artikel | ✅ | ✅ |
+| Testimoni & FAQ | ✅ | ✅ |
+| Klik WhatsApp (daftar calon pembeli) | — | ✅ |
+| Log Aktivitas | — | ✅ |
+| Pengguna | — | ✅ |
+| Pengaturan website | — | ✅ |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Log aktivitas pengguna
+- Mencatat **login, logout, login gagal** (beserta email yang dicoba).
+- Mencatat setiap **tambah, ubah, hapus** data, lengkap dengan nilai lama dan baru.
+- Menyimpan **IP address dan perangkat** (user agent). Password tidak pernah disimpan di log.
+- Bisa difilter berdasarkan pengguna, aksi, tanggal, dan kata kunci.
+- Login dibatasi 5 percobaan per menit; akun yang dinonaktifkan langsung dikeluarkan dari sesi.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 🚀 Instalasi
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+**Kebutuhan:** PHP 8.3+, Composer, Node.js 20+, dan database (SQLite/MySQL).
 
 ```bash
-composer require laravel/boost --dev
+git clone https://github.com/adiyoga27/durian.git
+cd durian
 
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+
+php artisan migrate --seed
+php artisan storage:link
+
+npm install
+npm run build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Perintah `migrate --seed` membuat **akun admin** (`admin@durianbali.test`) dengan **password acak yang ditampilkan di terminal** — catat password tersebut, lalu segera ganti lewat menu **Profil Saya**.
 
-## Contributing
+Seeder juga mengisi contoh produk, artikel, dan FAQ. Contoh testimoni sengaja **tidak ditampilkan** — ganti dengan ulasan asli dari pelanggan.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Menjalankan secara lokal
 
-## Code of Conduct
+```bash
+composer run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Buka http://localhost:8000 untuk website dan http://localhost:8000/admin untuk panel admin.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## ⚙️ Konfigurasi setelah instalasi
 
-## License
+Masuk ke **Admin → Pengaturan** dan isi:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Nomor WhatsApp** — semua tombol pesan diarahkan ke nomor ini.
+2. **Alamat, kota, kode pos, koordinat** — dipakai untuk SEO lokal dan harus **sama persis** dengan Google Business Profile.
+3. **Area pengiriman, jam buka, media sosial.**
+4. **Meta title & description beranda.**
+5. **Kode verifikasi Google Search Console** dan **Google Analytics ID** (opsional).
+
+Lalu di **Admin → Produk Durian**, perbarui harga dan **unggah foto durian asli** Anda.
+
+---
+
+## 🌐 Deploy ke production
+
+```bash
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+php artisan storage:link
+npm ci && npm run build
+php artisan optimize
+```
+
+Pastikan di `.env`:
+
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://domain-anda.com
+APP_TIMEZONE=Asia/Makassar
+```
+
+> `robots.txt` hanya mengizinkan Google mengindeks website saat `APP_ENV=production`.
+
+Setelah online, daftarkan `https://domain-anda.com/sitemap.xml` di **Google Search Console**.
+
+---
+
+## 📈 Tips agar website naik di Google
+
+Kode website sudah dioptimasi, tetapi peringkat juga ditentukan faktor di luar kode:
+
+1. **Google Business Profile** — daftarkan toko dengan nama, alamat, dan nomor yang sama dengan website.
+2. **Foto asli** durian dan kebun Anda, bukan foto dari internet.
+3. **Artikel rutin** 1–2 kali per bulan dengan kata kunci yang dicari orang (mis. "harga durian Bali hari ini", "durian antar ke villa Ubud").
+4. **Ulasan Google Maps** dari pelanggan.
+5. **Backlink** dari blog wisata, kuliner, atau direktori bisnis Bali.
+
+---
+
+## 🧪 Testing
+
+```bash
+php artisan test --compact
+```
+
+Format kode PHP:
+
+```bash
+vendor/bin/pint
+```
+
+---
+
+## 🗂️ Struktur penting
+
+```
+app/
+├── Enums/                  # UserRole, ActivityAction
+├── Http/Controllers/Site/  # Halaman publik, sitemap, redirect WhatsApp
+├── Http/Controllers/Admin/ # Panel admin
+├── Listeners/              # Pencatat login/logout/login gagal
+├── Models/Concerns/        # RecordsActivity (log tambah/ubah/hapus otomatis)
+└── Support/                # ActivityLogger, SiteSettings
+resources/
+├── css/app.css             # Tema Tailwind & animasi
+├── js/app.js               # Scroll reveal, tilt 3D, parallax, counter
+└── views/
+    ├── site/               # Halaman publik
+    ├── admin/              # Halaman admin
+    └── components/         # Layout & komponen Blade
+```
