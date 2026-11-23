@@ -50,7 +50,7 @@ Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaSc
 **Kebutuhan:** PHP 8.3+, Composer, Node.js 20+, dan database (SQLite/MySQL).
 
 ```bash
-git clone https://github.com/adiyoga27/durian.git kebunsangkara
+git clone https://github.com/adiyoga27/kebunsangkara.git
 cd kebunsangkara
 
 composer install
