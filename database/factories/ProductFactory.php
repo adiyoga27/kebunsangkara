@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\FruitCategory;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ class ProductFactory extends Factory
         return [
             'name' => $name = 'Durian '.fake()->unique()->words(2, true),
             'slug' => Str::slug($name),
+            'category' => FruitCategory::Durian,
             'variety' => fake()->randomElement(['Montong', 'Lokal Bali', 'Musang King', 'Bawor']),
             'origin' => fake()->randomElement(['Pupuan, Tabanan', 'Munduk, Buleleng', 'Jembrana']),
             'short_description' => fake()->sentence(12),
@@ -31,6 +33,15 @@ class ProductFactory extends Factory
             'is_featured' => false,
             'sort_order' => 0,
         ];
+    }
+
+    public function category(FruitCategory $category): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'category' => $category,
+            'name' => $name = $category->label().' '.fake()->unique()->words(2, true),
+            'slug' => Str::slug($name),
+        ]);
     }
 
     public function unavailable(): static

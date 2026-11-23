@@ -1,11 +1,11 @@
 <x-layouts.site
-    title="Artikel & Tips Durian Bali{{ $articles->currentPage() > 1 ? ' – Halaman '.$articles->currentPage() : '' }}"
-    description="Kumpulan tips memilih durian, info musim durian di Bali, jenis-jenis durian Bali, dan panduan menikmati durian dari {{ $site->get('site_name') }}."
+    title="Artikel & Tips Buah Segar{{ $articles->currentPage() > 1 ? ' – Halaman '.$articles->currentPage() : '' }}"
+    description="Tips memilih durian, alpukat, jeruk & manggis yang matang, info musim buah di Bali, dan panduan dari {{ $site->get('site_name') }}."
     :canonical="$articles->currentPage() > 1 ? $articles->url($articles->currentPage()) : route('articles.index')"
 >
-    <x-site.page-hero title="Artikel & Tips Seputar Durian Bali" eyebrow="Blog"
+    <x-site.page-hero title="Artikel & Tips Seputar Buah" eyebrow="Blog" image="images/kebun/alpukat-di-pohon.webp"
         :breadcrumbs="[['label' => 'Beranda', 'url' => route('home')], ['label' => 'Artikel', 'url' => null]]">
-        Panduan memilih durian matang, info musim durian di Bali, sampai rekomendasi jenis durian terbaik.
+        Panduan memilih buah yang matang, info musim panen di Bali, sampai resep dan manfaat buah segar.
     </x-site.page-hero>
 
     <div class="mx-auto max-w-7xl px-4 pt-16 sm:px-6">

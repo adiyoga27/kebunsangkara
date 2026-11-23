@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\FruitCategory;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -32,6 +33,7 @@ class SaveProductRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:160', 'alpha_dash', Rule::unique('products', 'slug')->ignore($this->route('product'))],
+            'category' => ['required', Rule::enum(FruitCategory::class)],
             'variety' => ['nullable', 'string', 'max:100'],
             'origin' => ['nullable', 'string', 'max:100'],
             'short_description' => ['required', 'string', 'max:300'],

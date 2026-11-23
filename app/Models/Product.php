@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FruitCategory;
 use App\Models\Concerns\RecordsActivity;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -15,7 +16,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 #[Fillable([
-    'name', 'slug', 'variety', 'origin', 'short_description', 'description', 'price', 'price_unit',
+    'name', 'slug', 'category', 'variety', 'origin', 'short_description', 'description', 'price', 'price_unit',
     'image_path', 'is_available', 'is_featured', 'sort_order', 'meta_title', 'meta_description',
 ])]
 class Product extends Model
@@ -29,6 +30,7 @@ class Product extends Model
     protected function casts(): array
     {
         return [
+            'category' => FruitCategory::class,
             'price' => 'integer',
             'is_available' => 'boolean',
             'is_featured' => 'boolean',
@@ -79,9 +81,17 @@ class Product extends Model
         return $this->image_path ? Storage::disk('public')->url($this->image_path) : null;
     }
 
+    /**
+     * The uploaded photo, or the category's default photo when none was uploaded.
+     */
+    public function displayImageUrl(): string
+    {
+        return $this->imageUrl() ?? asset(($this->category ?? FruitCategory::Durian)->imagePath());
+    }
+
     public function seoTitle(): string
     {
-        return $this->meta_title ?: $this->name.' Asli Bali – Harga '.$this->formattedPrice().' '.$this->price_unit;
+        return $this->meta_title ?: $this->name.' Segar – Harga '.$this->formattedPrice().' '.$this->price_unit;
     }
 
     public function seoDescription(): string

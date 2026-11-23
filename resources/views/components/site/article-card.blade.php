@@ -2,8 +2,8 @@
 
 <article class="group relative flex flex-col overflow-hidden rounded-[2rem] bg-white ring-1 ring-stone-200/70 transition duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-husk-900/10">
     <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-husk-100 to-flesh-100">
-        <img src="{{ $article->imageUrl() ?? asset('images/durian.svg') }}" alt="{{ $article->title }}" width="480" height="300" loading="lazy" decoding="async"
-             @class(['size-full transition duration-700 ease-out group-hover:scale-110', 'object-cover' => $article->imageUrl(), 'object-contain p-8 group-hover:rotate-6' => ! $article->imageUrl()])>
+        <img src="{{ $article->imageUrl() ?? asset('images/kebun/kebun-alpukat.webp') }}" alt="{{ $article->title }}" width="480" height="300" loading="lazy" decoding="async"
+             class="size-full object-cover transition duration-700 ease-out group-hover:scale-110">
         <span class="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-husk-800 backdrop-blur">{{ $article->readingMinutes() }} menit baca</span>
     </div>
     <div class="flex flex-1 flex-col p-6">

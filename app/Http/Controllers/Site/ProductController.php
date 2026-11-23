@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Enums\FruitCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use App\Models\Product;
@@ -17,12 +18,22 @@ class ProductController extends Controller
         ]);
     }
 
+    public function category(FruitCategory $category): View
+    {
+        return view('site.products.category', [
+            'category' => $category,
+            'products' => Product::query()->where('category', $category)->ordered()->get(),
+            'otherCategories' => collect(FruitCategory::cases())->reject(fn (FruitCategory $other): bool => $other === $category),
+        ]);
+    }
+
     public function show(Product $product): View
     {
         return view('site.products.show', [
             'product' => $product,
             'relatedProducts' => Product::query()
                 ->whereKeyNot($product->getKey())
+                ->orderByRaw('category = ? desc', [$product->category->value])
                 ->where('is_available', true)
                 ->ordered()
                 ->limit(3)

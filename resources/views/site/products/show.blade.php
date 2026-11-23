@@ -1,13 +1,13 @@
 @php
-    $productImage = $product->imageUrl() ?? asset('images/durian.svg');
+    $productImage = $product->displayImageUrl();
     $schemas = [
         [
             '@type' => 'Product',
             'name' => $product->name,
             'description' => $product->seoDescription(),
             'image' => [$productImage],
-            'sku' => 'DURIAN-'.$product->id,
-            'category' => 'Buah Durian',
+            'sku' => 'KS-'.$product->id,
+            'category' => 'Buah '.$product->category->label(),
             'brand' => ['@type' => 'Brand', 'name' => $site->get('site_name')],
             'countryOfOrigin' => 'ID',
             'offers' => [
@@ -26,7 +26,7 @@
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => route('home')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Harga Durian', 'item' => route('products.index')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => $product->category->label(), 'item' => route('products.category', $product->category)],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $product->name, 'item' => route('products.show', $product)],
             ],
         ],
@@ -50,7 +50,7 @@
         <div data-reveal>
             <x-site.breadcrumbs :items="[
                 ['label' => 'Beranda', 'url' => route('home')],
-                ['label' => 'Harga Durian', 'url' => route('products.index')],
+                ['label' => $product->category->label(), 'url' => route('products.category', $product->category)],
                 ['label' => $product->name, 'url' => null],
             ]" />
         </div>
@@ -59,18 +59,12 @@
             {{-- Stage --}}
             <div data-spotlight data-reveal="zoom" class="grain relative isolate aspect-square overflow-hidden rounded-[2.5rem] bg-husk-950 lg:sticky lg:top-28">
                 <div class="spotlight pointer-events-none absolute inset-0 -z-10"></div>
-                <div class="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-3/4 -translate-x-1/2 -translate-y-1/2 animate-blob bg-flesh-400/40 blur-3xl"></div>
-                <div class="pointer-events-none absolute inset-[10%] animate-spin-slow rounded-full border-2 border-dashed border-flesh-300/25"></div>
-                <div class="absolute inset-0" data-depth="-20">
-                    @if ($product->imageUrl())
-                        <img src="{{ $productImage }}" alt="{{ $product->name }} asli Bali" width="640" height="640" fetchpriority="high" class="size-full object-cover">
-                    @else
-                        <img src="{{ $productImage }}" alt="{{ $product->name }} asli Bali" width="640" height="680" fetchpriority="high"
-                             class="size-full animate-float object-contain p-[12%] drop-shadow-[0_40px_40px_rgba(0,0,0,0.5)]">
-                    @endif
+                <div class="absolute inset-0 overflow-hidden" data-depth="-12">
+                    <img src="{{ $productImage }}" alt="{{ $product->name }} segar dari kebun Bali" width="640" height="640" fetchpriority="high" class="size-full scale-110 object-cover">
                 </div>
-                <img src="{{ asset('images/durian-pod.svg') }}" alt="" class="absolute left-[8%] top-[12%] w-[12%] animate-float-slow drop-shadow-xl" data-depth="50">
-                <img src="{{ asset('images/leaf.svg') }}" alt="" class="absolute bottom-[10%] right-[8%] w-[16%] -rotate-12 animate-bob drop-shadow-lg" data-depth="35">
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-husk-950/50 via-transparent to-transparent"></div>
+                <img src="{{ asset('images/leaf.svg') }}" alt="" class="absolute -right-4 top-[8%] w-[22%] -rotate-12 animate-bob drop-shadow-xl" data-depth="35">
+                <span class="absolute bottom-5 left-5 rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-husk-900 backdrop-blur">{{ $product->category->emoji() }} {{ $product->category->label() }}</span>
                 @if ($product->is_featured)
                     <span class="absolute left-5 top-5 rounded-full bg-flesh-400 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-husk-950">★ Terlaris</span>
                 @endif
@@ -101,7 +95,7 @@
                         ['🌱', 'Varietas', $product->variety],
                         ['🛵', 'Pengiriman', 'Seluruh Bali'],
                         ['🛡️', 'Garansi', 'Ganti jika busuk'],
-                        ['☀️', 'Kondisi', 'Matang pohon'],
+                        ['☀️', 'Kondisi', 'Segar dari kebun'],
                     ], fn ($item) => filled($item[2])) as [$icon, $label, $value])
                         <div data-reveal class="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-stone-200/70 transition hover:-translate-y-0.5 hover:ring-flesh-300">
                             <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-flesh-100 text-lg">{{ $icon }}</span>
@@ -119,14 +113,14 @@
 
                 <section data-reveal class="mt-12 rounded-[2rem] bg-white p-8 ring-1 ring-stone-200/70" aria-labelledby="deskripsi">
                     <h2 id="deskripsi" class="font-display text-3xl font-bold text-husk-950">Tentang {{ $product->name }}</h2>
-                    <div class="prose-durian mt-4">{{ $product->descriptionHtml() }}</div>
+                    <div class="prose-kebun mt-4">{{ $product->descriptionHtml() }}</div>
                 </section>
             </div>
         </div>
 
         @if ($relatedProducts->isNotEmpty())
             <section class="mt-28" aria-labelledby="produk-lain">
-                <h2 id="produk-lain" data-reveal class="font-display text-4xl font-bold text-husk-950">Durian Bali Lainnya</h2>
+                <h2 id="produk-lain" data-reveal class="font-display text-4xl font-bold text-husk-950">Produk Lainnya dari Kebun Kami</h2>
                 <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger="120">
                     @foreach ($relatedProducts as $related)
                         <div data-reveal><x-site.product-card :product="$related" class="h-full" /></div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Enums\FruitCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Product;
@@ -17,6 +18,11 @@ class SitemapController extends Controller
             ['loc' => route('home'), 'lastmod' => $latestProductUpdate, 'priority' => '1.0'],
             ['loc' => route('products.index'), 'lastmod' => $latestProductUpdate, 'priority' => '0.9'],
             ['loc' => route('articles.index'), 'lastmod' => Article::query()->published()->max('updated_at'), 'priority' => '0.7'],
+            ...collect(FruitCategory::cases())->map(fn (FruitCategory $category): array => [
+                'loc' => route('products.category', $category),
+                'lastmod' => $latestProductUpdate,
+                'priority' => '0.9',
+            ]),
             ['loc' => route('about'), 'lastmod' => null, 'priority' => '0.5'],
             ['loc' => route('contact'), 'lastmod' => null, 'priority' => '0.6'],
         ])

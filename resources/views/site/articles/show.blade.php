@@ -1,5 +1,5 @@
 @php
-    $articleImage = $article->imageUrl() ?? asset('images/durian.svg');
+    $articleImage = $article->imageUrl() ?? asset('images/kebun/kebun-alpukat.webp');
     $schemas = [
         [
             '@type' => 'BlogPosting',
@@ -60,15 +60,15 @@
         <div data-reveal="zoom" class="relative mt-10 aspect-[16/9] overflow-hidden rounded-[2rem] bg-gradient-to-br from-husk-900 to-husk-700">
             <div class="absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 animate-blob bg-flesh-400/30 blur-3xl"></div>
             <img src="{{ $articleImage }}" alt="{{ $article->title }}" width="768" height="432" fetchpriority="high"
-                 @class(['relative size-full', 'object-cover' => $article->imageUrl(), 'animate-float object-contain p-10' => ! $article->imageUrl()])>
+                 class="relative size-full object-cover">
         </div>
 
-        <div class="prose-durian mt-10 text-lg">{{ $article->bodyHtml() }}</div>
+        <div class="prose-kebun mt-10 text-lg">{{ $article->bodyHtml() }}</div>
 
         @if ($products->isNotEmpty())
             <aside data-reveal class="grain relative mt-16 overflow-hidden rounded-[2rem] bg-husk-950 p-8 text-white sm:p-10" aria-labelledby="produk-artikel">
-                <img src="{{ asset('images/durian.svg') }}" alt="" class="absolute -right-10 -top-10 w-40 animate-float-slow opacity-90">
-                <h2 id="produk-artikel" class="relative max-w-sm font-display text-3xl font-bold">Pesan Durian Bali Asli Sekarang</h2>
+                <img src="{{ asset('images/logo.svg') }}" alt="" class="absolute -right-6 -top-6 w-32 rotate-12 animate-float-slow opacity-90">
+                <h2 id="produk-artikel" class="relative max-w-sm font-display text-3xl font-bold">Pesan Buah Segar dari Kebun Kami</h2>
                 <ul class="relative mt-6 divide-y divide-white/10">
                     @foreach ($products as $product)
                         <li class="flex items-center justify-between gap-4 py-3">

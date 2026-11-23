@@ -10,7 +10,7 @@
 
     $productListSchema = $products->isEmpty() ? [] : [[
         '@type' => 'ItemList',
-        'name' => 'Daftar Harga Durian Bali',
+        'name' => 'Daftar Harga Buah Kebun Sangkara',
         'itemListElement' => $products->values()->map(fn ($product, $index) => [
             '@type' => 'ListItem',
             'position' => $index + 1,
@@ -19,107 +19,94 @@
         ])->all(),
     ]];
 
-    $heroImage = $products->first(fn ($product) => $product->image_path)?->imageUrl();
     $featuredProduct = $products->firstWhere('is_featured', true) ?? $products->first();
     $lowestPrice = $products->min('price');
+    $categories = App\Enums\FruitCategory::cases();
 @endphp
 
 <x-layouts.site
     :title="$site->get('home_meta_title')"
     :description="$site->get('home_meta_description')"
     :canonical="route('home')"
-    :image="$heroImage"
+    :image="asset('images/kebun/durian-matang-di-pohon.webp')"
     :schemas="[...$faqSchema, ...$productListSchema]"
     full-title
     transparent-header
 >
     {{-- ============ HERO ============ --}}
     <section data-spotlight class="grain relative isolate overflow-hidden bg-husk-950 text-white">
+        <div class="absolute inset-0 -z-20">
+            <img src="{{ asset('images/kebun/kebun-alpukat.webp') }}" alt="" class="size-full scale-110 object-cover opacity-25 blur-[2px]" data-parallax="-0.15">
+            <div class="absolute inset-0 bg-gradient-to-b from-husk-950/70 via-husk-950/80 to-husk-950"></div>
+        </div>
         <div class="spotlight pointer-events-none absolute inset-0 -z-10"></div>
-        <div class="pointer-events-none absolute -left-40 top-20 -z-10 size-[34rem] animate-blob bg-husk-600/50 blur-3xl"></div>
-        <div class="pointer-events-none absolute -right-20 -top-32 -z-10 size-[30rem] animate-blob bg-flesh-500/25 blur-3xl [animation-delay:-9s]"></div>
-        <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(rgb(255_255_255/0.06)_1px,transparent_1px)] [background-size:28px_28px] [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_75%)]"></div>
+        <div class="pointer-events-none absolute -right-20 -top-32 -z-10 size-[30rem] animate-blob bg-flesh-500/20 blur-3xl"></div>
 
-        <div class="mx-auto grid min-h-[100svh] max-w-7xl items-center gap-10 px-4 pb-24 pt-32 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-28">
+        <div class="mx-auto grid min-h-[100svh] max-w-7xl items-center gap-14 px-4 pb-24 pt-32 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-28">
             <div class="relative z-10">
                 <p data-reveal class="inline-flex items-center gap-2.5 rounded-full bg-white/5 py-1.5 pl-2 pr-4 text-sm font-medium text-flesh-100 ring-1 ring-white/15 backdrop-blur">
                     <span class="relative flex size-6 items-center justify-center rounded-full bg-flesh-400/20">
                         <span class="absolute inset-0 animate-ping-slow rounded-full bg-flesh-400/40"></span>
                         <span class="size-2 rounded-full bg-flesh-400"></span>
                     </span>
-                    Musim durian Bali telah tiba
+                    Panen segar dari kebun Bali
                 </p>
 
                 <h1 data-reveal style="--reveal-delay: 100ms" class="mt-7 font-display text-5xl font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
-                    Jual Durian Bali Asli,
-                    <span class="text-gradient-gold italic">Matang Pohon</span>
+                    Buah Segar <span class="text-gradient-gold italic">Langsung</span>
                     <span class="relative inline-block">
-                        &amp; Manis Legit
+                        dari Kebun Bali
                         <svg class="absolute -bottom-3 left-0 w-full text-flesh-400" viewBox="0 0 300 12" fill="none" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c60-6 180-9 296-3" stroke="currentColor" stroke-width="4" stroke-linecap="round" pathLength="1" class="[stroke-dasharray:1] [stroke-dashoffset:1] [animation:draw_1.4s_.9s_cubic-bezier(.16,1,.3,1)_forwards]"/></svg>
                     </span>
                 </h1>
 
                 <p data-reveal style="--reveal-delay: 200ms" class="mt-8 max-w-xl text-lg leading-relaxed text-husk-100/80">
-                    Durian asli Bali langsung dari kebun petani {{ $site->get('city') }}. Dipilih satu per satu, <strong class="font-semibold text-white">garansi ganti jika busuk</strong>, dan diantar segar ke {{ Str::before($site->get('service_area'), ',') }} hingga seluruh Bali.
+                    <strong class="font-semibold text-white">{{ $site->get('site_name') }}</strong> menjual durian, alpukat, jeruk, dan manggis yang dipetik matang dari kebun — tanpa perantara, diantar segar ke {{ Str::before($site->get('service_area'), ',') }} hingga seluruh Bali.
                 </p>
 
                 <div data-reveal style="--reveal-delay: 300ms" class="mt-10 flex flex-wrap items-center gap-4">
                     <x-site.whatsapp-link size="lg">Pesan via WhatsApp</x-site.whatsapp-link>
-                    <a href="#harga-durian" class="group inline-flex items-center gap-3 rounded-full px-6 py-4 text-lg font-semibold text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-white hover:text-husk-950">
-                        Lihat Harga
+                    <a href="#kategori" class="group inline-flex items-center gap-3 rounded-full px-6 py-4 text-lg font-semibold text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-white hover:text-husk-950">
+                        Lihat Buah
                         <span class="flex size-7 items-center justify-center rounded-full bg-white/10 transition group-hover:translate-y-0.5 group-hover:bg-husk-950 group-hover:text-white" aria-hidden="true">&darr;</span>
                     </a>
                 </div>
 
-                <dl data-reveal style="--reveal-delay: 400ms" class="mt-14 grid max-w-lg grid-cols-3 divide-x divide-white/10 rounded-3xl bg-white/5 py-5 ring-1 ring-white/10 backdrop-blur">
-                    <div class="px-4 text-center sm:px-6">
-                        <dt class="mt-1 text-xs text-husk-200/80">Durian asli Bali</dt>
-                        <dd class="font-display text-3xl font-bold text-flesh-300"><span data-count-to="100" data-count-suffix="%">100%</span></dd>
-                    </div>
-                    <div class="px-4 text-center sm:px-6">
-                        <dt class="mt-1 text-xs text-husk-200/80">Jenis durian</dt>
-                        <dd class="font-display text-3xl font-bold text-flesh-300"><span data-count-to="{{ max(1, $products->count()) }}">{{ max(1, $products->count()) }}</span>+</dd>
-                    </div>
-                    <div class="px-4 text-center sm:px-6">
-                        <dt class="mt-1 text-xs text-husk-200/80">Kab/kota se-Bali</dt>
-                        <dd class="font-display text-3xl font-bold text-flesh-300"><span data-count-to="9">9</span></dd>
-                    </div>
-                </dl>
+                <div data-reveal style="--reveal-delay: 400ms" class="mt-12 flex flex-wrap gap-2">
+                    @foreach ($categories as $fruit)
+                        <a href="{{ route('products.category', $fruit) }}" class="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold ring-1 ring-white/15 backdrop-blur transition hover:-translate-y-0.5 hover:bg-flesh-400 hover:text-husk-950">
+                            {{ $fruit->emoji() }} {{ $fruit->label() }}
+                        </a>
+                    @endforeach
+                </div>
             </div>
 
-            {{-- Durian stage --}}
-            <div class="relative mx-auto aspect-square w-full max-w-[34rem]" data-reveal="zoom" style="--reveal-delay: 250ms">
-                <div class="absolute inset-[6%] animate-spin-slow rounded-full border-2 border-dashed border-flesh-300/25"></div>
-                <div class="absolute inset-[16%] animate-spin-reverse rounded-full border border-white/10"></div>
-                <div class="absolute inset-[18%] rounded-full bg-gradient-to-br from-flesh-300/40 via-flesh-500/20 to-transparent blur-2xl"></div>
+            {{-- Photo collage --}}
+            <div class="relative mx-auto aspect-[4/4.4] w-full max-w-[32rem]" data-reveal="zoom" style="--reveal-delay: 250ms">
+                <div class="absolute -inset-6 animate-spin-slow rounded-full border-2 border-dashed border-flesh-300/20"></div>
 
-                <div class="absolute inset-[8%]" data-depth="-25">
-                    @if ($heroImage)
-                        <img src="{{ $heroImage }}" alt="Durian asli Bali matang pohon dari kebun {{ $site->get('city') }}" width="560" height="560" fetchpriority="high"
-                             class="size-full animate-float rounded-full object-cover shadow-2xl shadow-black/40 ring-8 ring-white/10">
-                    @else
-                        <img src="{{ asset('images/durian.svg') }}" alt="Durian asli Bali matang pohon dari kebun {{ $site->get('city') }}" width="560" height="600" fetchpriority="high"
-                             class="size-full animate-float object-contain drop-shadow-[0_35px_45px_rgba(0,0,0,0.45)]">
-                    @endif
+                <div class="absolute inset-x-[8%] inset-y-0 overflow-hidden rounded-t-[999px] rounded-b-[3rem] shadow-2xl shadow-black/50 ring-8 ring-white/10" data-depth="-15">
+                    <img src="{{ asset('images/kebun/durian-matang-di-pohon.webp') }}" alt="Durian matang di pohon di kebun {{ $site->get('site_name') }} Bali" width="680" height="451" fetchpriority="high"
+                         class="size-full scale-110 object-cover" data-parallax="0.05">
+                    <div class="absolute inset-0 bg-gradient-to-t from-husk-950/60 via-transparent to-transparent"></div>
                 </div>
 
-                {{-- Floating pods & leaves --}}
-                <img src="{{ asset('images/durian-pod.svg') }}" alt="" class="absolute left-[2%] top-[18%] w-[13%] animate-float-slow drop-shadow-xl [animation-delay:-2s]" data-depth="45">
-                <img src="{{ asset('images/durian-pod.svg') }}" alt="" class="absolute bottom-[10%] right-[4%] w-[15%] rotate-[30deg] animate-float drop-shadow-xl [animation-delay:-4s]" data-depth="60">
-                <img src="{{ asset('images/leaf.svg') }}" alt="" class="absolute right-[10%] top-[4%] w-[18%] rotate-[-25deg] animate-bob drop-shadow-lg" data-depth="35">
-                <img src="{{ asset('images/leaf.svg') }}" alt="" class="absolute bottom-[4%] left-[14%] w-[14%] rotate-[160deg] animate-bob drop-shadow-lg [animation-delay:-1.5s]" data-depth="-30">
+                <figure class="absolute -left-4 top-[14%] w-[34%] animate-bob overflow-hidden rounded-3xl bg-white p-1.5 shadow-2xl [animation-delay:-1s] sm:-left-8" data-depth="40">
+                    <img src="{{ asset('images/kebun/alpukat-di-pohon.webp') }}" alt="Alpukat segar di pohon" width="300" height="200" class="aspect-square w-full rounded-[1.2rem] object-cover">
+                    <figcaption class="px-2 py-1.5 text-center text-xs font-bold text-husk-900">🥑 Alpukat</figcaption>
+                </figure>
+                <figure class="absolute -right-2 top-[40%] w-[32%] animate-bob overflow-hidden rounded-3xl bg-white p-1.5 shadow-2xl [animation-delay:-2.5s] sm:-right-8" data-depth="-35">
+                    <img src="{{ asset('images/kebun/buah-manggis.webp') }}" alt="Buah manggis segar" width="300" height="225" class="aspect-square w-full rounded-[1.2rem] object-cover">
+                    <figcaption class="px-2 py-1.5 text-center text-xs font-bold text-husk-900">🟣 Manggis</figcaption>
+                </figure>
+                <figure class="absolute -bottom-6 left-[6%] w-[30%] animate-bob overflow-hidden rounded-3xl bg-white p-1.5 shadow-2xl [animation-delay:-4s]" data-depth="50">
+                    <img src="{{ asset('images/kebun/petani-memetik-jeruk.webp') }}" alt="Memetik jeruk di kebun" width="300" height="200" class="aspect-square w-full rounded-[1.2rem] object-cover object-[40%_center]">
+                    <figcaption class="px-2 py-1.5 text-center text-xs font-bold text-husk-900">🍊 Jeruk</figcaption>
+                </figure>
 
-                {{-- Glass chips --}}
-                <div class="absolute -left-2 bottom-[22%] animate-bob rounded-2xl bg-white/90 px-4 py-3 text-stone-800 shadow-2xl backdrop-blur sm:-left-6" data-depth="20">
-                    <p class="text-[11px] font-semibold uppercase tracking-wider text-stone-400">Mulai dari</p>
-                    <p class="font-display text-2xl font-bold text-husk-800">{{ $lowestPrice ? 'Rp '.number_format($lowestPrice, 0, ',', '.') : 'Tanya harga' }}</p>
-                </div>
-                <div class="absolute right-0 top-[26%] flex animate-bob items-center gap-2.5 rounded-2xl bg-husk-900/70 px-4 py-3 shadow-2xl ring-1 ring-white/15 backdrop-blur-md [animation-delay:-2s] sm:-right-4" data-depth="-20">
-                    <span class="flex size-9 items-center justify-center rounded-xl bg-flesh-400 text-lg text-husk-950">✓</span>
-                    <span class="text-sm font-semibold leading-tight">Matang pohon<br><span class="font-normal text-husk-200">bukan diperam</span></span>
-                </div>
-                <div class="absolute bottom-[-2%] right-[22%] flex animate-bob items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-husk-900 shadow-2xl [animation-delay:-3s]" data-depth="30">
-                    🛵 Antar se-Bali
+                <div class="absolute -bottom-4 right-[4%] animate-bob rounded-2xl bg-husk-900/80 px-4 py-3 shadow-2xl ring-1 ring-white/15 backdrop-blur-md [animation-delay:-3s]" data-depth="25">
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-husk-200">Mulai dari</p>
+                    <p class="font-display text-2xl font-bold text-flesh-300">{{ $lowestPrice ? 'Rp '.number_format($lowestPrice, 0, ',', '.') : 'Tanya harga' }}</p>
                 </div>
             </div>
         </div>
@@ -134,100 +121,97 @@
     <div id="marquee" class="relative z-10 -mt-6 -rotate-2 overflow-hidden bg-flesh-400 py-5 shadow-xl shadow-flesh-500/20" aria-hidden="true">
         <div class="flex w-max animate-marquee">
             @foreach (range(1, 2) as $copy)
-                @foreach (['Durian Asli Bali', 'Matang Pohon', 'Garansi Ganti', 'Antar se-Bali', 'Langsung dari Petani', 'Manis Legit', 'Durian Montong', 'Durian Kupas'] as $word)
+                @foreach (['🍈 Durian Matang Pohon', '🥑 Alpukat Mentega', '🍊 Jeruk Segar', '🟣 Manggis Manis', '🌿 Langsung dari Kebun', '🛵 Antar se-Bali', '🛡️ Garansi Ganti'] as $word)
                     <span class="flex items-center gap-6 px-6 font-display text-2xl font-bold text-husk-950 sm:text-3xl">
-                        {{ $word }}
-                        <img src="{{ asset('images/durian-pod.svg') }}" alt="" class="w-6 rotate-12">
+                        {{ $word }} <span class="text-husk-950/30">✦</span>
                     </span>
                 @endforeach
             @endforeach
         </div>
     </div>
 
-    {{-- ============ KEUNGGULAN (bento) ============ --}}
-    <section class="mx-auto max-w-7xl px-4 py-28 sm:px-6" aria-labelledby="keunggulan">
-        <div class="max-w-3xl" data-reveal>
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Kenapa kami?</p>
-            <h2 id="keunggulan" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Kenapa Beli Durian Bali di {{ $site->get('site_name') }}?</h2>
+    {{-- ============ KATEGORI ============ --}}
+    <section id="kategori" class="mx-auto max-w-7xl scroll-mt-20 px-4 py-28 sm:px-6" aria-labelledby="kategori-title">
+        <div class="flex flex-wrap items-end justify-between gap-6" data-reveal>
+            <div class="max-w-2xl">
+                <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Hasil kebun kami</p>
+                <h2 id="kategori-title" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Pilih Buah Favorit Anda</h2>
+            </div>
+            <p class="max-w-sm text-stone-600">Empat jenis buah unggulan yang kami tanam dan rawat sendiri di kebun Bali.</p>
         </div>
 
-        <div class="mt-14 grid gap-5 md:grid-cols-6 md:grid-rows-2" data-reveal-stagger="120">
-            <div data-reveal class="grain group relative overflow-hidden rounded-[2rem] bg-husk-900 p-8 text-white md:col-span-3 md:row-span-2 md:p-10">
-                <img src="{{ asset('images/durian.svg') }}" alt="" class="absolute -bottom-16 -right-16 w-72 opacity-90 transition duration-1000 group-hover:-rotate-12 group-hover:scale-110 md:w-96">
-                <span class="inline-flex size-14 items-center justify-center rounded-2xl bg-flesh-400 text-2xl">🌳</span>
-                <h3 class="mt-6 max-w-xs font-display text-3xl font-bold leading-tight">Asli dari kebun-kebun Bali</h3>
-                <p class="mt-4 max-w-xs leading-relaxed text-husk-100/80">Langsung dari petani di Tabanan, Buleleng &amp; Jembrana — bukan durian luar pulau yang dilabeli "durian Bali".</p>
-            </div>
-            @foreach ([
-                ['emoji' => '☀️', 'title' => 'Matang Pohon', 'text' => 'Dipanen saat matang alami, aroma kuat dan daging legit.', 'class' => 'bg-flesh-100 md:col-span-3'],
-                ['emoji' => '🛡️', 'title' => 'Garansi Ganti', 'text' => 'Busuk atau mentah? Kami ganti, tanpa ribet.', 'class' => 'bg-white ring-1 ring-stone-200/70 md:col-span-1 lg:col-span-1'],
-                ['emoji' => '🛵', 'title' => 'Antar se-Bali', 'text' => 'Ke rumah, villa, hingga hotel Anda di Bali.', 'class' => 'bg-husk-100 md:col-span-2'],
-            ] as $feature)
-                <div data-reveal class="group rounded-[2rem] p-7 transition duration-500 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-husk-900/10 {{ $feature['class'] }}">
-                    <span class="inline-flex size-12 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm transition duration-500 group-hover:-rotate-12 group-hover:scale-110">{{ $feature['emoji'] }}</span>
-                    <h3 class="mt-5 font-display text-xl font-bold text-husk-950">{{ $feature['title'] }}</h3>
-                    <p class="mt-2 text-sm leading-relaxed text-stone-600">{{ $feature['text'] }}</p>
-                </div>
+        <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="120">
+            @foreach ($categories as $fruit)
+                <a data-reveal href="{{ route('products.category', $fruit) }}" @class([
+                    'group relative isolate flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[2rem] p-6 text-white shadow-lg transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-husk-900/30',
+                    'lg:translate-y-10' => $loop->odd,
+                ])>
+                    <img src="{{ asset($fruit->imagePath()) }}" alt="{{ $fruit->label() }} segar dari kebun Bali" width="400" height="530" loading="lazy"
+                         class="absolute inset-0 -z-10 size-full object-cover transition duration-1000 ease-out group-hover:scale-110">
+                    <span class="absolute inset-0 -z-10 bg-gradient-to-t from-husk-950/95 via-husk-950/30 to-transparent transition duration-500 group-hover:from-husk-950"></span>
+                    <span class="absolute right-5 top-5 flex size-12 items-center justify-center rounded-full bg-white/15 text-xl ring-1 ring-white/30 backdrop-blur transition duration-500 group-hover:rotate-[-45deg] group-hover:bg-flesh-400 group-hover:text-husk-950">&rarr;</span>
+                    <span class="text-3xl">{{ $fruit->emoji() }}</span>
+                    <h3 class="mt-2 font-display text-3xl font-bold">{{ $fruit->label() }}</h3>
+                    <p class="mt-1 text-sm text-husk-100/85">{{ $fruit->tagline() }}</p>
+                    <p class="mt-4 inline-flex w-fit rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
+                        {{ ($categoryCounts[$fruit->value] ?? 0) > 0 ? $categoryCounts[$fruit->value].' produk tersedia' : 'Tanya stok' }}
+                    </p>
+                </a>
             @endforeach
         </div>
     </section>
 
-    {{-- ============ SHOWCASE ============ --}}
-    @if ($featuredProduct)
-        <section class="grain relative overflow-hidden bg-husk-950 py-28 text-white" aria-labelledby="unggulan">
-            <div class="pointer-events-none absolute left-1/3 top-1/2 size-[40rem] -translate-y-1/2 animate-blob bg-flesh-500/15 blur-3xl"></div>
-            <div class="relative mx-auto grid max-w-7xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2">
-                <div class="relative mx-auto aspect-square w-full max-w-lg" data-reveal="left">
-                    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-flesh-300 to-flesh-500 opacity-90"></div>
-                    <div class="absolute inset-[-6%] animate-spin-slow rounded-full border border-dashed border-flesh-300/40"></div>
-                    <div class="absolute inset-0" data-parallax="0.08">
-                        <img src="{{ $featuredProduct->imageUrl() ?? asset('images/durian.svg') }}" alt="{{ $featuredProduct->name }} asli Bali" width="520" height="520" loading="lazy"
-                             @class(['size-full animate-float', 'rounded-full object-cover p-3' => $featuredProduct->imageUrl(), 'scale-110 object-contain drop-shadow-[0_40px_40px_rgba(0,0,0,0.5)]' => ! $featuredProduct->imageUrl()])>
-                    </div>
-                    <span class="absolute -right-2 top-8 flex size-28 rotate-12 flex-col items-center justify-center rounded-full bg-husk-950 text-center ring-4 ring-flesh-400 sm:size-32">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-flesh-300">Hanya</span>
-                        <span class="font-display text-lg font-bold leading-none sm:text-xl">{{ $featuredProduct->formattedPrice() }}</span>
-                        <span class="text-[10px] text-husk-200">{{ $featuredProduct->price_unit }}</span>
-                    </span>
+    {{-- ============ KEBUN STORY ============ --}}
+    <section class="grain relative overflow-hidden bg-husk-950 py-28 text-white" aria-labelledby="kebun-kami">
+        <div class="pointer-events-none absolute left-1/3 top-1/2 size-[40rem] -translate-y-1/2 animate-blob bg-husk-600/30 blur-3xl"></div>
+        <div class="relative mx-auto grid max-w-7xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-2">
+            <div class="relative h-[28rem] sm:h-[34rem]" data-reveal="left">
+                <div class="absolute left-0 top-0 h-[78%] w-[72%] overflow-hidden rounded-[2.5rem] shadow-2xl">
+                    <img src="{{ asset('images/kebun/kebun-alpukat.webp') }}" alt="Barisan pohon alpukat di kebun {{ $site->get('site_name') }}" width="771" height="432" loading="lazy" class="size-full scale-125 object-cover" data-parallax="0.06">
                 </div>
-
-                <div data-reveal="right">
-                    <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-300">★ Paling dicari</p>
-                    <h2 id="unggulan" class="mt-3 font-display text-4xl font-bold leading-tight sm:text-6xl">{{ $featuredProduct->name }}</h2>
-                    <p class="mt-6 text-lg leading-relaxed text-husk-100/80">{{ $featuredProduct->short_description }}</p>
-
-                    <div class="mt-10 space-y-5" data-reveal>
-                        <p class="text-sm font-semibold text-husk-200">Profil rasa</p>
-                        @foreach (['Manis' => 0.9, 'Legit / creamy' => 0.85, 'Aroma' => 0.95, 'Pahit' => 0.3] as $label => $value)
-                            <div>
-                                <div class="flex justify-between text-sm"><span>{{ $label }}</span><span class="text-husk-200">{{ $value * 10 }}/10</span></div>
-                                <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-white/10">
-                                    <div class="meter-bar h-full rounded-full bg-gradient-to-r from-flesh-300 to-flesh-500" style="--value: {{ $value }}; --reveal-delay: {{ $loop->index * 150 + 200 }}ms"></div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="mt-10 flex flex-wrap gap-4">
-                        <x-site.whatsapp-link :product="$featuredProduct" size="lg">Pesan Sekarang</x-site.whatsapp-link>
-                        <a href="{{ route('products.show', $featuredProduct) }}" class="inline-flex items-center rounded-full px-6 py-4 font-semibold ring-1 ring-white/25 transition hover:bg-white hover:text-husk-950">Lihat detail</a>
-                    </div>
+                <div class="absolute bottom-0 right-0 h-[58%] w-[58%] overflow-hidden rounded-[2.5rem] shadow-2xl ring-8 ring-husk-950">
+                    <img src="{{ asset('images/kebun/pohon-durian.webp') }}" alt="Pohon durian berbuah lebat di kebun" width="678" height="452" loading="lazy" class="size-full scale-125 object-cover" data-parallax="-0.06">
+                </div>
+                <div class="absolute bottom-[12%] left-[4%] flex animate-bob items-center gap-3 rounded-2xl bg-white px-4 py-3 text-stone-800 shadow-2xl">
+                    <span class="flex size-10 items-center justify-center rounded-xl bg-husk-100 text-xl">🌿</span>
+                    <span class="text-sm font-semibold leading-tight">Ditanam &amp; dirawat<br><span class="font-normal text-stone-500">sendiri oleh kami</span></span>
                 </div>
             </div>
-        </section>
-    @endif
+
+            <div data-reveal="right">
+                <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-300">Dari kebun ke meja Anda</p>
+                <h2 id="kebun-kami" class="mt-3 font-display text-4xl font-bold leading-tight sm:text-5xl">Kenapa beli buah di {{ $site->get('site_name') }}?</h2>
+                <p class="mt-6 text-lg leading-relaxed text-husk-100/80">Kami bukan sekadar reseller. Buah dipetik dari kebun kami sendiri saat waktunya tepat, lalu langsung dikirim — sehingga lebih segar dan harganya tetap bersahabat.</p>
+
+                <div class="mt-10 grid gap-4 sm:grid-cols-2" data-reveal-stagger="100">
+                    @foreach ([
+                        ['☀️', 'Matang alami', 'Dipanen saat matang di pohon, bukan diperam.'],
+                        ['🤝', 'Tanpa perantara', 'Langsung dari kebun, harga lebih bersahabat.'],
+                        ['🛡️', 'Garansi ganti', 'Buah busuk atau rusak? Kami ganti.'],
+                        ['🛵', 'Antar se-Bali', 'Ke rumah, villa, hingga hotel Anda.'],
+                    ] as [$icon, $title, $text])
+                        <div data-reveal class="group rounded-3xl bg-white/5 p-5 ring-1 ring-white/10 transition duration-500 hover:-translate-y-1 hover:bg-white/10">
+                            <span class="inline-flex size-11 items-center justify-center rounded-2xl bg-flesh-400 text-xl transition duration-500 group-hover:-rotate-12 group-hover:scale-110">{{ $icon }}</span>
+                            <h3 class="mt-4 font-display text-lg font-bold">{{ $title }}</h3>
+                            <p class="mt-1 text-sm text-husk-200/80">{{ $text }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </section>
 
     {{-- ============ PRODUK ============ --}}
-    <section id="harga-durian" class="scroll-mt-20 py-28" aria-labelledby="harga-durian-title">
+    <section id="harga" class="scroll-mt-20 py-28" aria-labelledby="harga-title">
         <div class="mx-auto max-w-7xl px-4 sm:px-6">
             <div class="flex flex-wrap items-end justify-between gap-6" data-reveal>
                 <div class="max-w-2xl">
                     <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Daftar harga</p>
-                    <h2 id="harga-durian-title" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Harga Durian Bali Hari Ini</h2>
-                    <p class="mt-4 text-lg text-stone-600">Harga dapat berubah mengikuti musim panen — konfirmasi stok via WhatsApp.</p>
+                    <h2 id="harga-title" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Harga Buah Hari Ini</h2>
+                    <p class="mt-4 text-lg text-stone-600">Harga mengikuti musim panen — konfirmasi stok terbaru via WhatsApp.</p>
                 </div>
                 <a href="{{ route('products.index') }}" class="group inline-flex items-center gap-2 rounded-full bg-husk-950 px-6 py-3 font-semibold text-white transition hover:bg-husk-800">
-                    Semua jenis durian <span class="transition group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
+                    Semua produk <span class="transition group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
                 </a>
             </div>
             <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger="120">
@@ -245,14 +229,14 @@
         <div class="rounded-[2.5rem] bg-white px-6 py-20 ring-1 ring-stone-200/70 sm:px-12">
             <div class="text-center" data-reveal>
                 <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Gampang banget</p>
-                <h2 id="cara-pesan" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">Cara Pesan Durian Bali Online</h2>
+                <h2 id="cara-pesan" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">Cara Pesan Buah Online</h2>
             </div>
             <ol class="relative mt-16 grid gap-10 md:grid-cols-3" data-reveal-stagger="200">
                 <span class="absolute left-[16%] right-[16%] top-8 hidden h-0.5 bg-[repeating-linear-gradient(90deg,var(--color-flesh-400)_0_10px,transparent_10px_18px)] md:block" aria-hidden="true"></span>
                 @foreach ([
-                    ['emoji' => '🛒', 'title' => 'Pilih Durian', 'text' => 'Lihat daftar harga dan pilih jenis durian Bali yang Anda inginkan.'],
+                    ['emoji' => '🧺', 'title' => 'Pilih Buah', 'text' => 'Lihat daftar harga dan pilih buah yang Anda inginkan.'],
                     ['emoji' => '💬', 'title' => 'Chat WhatsApp', 'text' => 'Klik "Pesan via WhatsApp", sebutkan jumlah dan alamat pengiriman.'],
-                    ['emoji' => '🎉', 'title' => 'Durian Diantar', 'text' => 'Durian dicek kualitasnya, lalu diantar segar ke lokasi Anda.'],
+                    ['emoji' => '🎉', 'title' => 'Buah Diantar', 'text' => 'Buah dipetik, dicek kualitasnya, lalu diantar segar ke lokasi Anda.'],
                 ] as $step)
                     <li data-reveal class="group relative text-center">
                         <span class="relative mx-auto flex size-16 items-center justify-center rounded-2xl bg-husk-950 text-3xl shadow-xl shadow-husk-950/20 transition duration-500 group-hover:-translate-y-2 group-hover:rotate-6">
@@ -268,9 +252,36 @@
         </div>
     </section>
 
+    {{-- ============ PANEN / GALERI ============ --}}
+    <section class="py-28" aria-labelledby="galeri">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6" data-reveal>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Suasana kebun</p>
+            <h2 id="galeri" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">Intip Kebun Kami</h2>
+        </div>
+        <div class="mask-fade-x mt-12 overflow-hidden">
+            <div class="flex w-max animate-marquee-slow gap-5 hover:[animation-play-state:paused]">
+                @foreach (range(1, 2) as $copy)
+                    @foreach ([
+                        ['images/kebun/pohon-durian.webp', 'Pohon durian berbuah lebat'],
+                        ['images/kebun/alpukat-di-pohon.webp', 'Alpukat menggantung di pohon'],
+                        ['images/kebun/petani-memetik-jeruk.webp', 'Memetik jeruk di kebun'],
+                        ['images/kebun/buah-manggis.webp', 'Manggis hasil panen'],
+                        ['images/kebun/kebun-alpukat.webp', 'Barisan pohon alpukat'],
+                        ['images/kebun/durian-matang-di-pohon.webp', 'Durian matang di pohon'],
+                    ] as [$src, $caption])
+                        <figure class="group relative h-72 w-64 shrink-0 overflow-hidden rounded-[2rem] even:mt-10 sm:h-80 sm:w-72" @if ($copy === 2) aria-hidden="true" @endif>
+                            <img src="{{ asset($src) }}" alt="{{ $copy === 1 ? $caption : '' }}" loading="lazy" width="288" height="320" class="size-full object-cover transition duration-700 group-hover:scale-110">
+                            <figcaption class="absolute inset-x-3 bottom-3 translate-y-2 rounded-2xl bg-white/90 px-4 py-2 text-sm font-semibold text-husk-900 opacity-0 backdrop-blur transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">{{ $caption }}</figcaption>
+                        </figure>
+                    @endforeach
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     {{-- ============ TESTIMONI ============ --}}
     @if ($testimonials->isNotEmpty())
-        <section class="py-28" aria-labelledby="testimoni">
+        <section class="pb-28" aria-labelledby="testimoni">
             <div class="mx-auto max-w-7xl px-4 sm:px-6" data-reveal>
                 <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Testimoni</p>
                 <h2 id="testimoni" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">Kata Pelanggan Kami</h2>
@@ -292,23 +303,17 @@
                 </div>
             </div>
         </section>
-    @else
-        <div class="py-14"></div>
     @endif
 
     {{-- ============ SEO COPY ============ --}}
-    <section class="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1fr_1.2fr]" aria-labelledby="tentang-durian-bali">
-        <div class="relative mx-auto aspect-square w-full max-w-md" data-reveal="left">
-            <div class="absolute inset-0 animate-blob bg-gradient-to-br from-husk-200 to-flesh-200"></div>
-            <img src="{{ asset('images/durian.svg') }}" alt="Durian lokal Bali terbelah dengan daging buah kuning" width="420" height="450" loading="lazy" class="relative size-full animate-float-slow object-contain p-10 drop-shadow-2xl">
-        </div>
-        <div data-reveal="right">
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Mengenal durian Bali</p>
-            <h2 id="tentang-durian-bali" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950">Durian Bali: Oleh-oleh &amp; Buah Favorit dari Pulau Dewata</h2>
-            <div class="prose-durian mt-6 text-lg">
-                <p>Bali bukan hanya terkenal dengan pantai dan budayanya. Daerah dataran tinggi seperti <strong>Pupuan dan Penebel di Tabanan</strong>, <strong>Munduk dan Sukasada di Buleleng</strong>, serta <strong>Jembrana</strong> menghasilkan durian lokal dengan karakter rasa yang khas: manis, sedikit pahit, dengan aroma yang kuat.</p>
-                <p>Di {{ $site->get('site_name') }}, kami menjual <strong>durian asli Bali</strong> yang dipetik matang dari kebun petani, mulai dari <a href="{{ route('products.index') }}">durian lokal Bali, durian Montong Bali, hingga durian kupas</a> yang siap santap.</p>
-                <p>Ingin tahu cara memilih durian yang benar-benar matang? Baca panduan lengkap di <a href="{{ route('articles.index') }}">artikel kami</a>.</p>
+    <section class="mx-auto max-w-4xl px-4 sm:px-6" aria-labelledby="tentang-kebun">
+        <div data-reveal>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Tentang {{ $site->get('site_name') }}</p>
+            <h2 id="tentang-kebun" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950">Kebun Buah di Bali: Durian, Alpukat, Jeruk &amp; Manggis</h2>
+            <div class="prose-kebun mt-6 text-lg">
+                <p><strong>{{ $site->get('site_name') }}</strong> adalah kebun buah di Bali yang menjual hasil panennya langsung kepada pelanggan. Kami menanam <a href="{{ route('products.category', App\Enums\FruitCategory::Durian) }}">durian</a>, <a href="{{ route('products.category', App\Enums\FruitCategory::Alpukat) }}">alpukat</a>, <a href="{{ route('products.category', App\Enums\FruitCategory::Jeruk) }}">jeruk</a>, dan <a href="{{ route('products.category', App\Enums\FruitCategory::Manggis) }}">manggis</a> di tanah Bali yang subur.</p>
+                <p>Karena dijual langsung dari kebun, buah yang Anda terima lebih segar dan dipetik pada waktu yang tepat. Cocok untuk konsumsi keluarga, oleh-oleh, hingga kebutuhan villa, hotel, dan kafe di Bali.</p>
+                <p>Ingin tahu cara memilih buah yang benar-benar matang? Baca panduan lengkap di <a href="{{ route('articles.index') }}">artikel kami</a>.</p>
             </div>
         </div>
     </section>
@@ -319,7 +324,7 @@
             <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
                 <div>
                     <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Blog</p>
-                    <h2 id="artikel-terbaru" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">Tips &amp; Info Durian</h2>
+                    <h2 id="artikel-terbaru" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">Tips &amp; Info Buah</h2>
                 </div>
                 <a href="{{ route('articles.index') }}" class="group inline-flex items-center gap-2 font-semibold text-husk-700">Semua artikel <span class="transition group-hover:translate-x-1" aria-hidden="true">&rarr;</span></a>
             </div>
@@ -336,7 +341,7 @@
         <section class="mx-auto grid max-w-7xl gap-12 px-4 pt-28 sm:px-6 lg:grid-cols-[1fr_1.6fr]" aria-labelledby="faq">
             <div data-reveal class="lg:sticky lg:top-28 lg:self-start">
                 <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">FAQ</p>
-                <h2 id="faq" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Pertanyaan Seputar Durian Bali</h2>
+                <h2 id="faq" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Pertanyaan yang Sering Ditanyakan</h2>
                 <p class="mt-4 text-stone-600">Belum menemukan jawaban? Tanyakan langsung ke kami.</p>
                 <x-site.whatsapp-link class="mt-8">Tanya via WhatsApp</x-site.whatsapp-link>
             </div>

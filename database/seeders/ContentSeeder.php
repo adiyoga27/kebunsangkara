@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\FruitCategory;
 use App\Models\Article;
 use App\Models\Faq;
 use App\Models\Product;
@@ -11,7 +12,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 /**
- * Starter content for the durian shop. Prices are examples and must be updated from the admin panel.
+ * Starter content for Kebun Sangkara. Prices are examples and must be updated from the admin panel.
  */
 class ContentSeeder extends Seeder
 {
@@ -29,51 +30,80 @@ class ContentSeeder extends Seeder
     {
         $products = [
             [
-                'name' => 'Durian Lokal Bali Pupuan',
+                'name' => 'Durian Lokal Bali',
                 'slug' => 'durian-lokal-bali-pupuan',
+                'category' => FruitCategory::Durian,
                 'variety' => 'Durian lokal Bali',
-                'origin' => 'Pupuan, Tabanan',
-                'short_description' => 'Durian lokal asli Bali dari kebun Pupuan, Tabanan. Daging tebal, manis legit dengan sedikit rasa pahit dan aroma kuat khas durian kampung.',
-                'description' => "Durian lokal Bali dari daerah **Pupuan, Tabanan** adalah durian kampung yang tumbuh di dataran tinggi dengan udara sejuk. Karakter rasanya khas: **manis legit, sedikit pahit**, dengan aroma yang kuat — favorit para pecinta durian sejati.\n\n## Keunggulan\n\n- Dipanen matang pohon, bukan diperam\n- Dipilih satu per satu sebelum dikirim\n- Garansi ganti jika busuk atau mentah\n- Bisa minta dibukakan sebelum diantar\n\n## Ukuran & Harga\n\nHarga per buah tergantung ukuran (umumnya 1,5–3 kg). Silakan tanyakan stok dan ukuran yang tersedia hari ini via WhatsApp.\n\n## Pengiriman\n\nKami mengantar ke Denpasar, Badung, Gianyar, Tabanan dan area lain di Bali. Durian dikemas rapi agar aroma tidak mengganggu selama perjalanan.",
+                'origin' => 'Kebun Sangkara',
+                'short_description' => 'Durian lokal Bali dari kebun kami. Daging tebal, manis legit dengan sedikit rasa pahit dan aroma kuat khas durian kampung.',
+                'description' => "Durian lokal Bali dari **Kebun Sangkara** dipanen saat matang alami di pohon. Karakter rasanya khas: **manis legit, sedikit pahit**, dengan aroma yang kuat — favorit para pecinta durian sejati.\n\n## Keunggulan\n\n- Matang pohon, bukan diperam\n- Dipilih satu per satu sebelum dikirim\n- Garansi ganti jika busuk atau mentah\n- Bisa minta dibukakan sebelum diantar\n\n## Ukuran & Harga\n\nHarga per buah tergantung ukuran (umumnya 1,5–3 kg). Tanyakan stok dan ukuran yang tersedia hari ini via WhatsApp.",
                 'price' => 75000,
                 'price_unit' => 'per buah',
                 'is_featured' => true,
                 'sort_order' => 1,
-                'meta_title' => 'Durian Lokal Bali Pupuan Asli – Matang Pohon, Antar se-Bali',
+                'meta_title' => 'Durian Lokal Bali Matang Pohon – Kebun Sangkara',
             ],
             [
                 'name' => 'Durian Montong Bali',
                 'slug' => 'durian-montong-bali',
+                'category' => FruitCategory::Durian,
                 'variety' => 'Montong',
-                'origin' => 'Tabanan, Bali',
-                'short_description' => 'Durian Montong yang ditanam di kebun Bali. Daging tebal berwarna kuning, biji kecil, rasa manis lembut dan aroma tidak terlalu menyengat.',
-                'description' => "Durian **Montong Bali** cocok untuk Anda yang suka durian dengan **daging tebal, biji kecil, dan rasa manis lembut**. Aromanya lebih ringan dibanding durian lokal, sehingga cocok juga untuk pemula atau tamu dari luar negeri.\n\n## Kenapa Montong?\n\n- Daging buah tebal dan creamy\n- Biji relatif kecil\n- Rasa manis, tidak pahit\n\n## Cara Pesan\n\nKlik tombol **Pesan via WhatsApp**, sebutkan berat yang diinginkan dan alamat pengiriman. Kami akan konfirmasi stok dan ongkos kirim.",
+                'origin' => 'Kebun Sangkara',
+                'short_description' => 'Durian Montong dari kebun Bali. Daging tebal berwarna kuning, biji kecil, rasa manis lembut dan aroma tidak terlalu menyengat.',
+                'description' => "Durian **Montong** cocok untuk Anda yang suka durian dengan **daging tebal, biji kecil, dan rasa manis lembut**. Aromanya lebih ringan dibanding durian lokal, sehingga cocok juga untuk pemula atau tamu dari luar negeri.\n\n## Cara Pesan\n\nKlik tombol **Pesan via WhatsApp**, sebutkan berat yang diinginkan dan alamat pengiriman.",
                 'price' => 70000,
                 'price_unit' => 'per kg',
-                'is_featured' => true,
                 'sort_order' => 2,
             ],
             [
-                'name' => 'Durian Kupas Bali (Box 500 gr)',
-                'slug' => 'durian-kupas-bali-box',
-                'variety' => 'Campuran lokal Bali',
-                'origin' => 'Bali',
-                'short_description' => 'Daging durian Bali pilihan yang sudah dikupas dan dikemas dalam box 500 gram. Praktis, tanpa repot membuka kulit, siap santap.',
-                'description' => "Ingin makan durian tanpa repot membuka kulitnya? **Durian kupas Bali** kami berisi daging durian pilihan yang sudah dipisahkan dari kulit dan dikemas higienis dalam box.\n\n## Cocok Untuk\n\n- Dinikmati di hotel atau villa\n- Oleh-oleh untuk keluarga\n- Bahan pancake durian, es durian, atau kolak\n\n## Penyimpanan\n\nSimpan di kulkas dan habiskan dalam 2–3 hari. Untuk penyimpanan lebih lama, simpan di freezer.",
-                'price' => 95000,
-                'price_unit' => 'per box',
+                'name' => 'Alpukat Mentega',
+                'slug' => 'alpukat-mentega-bali',
+                'category' => FruitCategory::Alpukat,
+                'variety' => 'Mentega',
+                'origin' => 'Kebun Sangkara',
+                'short_description' => 'Alpukat mentega dengan daging tebal berwarna kuning, tekstur lembut dan pulen seperti mentega. Pas untuk jus, salad, dan roti panggang.',
+                'description' => "**Alpukat mentega** dari kebun kami dipetik saat buah sudah tua, lalu dibiarkan matang alami. Dagingnya **tebal, pulen, dan gurih** dengan biji yang relatif kecil.\n\n## Cocok Untuk\n\n- Jus alpukat dan smoothie\n- Salad, guacamole, dan roti panggang\n- Kebutuhan kafe dan restoran\n\n## Tips Penyimpanan\n\nSimpan di suhu ruang hingga empuk saat ditekan, lalu pindahkan ke kulkas agar tahan lebih lama.",
+                'price' => 35000,
+                'price_unit' => 'per kg',
+                'is_featured' => true,
                 'sort_order' => 3,
+                'meta_title' => 'Alpukat Mentega Bali Segar – Kebun Sangkara',
             ],
             [
-                'name' => 'Paket Durian Keluarga',
-                'slug' => 'paket-durian-keluarga',
-                'variety' => 'Durian lokal Bali',
-                'origin' => 'Tabanan & Buleleng',
-                'short_description' => 'Paket hemat 3 buah durian lokal Bali pilihan, pas untuk dinikmati bersama keluarga atau acara kumpul-kumpul.',
-                'description' => "**Paket Durian Keluarga** berisi 3 buah durian lokal Bali pilihan dengan ukuran sedang. Lebih hemat dibanding beli satuan, dan semua tetap mendapat **garansi ganti jika busuk**.\n\nIngin jumlah lebih banyak untuk acara atau usaha? Hubungi kami via WhatsApp untuk harga khusus.",
-                'price' => 200000,
-                'price_unit' => 'per paket',
+                'name' => 'Jeruk Siam Bali',
+                'slug' => 'jeruk-siam-bali',
+                'category' => FruitCategory::Jeruk,
+                'variety' => 'Siam',
+                'origin' => 'Kebun Sangkara',
+                'short_description' => 'Jeruk siam segar dipetik langsung dari pohon. Kulit tipis, mudah dikupas, rasa manis segar dan kaya air.',
+                'description' => "**Jeruk siam** dari kebun kami memiliki kulit tipis yang mudah dikupas, dengan rasa **manis segar** dan kandungan air yang melimpah.\n\n## Cocok Untuk\n\n- Dimakan langsung sebagai camilan sehat\n- Jus jeruk segar tanpa pemanis\n- Hantaran dan parsel buah\n\nPesan dalam jumlah besar untuk usaha jus atau acara? Hubungi kami untuk harga khusus.",
+                'price' => 25000,
+                'price_unit' => 'per kg',
                 'sort_order' => 4,
+            ],
+            [
+                'name' => 'Manggis Bali',
+                'slug' => 'manggis-bali',
+                'category' => FruitCategory::Manggis,
+                'variety' => 'Manggis lokal',
+                'origin' => 'Kebun Sangkara',
+                'short_description' => 'Manggis segar dengan kulit ungu mulus dan daging buah putih bersih. Rasa manis-asam yang menyegarkan, sang "ratu buah".',
+                'description' => "**Manggis** dijuluki *ratu buah* karena rasanya yang istimewa. Manggis dari kebun kami dipilih yang **kulitnya mulus, buahnya padat**, dan daging buahnya putih bersih.\n\n## Cara Memilih Manggis yang Bagus\n\n- Kulit berwarna ungu tua dan tidak keras\n- Kelopak (tangkai) masih hijau segar\n- Jumlah kelopak di pantat buah menunjukkan jumlah juring di dalamnya\n\nMusim manggis terbatas, jadi pesan selagi stok tersedia.",
+                'price' => 30000,
+                'price_unit' => 'per kg',
+                'sort_order' => 5,
+            ],
+            [
+                'name' => 'Paket Buah Kebun',
+                'slug' => 'paket-buah-kebun',
+                'category' => FruitCategory::Durian,
+                'variety' => 'Campuran',
+                'origin' => 'Kebun Sangkara',
+                'short_description' => 'Paket campuran 1 durian lokal, 1 kg alpukat, 1 kg jeruk, dan 1 kg manggis. Pas untuk keluarga atau hantaran.',
+                'description' => "**Paket Buah Kebun** berisi pilihan terbaik dari kebun kami: 1 buah durian lokal, 1 kg alpukat mentega, 1 kg jeruk siam, dan 1 kg manggis (menyesuaikan musim panen).\n\nCocok untuk hantaran, oleh-oleh, atau stok buah keluarga selama seminggu.",
+                'price' => 175000,
+                'price_unit' => 'per paket',
+                'sort_order' => 6,
             ],
         ];
 
@@ -85,13 +115,16 @@ class ContentSeeder extends Seeder
     private function seedFaqs(): void
     {
         $faqs = [
-            ['Apakah durian yang dijual benar-benar durian asli Bali?', 'Ya. Durian kami berasal dari kebun petani lokal di Bali, terutama daerah Tabanan (Pupuan, Penebel) dan Buleleng. Kami tidak menjual durian dari luar pulau sebagai durian Bali.'],
-            ['Kapan musim durian di Bali?', 'Musim durian di Bali umumnya berlangsung sekitar akhir tahun hingga awal tahun, kurang lebih November sampai Maret, tergantung cuaca dan daerah. Di luar musim, stok terbatas sehingga sebaiknya tanyakan dulu via WhatsApp.'],
-            ['Bagaimana cara memesan durian?', 'Klik tombol "Pesan via WhatsApp" di website ini, sebutkan jenis durian, jumlah, dan alamat pengiriman. Kami akan mengonfirmasi stok, total harga, dan jadwal pengiriman.'],
-            ['Apakah bisa diantar ke hotel atau villa?', 'Bisa. Kami mengantar ke rumah, hotel, maupun villa di Denpasar, Kuta, Seminyak, Canggu, Ubud, Nusa Dua dan area lain di Bali. Beberapa hotel melarang durian dibawa ke kamar, jadi pastikan dulu aturan hotel Anda.'],
-            ['Bagaimana jika durian yang diterima busuk atau mentah?', 'Kami memberikan garansi ganti. Kirimkan foto durian melalui WhatsApp maksimal beberapa jam setelah diterima, dan kami akan mengganti dengan durian lain.'],
-            ['Metode pembayaran apa saja yang tersedia?', 'Pembayaran bisa melalui transfer bank, QRIS, atau tunai saat durian diantar (COD) untuk area tertentu. Detailnya akan diinformasikan saat pemesanan via WhatsApp.'],
+            ['Apakah buahnya benar-benar dari kebun di Bali?', 'Ya. Durian, alpukat, jeruk, dan manggis kami berasal dari kebun Kebun Sangkara di Bali dan dipetik saat matang. Kami tidak menjual buah impor atau buah dari luar pulau.'],
+            ['Kapan musim durian dan manggis di Bali?', 'Musim durian di Bali umumnya sekitar akhir tahun hingga awal tahun (kurang lebih November–Maret), dan musim manggis biasanya berdekatan. Alpukat dan jeruk lebih sering tersedia sepanjang tahun. Waktu pastinya mengikuti cuaca, jadi tanyakan stok via WhatsApp.'],
+            ['Bagaimana cara memesan buah?', 'Klik tombol "Pesan via WhatsApp" di website ini, sebutkan jenis buah, jumlah, dan alamat pengiriman. Kami akan mengonfirmasi stok, total harga, dan jadwal pengiriman.'],
+            ['Apakah bisa diantar ke hotel atau villa?', 'Bisa. Kami mengantar ke rumah, hotel, maupun villa di seluruh Bali. Untuk durian, pastikan dulu aturan hotel karena beberapa hotel melarang durian dibawa ke kamar.'],
+            ['Bagaimana jika buah yang diterima busuk atau rusak?', 'Kami memberikan garansi ganti. Kirimkan foto buah melalui WhatsApp maksimal beberapa jam setelah diterima, dan kami akan menggantinya.'],
+            ['Apakah melayani pesanan dalam jumlah besar?', 'Ya. Kami melayani pesanan untuk kafe, restoran, hotel, usaha jus, maupun acara. Hubungi kami via WhatsApp untuk harga khusus.'],
+            ['Metode pembayaran apa saja yang tersedia?', 'Pembayaran bisa melalui transfer bank, QRIS, atau tunai saat buah diantar (COD) untuk area tertentu. Detailnya diinformasikan saat pemesanan via WhatsApp.'],
         ];
+
+        Faq::query()->whereNotIn('question', array_column($faqs, 0))->delete();
 
         foreach ($faqs as $index => [$question, $answer]) {
             Faq::updateOrCreate(['question' => $question], ['answer' => $answer, 'sort_order' => $index + 1, 'is_published' => true]);
@@ -147,7 +180,7 @@ Pada beberapa jenis durian, daging buah yang sudah matang akan sedikit terlepas 
 
 ## 6. Pilih Durian Jatuhan atau Matang Pohon
 
-Durian **matang pohon** (dipanen saat sudah matang alami) rasanya jauh lebih nikmat dibanding durian yang dipetik muda lalu diperam. Itulah kenapa kami di Bali hanya menjual durian matang pohon.
+Durian **matang pohon** (dipanen saat sudah matang alami) rasanya jauh lebih nikmat dibanding durian yang dipetik muda lalu diperam. Itulah kenapa di Kebun Sangkara kami hanya menjual durian matang pohon.
 
 ## 7. Beli dari Penjual Terpercaya
 
@@ -155,7 +188,7 @@ Cara paling aman adalah membeli dari penjual yang memberikan **garansi ganti** j
 
 ## Kesimpulan
 
-Gunakan indra penciuman, perabaan, dan pendengaran untuk memilih durian. Jika tidak ingin repot, Anda bisa langsung [memesan durian Bali asli](/durian) dari kami — setiap buah sudah kami pilihkan dan bergaransi.
+Gunakan indra penciuman, perabaan, dan pendengaran untuk memilih durian. Jika tidak ingin repot, Anda bisa langsung [memesan durian dari kebun kami](/buah/durian) dari kami — setiap buah sudah kami pilihkan dan bergaransi.
 MD,
             ],
             [
@@ -189,7 +222,37 @@ Di awal dan akhir musim, jumlah durian masih sedikit sehingga harganya cenderung
 2. Tanyakan apakah durian **matang pohon** atau diperam.
 3. Pastikan ada garansi jika durian busuk.
 
-Ingin menikmati durian Bali tanpa harus pergi ke kebun? [Lihat harga durian Bali hari ini](/durian) dan pesan langsung via WhatsApp.
+Ingin menikmati durian Bali tanpa harus pergi ke kebun? [Lihat harga durian hari ini](/buah/durian) dan pesan langsung via WhatsApp.
+MD,
+            ],
+            [
+                'title' => 'Cara Memilih Alpukat, Jeruk, dan Manggis yang Matang dan Manis',
+                'slug' => 'cara-memilih-alpukat-jeruk-manggis',
+                'excerpt' => 'Panduan praktis memilih alpukat yang pulen, jeruk yang manis, dan manggis yang segar — supaya tidak salah beli buah.',
+                'body' => <<<'MD'
+Selain durian, Kebun Sangkara juga memanen alpukat, jeruk, dan manggis. Setiap buah punya ciri matang yang berbeda. Berikut panduan singkatnya.
+
+## Cara Memilih Alpukat
+
+- **Tekan perlahan** bagian dekat tangkai. Alpukat matang terasa sedikit empuk, tetapi tidak lembek.
+- **Cek tangkainya.** Jika tangkai mudah dicabut dan bagian bawahnya berwarna hijau kekuningan, alpukat siap dimakan.
+- Alpukat yang masih keras bisa disimpan di suhu ruang 2–4 hari sampai matang.
+
+## Cara Memilih Jeruk
+
+- Pilih jeruk yang **terasa berat** dibanding ukurannya — artinya kaya air.
+- **Kulit mengkilap dan halus** biasanya menandakan buah segar.
+- Hindari jeruk dengan bagian kulit yang lembek atau berjamur.
+
+## Cara Memilih Manggis
+
+- **Kulit ungu tua** dan sedikit lentur saat ditekan menandakan manggis segar. Kulit yang sangat keras biasanya sudah lama dipetik.
+- **Kelopak hijau segar** di bagian atas menandakan buah baru dipanen.
+- Hitung **kelopak kecil di bagian bawah** buah — jumlahnya sama dengan jumlah juring daging di dalamnya.
+
+## Kesimpulan
+
+Buah yang dipetik langsung dari kebun selalu lebih segar. Lihat [daftar harga buah kami](/produk) dan pesan langsung via WhatsApp.
 MD,
             ],
             [
@@ -231,7 +294,7 @@ Bagi yang tidak mau repot membuka kulit durian, **durian kupas** adalah pilihan 
 | Suka manis lembut, aroma ringan | Durian Montong |
 | Ingin praktis | Durian kupas |
 
-Masih bingung? Konsultasikan selera Anda dengan kami via WhatsApp, dan kami akan merekomendasikan [durian Bali terbaik](/durian) yang sedang tersedia.
+Masih bingung? Konsultasikan selera Anda dengan kami via WhatsApp, dan kami akan merekomendasikan [durian terbaik](/buah/durian) yang sedang tersedia.
 MD,
             ],
         ];

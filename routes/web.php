@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', Site\HomeController::class)->name('home');
-Route::get('/durian', [Site\ProductController::class, 'index'])->name('products.index');
-Route::get('/durian/{product}', [Site\ProductController::class, 'show'])->name('products.show');
+Route::get('/produk', [Site\ProductController::class, 'index'])->name('products.index');
+Route::get('/produk/{product}', [Site\ProductController::class, 'show'])->name('products.show');
+Route::get('/buah/{category}', [Site\ProductController::class, 'category'])->name('products.category');
 Route::get('/artikel', [Site\ArticleController::class, 'index'])->name('articles.index');
 Route::get('/artikel/{article}', [Site\ArticleController::class, 'show'])->name('articles.show');
 Route::get('/tentang-kami', [Site\PageController::class, 'about'])->name('about');

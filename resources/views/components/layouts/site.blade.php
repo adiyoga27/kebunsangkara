@@ -14,7 +14,7 @@
     $siteName = $site->get('site_name');
     $pageTitle = $fullTitle ? $title : $title.' | '.$siteName;
     $canonical ??= url()->current();
-    $image ??= asset('images/durian.svg');
+    $image ??= asset('images/kebun/durian-matang-di-pohon.webp');
 
     $business = [
         '@type' => 'Store',
@@ -55,7 +55,7 @@
 
     $navigation = [
         ['label' => 'Beranda', 'route' => 'home', 'active' => 'home'],
-        ['label' => 'Harga Durian', 'route' => 'products.index', 'active' => 'products.*'],
+        ['label' => 'Produk & Harga', 'route' => 'products.index', 'active' => 'products.*'],
         ['label' => 'Artikel', 'route' => 'articles.index', 'active' => 'articles.*'],
         ['label' => 'Tentang Kami', 'route' => 'about', 'active' => 'about'],
         ['label' => 'Kontak', 'route' => 'contact', 'active' => 'contact'],
@@ -96,7 +96,7 @@
         <meta name="google-site-verification" content="{{ $site->get('google_site_verification') }}">
     @endif
 
-    <link rel="icon" href="{{ asset('images/durian.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('images/logo.svg') }}" type="image/svg+xml">
     <link rel="sitemap" type="application/xml" href="{{ route('sitemap') }}">
     {{ $head ?? '' }}
 
@@ -121,10 +121,11 @@
     <header data-header @if ($transparentHeader) data-transparent @endif class="site-header fixed inset-x-0 top-0 z-50">
         <div class="header-inner mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
             <a href="{{ route('home') }}" class="group flex items-center gap-2.5" aria-label="{{ $siteName }} – Beranda">
-                <span class="relative flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-flesh-200 to-flesh-400 shadow-lg shadow-flesh-500/30 transition duration-500 group-hover:rotate-12">
-                    <img src="{{ asset('images/durian.svg') }}" alt="" width="32" height="32" class="size-8">
+                <img src="{{ asset('images/logo.svg') }}" alt="" width="44" height="44" class="size-11 rounded-2xl shadow-lg shadow-husk-950/30 transition duration-500 group-hover:-rotate-12 group-hover:scale-105">
+                <span class="leading-none">
+                    <span class="block font-display text-xl font-bold tracking-tight">{{ $siteName }}</span>
+                    <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.25em] opacity-60">Buah Segar Bali</span>
                 </span>
-                <span class="font-display text-xl font-bold tracking-tight">{{ $siteName }}</span>
             </a>
 
             <nav aria-label="Menu utama" class="hidden items-center lg:flex">
@@ -172,7 +173,7 @@
         <div class="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6">
             <div class="flex flex-col items-start justify-between gap-8 border-b border-white/10 pb-14 md:flex-row md:items-end">
                 <p class="max-w-2xl font-display text-4xl font-bold leading-tight text-white sm:text-5xl">
-                    Durian terbaik Bali, <span class="text-gradient-gold italic">tinggal satu chat</span> lagi.
+                    Buah segar dari kebun, <span class="text-gradient-gold italic">tinggal satu chat</span> lagi.
                 </p>
                 <x-site.whatsapp-link size="lg">Chat WhatsApp</x-site.whatsapp-link>
             </div>
@@ -180,7 +181,7 @@
             <div class="grid gap-10 py-14 md:grid-cols-4">
                 <div class="md:col-span-2">
                     <p class="font-display text-2xl font-bold text-white">{{ $siteName }}</p>
-                    <p class="mt-3 max-w-md text-sm leading-relaxed text-husk-200/80">{{ $site->get('tagline') }}. Melayani pengiriman durian segar ke {{ $site->get('service_area') }}.</p>
+                    <p class="mt-3 max-w-md text-sm leading-relaxed text-husk-200/80">{{ $site->get('tagline') }}. Melayani pengiriman buah segar ke {{ $site->get('service_area') }}.</p>
                     <div class="mt-6 flex gap-3">
                         @foreach (['instagram_url' => 'Instagram', 'facebook_url' => 'Facebook', 'tiktok_url' => 'TikTok'] as $key => $label)
                             @if ($site->get($key))
@@ -191,7 +192,13 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Jelajahi</p>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Buah Kami</p>
+                    <ul class="mt-5 space-y-3 text-sm">
+                        @foreach (App\Enums\FruitCategory::cases() as $fruit)
+                            <li><a href="{{ route('products.category', $fruit) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ $fruit->label() }} Bali</a></li>
+                        @endforeach
+                    </ul>
+                    <p class="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Jelajahi</p>
                     <ul class="mt-5 space-y-3 text-sm">
                         @foreach ($navigation as $item)
                             <li><a href="{{ route($item['route']) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ $item['label'] }}</a></li>
@@ -213,16 +220,16 @@
             </div>
         </div>
 
-        <p class="relative select-none overflow-hidden whitespace-nowrap text-center font-display text-[18vw] font-bold leading-[0.8] text-white/[0.04]" aria-hidden="true">Durian Bali</p>
+        <p class="relative select-none overflow-hidden whitespace-nowrap text-center font-display text-[18vw] font-bold leading-[0.8] text-white/[0.04]" aria-hidden="true">Kebun Sangkara</p>
 
         <div class="relative border-t border-white/10">
-            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. Jual durian asli Bali – durian lokal Bali, durian Montong & durian kupas.</p>
+            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. Buah segar dari kebun Bali – durian, alpukat, jeruk &amp; manggis.</p>
         </div>
     </footer>
 
     <a href="{{ route('whatsapp.order') }}" rel="nofollow"
        class="group fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-whatsapp p-3.5 font-semibold text-white shadow-xl shadow-whatsapp/30 transition hover:scale-105 hover:bg-whatsapp-dark sm:py-3 sm:pl-3.5 sm:pr-5"
-       aria-label="Pesan durian via WhatsApp">
+       aria-label="Pesan buah via WhatsApp">
         <span class="absolute inset-0 animate-ping-slow rounded-full bg-whatsapp" aria-hidden="true"></span>
         <x-site.whatsapp-icon class="relative size-7 transition duration-500 group-hover:rotate-[360deg]" />
         <span class="relative hidden sm:inline">Chat WhatsApp</span>

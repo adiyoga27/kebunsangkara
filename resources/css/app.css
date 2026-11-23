@@ -266,7 +266,7 @@
     }
 
     /* Typography for Markdown-rendered article & product content. */
-    .prose-durian {
+    .prose-kebun {
         @apply leading-relaxed text-stone-700;
 
         & h2 { @apply mt-10 mb-3 font-display text-2xl font-bold text-husk-900; }

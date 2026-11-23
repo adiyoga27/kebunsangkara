@@ -1,6 +1,6 @@
-# 🌳 Durian Bali Asli
+# 🌳 Kebun Sangkara
 
-Website penjualan **durian asli Bali** yang dioptimasi untuk SEO Google, dengan pemesanan langsung via **WhatsApp**, panel admin untuk mengelola konten, dan **log aktivitas pengguna**.
+Website **[kebunsangkara.com](https://kebunsangkara.com)** — penjualan buah segar langsung dari kebun di Bali (**durian, alpukat, jeruk, dan manggis**), dioptimasi untuk SEO Google, dengan pemesanan langsung via **WhatsApp**, panel admin untuk mengelola konten, dan **log aktivitas pengguna**.
 
 Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaScript tambahan.
 
@@ -9,8 +9,8 @@ Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaSc
 ## ✨ Fitur
 
 ### Website publik
-- **Beranda** dengan hero animasi, daftar harga, produk unggulan + profil rasa, cara pesan, testimoni, artikel, dan FAQ.
-- **Harga Durian** (`/durian`) dan halaman detail tiap produk (`/durian/{slug}`).
+- **Beranda** dengan hero foto kebun beranimasi, kategori buah, cerita kebun, daftar harga, cara pesan, galeri kebun, testimoni, artikel, dan FAQ.
+- **Produk & Harga** (`/produk`), halaman per jenis buah (`/buah/durian`, `/buah/alpukat`, `/buah/jeruk`, `/buah/manggis`), dan detail produk (`/produk/{slug}`).
 - **Artikel / blog** (`/artikel`) dengan konten Markdown, mendukung jadwal terbit.
 - **Tentang Kami** dan **Kontak** (dengan peta lokasi).
 - **Tombol WhatsApp** di setiap halaman dengan pesan otomatis berisi nama produk, harga, dan link. Setiap klik tercatat sebagai calon pembeli.
@@ -28,7 +28,7 @@ Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaSc
 | Menu | Editor | Administrator |
 | --- | :---: | :---: |
 | Dashboard (statistik & grafik klik WhatsApp) | ✅ | ✅ |
-| Produk Durian (harga, stok, foto, SEO) | ✅ | ✅ |
+| Produk (kategori buah, harga, stok, foto, SEO) | ✅ | ✅ |
 | Artikel | ✅ | ✅ |
 | Testimoni & FAQ | ✅ | ✅ |
 | Klik WhatsApp (daftar calon pembeli) | — | ✅ |
@@ -50,8 +50,8 @@ Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaSc
 **Kebutuhan:** PHP 8.3+, Composer, Node.js 20+, dan database (SQLite/MySQL).
 
 ```bash
-git clone https://github.com/adiyoga27/durian.git
-cd durian
+git clone https://github.com/adiyoga27/durian.git kebunsangkara
+cd kebunsangkara
 
 composer install
 cp .env.example .env
@@ -88,7 +88,7 @@ Masuk ke **Admin → Pengaturan** dan isi:
 4. **Meta title & description beranda.**
 5. **Kode verifikasi Google Search Console** dan **Google Analytics ID** (opsional).
 
-Lalu di **Admin → Produk Durian**, perbarui harga dan **unggah foto durian asli** Anda.
+Lalu di **Admin → Produk**, perbarui harga dan **unggah foto buah asli** dari kebun Anda. Produk tanpa foto otomatis memakai foto bawaan kategorinya (`public/images/kebun/`).
 
 ---
 
@@ -107,13 +107,13 @@ Pastikan di `.env`:
 ```dotenv
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://domain-anda.com
+APP_URL=https://kebunsangkara.com
 APP_TIMEZONE=Asia/Makassar
 ```
 
 > `robots.txt` hanya mengizinkan Google mengindeks website saat `APP_ENV=production`.
 
-Setelah online, daftarkan `https://domain-anda.com/sitemap.xml` di **Google Search Console**.
+Setelah online, daftarkan `https://kebunsangkara.com/sitemap.xml` di **Google Search Console**.
 
 ---
 
@@ -122,8 +122,8 @@ Setelah online, daftarkan `https://domain-anda.com/sitemap.xml` di **Google Sear
 Kode website sudah dioptimasi, tetapi peringkat juga ditentukan faktor di luar kode:
 
 1. **Google Business Profile** — daftarkan toko dengan nama, alamat, dan nomor yang sama dengan website.
-2. **Foto asli** durian dan kebun Anda, bukan foto dari internet.
-3. **Artikel rutin** 1–2 kali per bulan dengan kata kunci yang dicari orang (mis. "harga durian Bali hari ini", "durian antar ke villa Ubud").
+2. **Foto asli** buah dan kebun Anda. Foto bawaan di `public/images/kebun/` sebaiknya diganti dengan foto milik sendiri — foto dari internet umumnya berhak cipta.
+3. **Artikel rutin** 1–2 kali per bulan dengan kata kunci yang dicari orang (mis. "harga durian Bali hari ini", "alpukat mentega Bali", "jual manggis Tabanan").
 4. **Ulasan Google Maps** dari pelanggan.
 5. **Backlink** dari blog wisata, kuliner, atau direktori bisnis Bali.
 
@@ -147,7 +147,7 @@ vendor/bin/pint
 
 ```
 app/
-├── Enums/                  # UserRole, ActivityAction
+├── Enums/                  # FruitCategory, UserRole, ActivityAction
 ├── Http/Controllers/Site/  # Halaman publik, sitemap, redirect WhatsApp
 ├── Http/Controllers/Admin/ # Panel admin
 ├── Listeners/              # Pencatat login/logout/login gagal

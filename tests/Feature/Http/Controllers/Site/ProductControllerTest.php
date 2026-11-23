@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\FruitCategory;
 use App\Models\Product;
 
 it('renders a product page with Product structured data and price', function () {
@@ -38,5 +39,28 @@ it('lists all products on the price page', function () {
 });
 
 it('returns 404 for an unknown product slug', function () {
-    $this->get('/durian/tidak-ada')->assertNotFound();
+    $this->get('/produk/tidak-ada')->assertNotFound();
+});
+
+it('shows only products of the requested fruit category', function () {
+    Product::factory()->category(FruitCategory::Alpukat)->create(['name' => 'Alpukat Mentega']);
+    Product::factory()->category(FruitCategory::Jeruk)->create(['name' => 'Jeruk Siam']);
+
+    $this->get(route('products.category', FruitCategory::Alpukat))
+        ->assertOk()
+        ->assertSee('<title>'.FruitCategory::Alpukat->seoTitle(), false)
+        ->assertSee('Alpukat Mentega')
+        ->assertDontSee('Jeruk Siam');
+});
+
+it('returns 404 for an unknown fruit category', function () {
+    $this->get('/buah/rambutan')->assertNotFound();
+});
+
+it('uses the category photo when a product has no uploaded image', function () {
+    $product = Product::factory()->category(FruitCategory::Manggis)->create();
+
+    $this->get(route('products.show', $product))
+        ->assertOk()
+        ->assertSee(asset(FruitCategory::Manggis->imagePath()), false);
 });

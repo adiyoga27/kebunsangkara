@@ -3,7 +3,7 @@
 @php
     $menu = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => 'admin.dashboard', 'icon' => 'M3 12l9-9 9 9M5 10v10h14V10'],
-        ['label' => 'Produk Durian', 'route' => 'admin.products.index', 'active' => 'admin.products.*', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'],
+        ['label' => 'Produk', 'route' => 'admin.products.index', 'active' => 'admin.products.*', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'],
         ['label' => 'Artikel', 'route' => 'admin.articles.index', 'active' => 'admin.articles.*', 'icon' => 'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v8a2 2 0 01-2 2zM7 8h5m-5 4h10m-10 4h10'],
         ['label' => 'Testimoni', 'route' => 'admin.testimonials.index', 'active' => 'admin.testimonials.*', 'icon' => 'M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.4-4 8-9 8a9.9 9.9 0 01-4.3-1L3 20l1.4-3.7A7.6 7.6 0 013 12c0-4.4 4-8 9-8s9 3.6 9 8z'],
         ['label' => 'FAQ', 'route' => 'admin.faqs.index', 'active' => 'admin.faqs.*', 'icon' => 'M8.2 9a4 4 0 017.6 1c0 2-3 3-3 3m.2 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>{{ $title }} – Admin {{ $site->get('site_name') }}</title>
-    <link rel="icon" href="{{ asset('images/durian.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('images/logo.svg') }}" type="image/svg+xml">
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -34,13 +34,13 @@
         <aside class="bg-husk-950 text-husk-100 lg:fixed lg:inset-y-0 lg:w-64">
             <details class="group lg:contents" open>
                 <summary class="flex items-center justify-between px-5 py-4 lg:hidden">
-                    <span class="font-display text-lg font-bold text-white">Admin Durian</span>
+                    <span class="font-display text-lg font-bold text-white">{{ $site->get('site_name') }}</span>
                     <span class="text-sm">Menu</span>
                 </summary>
                 <div class="flex flex-col lg:h-full">
                     <a href="{{ route('admin.dashboard') }}" class="hidden items-center gap-2 px-6 py-6 lg:flex">
-                        <img src="{{ asset('images/durian.svg') }}" alt="" class="size-9 rounded-full">
-                        <span class="font-display text-lg font-bold text-white">Admin Durian</span>
+                        <img src="{{ asset('images/logo.svg') }}" alt="" class="size-9 rounded-xl">
+                        <span class="font-display text-lg font-bold leading-tight text-white">{{ $site->get('site_name') }}<span class="block text-[10px] font-sans font-semibold uppercase tracking-[0.25em] text-husk-200/70">Admin Panel</span></span>
                     </a>
                     <nav class="flex-1 space-y-1 px-3 pb-4" aria-label="Menu admin">
                         @foreach ($menu as $item)

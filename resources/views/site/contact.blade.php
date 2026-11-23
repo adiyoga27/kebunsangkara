@@ -1,18 +1,18 @@
 <x-layouts.site
-    title="Kontak & Lokasi – Pesan Durian Bali via WhatsApp"
-    description="Hubungi {{ $site->get('site_name') }} untuk pesan durian asli Bali. WhatsApp {{ $site->get('phone_display') }}. Lokasi {{ $site->get('city') }}, Bali. Antar ke seluruh Bali."
+    title="Kontak & Lokasi – Pesan Buah via WhatsApp"
+    description="Hubungi {{ $site->get('site_name') }} untuk pesan durian, alpukat, jeruk & manggis segar. WhatsApp {{ $site->get('phone_display') }}. Lokasi {{ $site->get('city') }}, Bali. Antar ke seluruh Bali."
     :canonical="route('contact')"
 >
     <x-site.page-hero title="Hubungi Kami" eyebrow="Kontak"
         :breadcrumbs="[['label' => 'Beranda', 'url' => route('home')], ['label' => 'Kontak', 'url' => null]]">
-        Cara tercepat memesan durian adalah melalui WhatsApp. Kami siap membantu memilihkan durian terbaik untuk Anda.
+        Cara tercepat memesan adalah melalui WhatsApp. Kami siap membantu memilihkan buah terbaik untuk Anda.
     </x-site.page-hero>
 
     <div class="mx-auto max-w-7xl px-4 pt-16 sm:px-6">
         <div class="grid gap-8 lg:grid-cols-2">
             <div class="space-y-4" data-reveal-stagger="120">
                 <div data-reveal class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-whatsapp to-whatsapp-dark p-8 text-white">
-                    <img src="{{ asset('images/durian-pod.svg') }}" alt="" class="absolute -right-4 -top-4 w-24 rotate-12 animate-float opacity-90">
+                    <img src="{{ asset('images/logo.svg') }}" alt="" class="absolute -right-4 -top-4 w-24 rotate-12 animate-float opacity-90">
                     <h2 class="font-display text-2xl font-bold">WhatsApp</h2>
                     <p class="mt-2 text-white/85">{{ $site->get('phone_display') }} · {{ $site->get('opening_hours') }}</p>
                     <a href="{{ route('whatsapp.order') }}" rel="nofollow" class="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-semibold text-whatsapp-dark shadow-lg transition hover:-translate-y-0.5">Chat Sekarang &rarr;</a>

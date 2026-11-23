@@ -9,11 +9,20 @@
         <div class="space-y-6 lg:col-span-2">
             <x-admin.card title="Informasi Produk">
                 <div class="space-y-4">
-                    <x-admin.input name="name" label="Nama Produk" :value="$product->name" required help="Contoh: Durian Montong Bali, Durian Lokal Pupuan." />
-                    <x-admin.input name="slug" label="Slug URL" :value="$product->slug" help="Kosongkan untuk dibuat otomatis dari nama. Contoh: durian-montong-bali" />
+                    <x-admin.input name="name" label="Nama Produk" :value="$product->name" required help="Contoh: Durian Montong Bali, Alpukat Mentega, Jeruk Siam." />
+                    <div>
+                        <label for="category" class="block text-sm font-semibold text-stone-700">Kategori Buah</label>
+                        <select id="category" name="category" class="mt-1.5 block w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm">
+                            @foreach (App\Enums\FruitCategory::cases() as $fruit)
+                                <option value="{{ $fruit->value }}" @selected(old('category', $product->category?->value) === $fruit->value)>{{ $fruit->emoji() }} {{ $fruit->label() }}</option>
+                            @endforeach
+                        </select>
+                        @error('category')<p class="mt-1 text-xs font-medium text-red-600">{{ $message }}</p>@enderror
+                    </div>
+                    <x-admin.input name="slug" label="Slug URL" :value="$product->slug" help="Kosongkan untuk dibuat otomatis dari nama. Contoh: alpukat-mentega-bali" />
                     <div class="grid gap-4 sm:grid-cols-2">
                         <x-admin.input name="variety" label="Varietas" :value="$product->variety" />
-                        <x-admin.input name="origin" label="Asal Kebun / Daerah" :value="$product->origin" help="Contoh: Pupuan, Tabanan" />
+                        <x-admin.input name="origin" label="Asal Kebun / Daerah" :value="$product->origin" help="Contoh: Kebun Sangkara, Tabanan" />
                     </div>
                     <x-admin.textarea name="short_description" label="Deskripsi Singkat" :value="$product->short_description" rows="2" maxlength="300" required />
                     <x-admin.textarea name="description" label="Deskripsi Lengkap" :value="$product->description" rows="12" required

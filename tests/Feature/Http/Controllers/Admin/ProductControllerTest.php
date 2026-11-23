@@ -19,6 +19,7 @@ function validProductPayload(array $overrides = []): array
 {
     return [
         'name' => 'Durian Montong Bali',
+        'category' => 'durian',
         'short_description' => 'Daging tebal, manis lembut.',
         'description' => 'Durian Montong dari kebun Tabanan.',
         'price' => 70000,
@@ -49,7 +50,7 @@ it('creates a product with a generated slug, uploaded image and activity log', f
 it('rejects a product without required fields', function () {
     $this->actingAs($this->editor)
         ->post(route('admin.products.store'), [])
-        ->assertSessionHasErrors(['name', 'short_description', 'description', 'price', 'price_unit']);
+        ->assertSessionHasErrors(['name', 'category', 'short_description', 'description', 'price', 'price_unit']);
 
     expect(Product::count())->toBe(0);
 });
@@ -93,4 +94,10 @@ it('deletes a product with its image and logs the deletion', function () {
     $this->assertModelMissing($product);
     Storage::disk('public')->assertMissing('products/durian.jpg');
     $this->assertDatabaseHas('activity_logs', ['action' => ActivityAction::Deleted->value, 'subject_id' => $product->id]);
+});
+
+it('rejects an unknown fruit category', function () {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload(['category' => 'rambutan']))
+        ->assertSessionHasErrors('category');
 });

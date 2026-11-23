@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\FruitCategory;
 use App\Http\Controllers\Admin\Concerns\HandlesImageUploads;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SaveProductRequest;
@@ -19,6 +20,7 @@ class ProductController extends Controller
         return view('admin.products.index', [
             'products' => Product::query()
                 ->when($request->string('q')->trim()->value(), fn ($query, string $search) => $query->where('name', 'like', "%{$search}%"))
+                ->when(FruitCategory::tryFrom($request->string('category')->value()), fn ($query, FruitCategory $category) => $query->where('category', $category))
                 ->ordered()
                 ->paginate(20)
                 ->withQueryString(),
@@ -27,7 +29,7 @@ class ProductController extends Controller
 
     public function create(): View
     {
-        return view('admin.products.form', ['product' => new Product(['is_available' => true, 'price_unit' => 'per kg'])]);
+        return view('admin.products.form', ['product' => new Product(['is_available' => true, 'price_unit' => 'per kg', 'category' => FruitCategory::Durian])]);
     }
 
     public function store(SaveProductRequest $request): RedirectResponse

@@ -25,10 +25,10 @@ class SiteSettings
     public static function defaults(): array
     {
         return [
-            'site_name' => 'Durian Bali Asli',
-            'tagline' => 'Durian Asli Bali, Dipetik Matang dari Kebun',
+            'site_name' => 'Kebun Sangkara',
+            'tagline' => 'Buah Segar Langsung dari Kebun Bali',
             'whatsapp_number' => '6281234567890',
-            'whatsapp_message' => 'Halo, saya ingin memesan durian asli Bali.',
+            'whatsapp_message' => 'Halo Kebun Sangkara, saya ingin memesan buah.',
             'phone_display' => '0812-3456-7890',
             'email' => '',
             'street_address' => 'Jl. Raya Pupuan',
@@ -43,9 +43,9 @@ class SiteSettings
             'instagram_url' => '',
             'facebook_url' => '',
             'tiktok_url' => '',
-            'home_meta_title' => 'Jual Durian Bali Asli Matang Pohon – Pesan via WhatsApp',
-            'home_meta_description' => 'Jual durian asli Bali langsung dari kebun petani Tabanan. Matang pohon, manis legit, garansi ganti jika busuk. Antar se-Bali. Pesan via WhatsApp!',
-            'about_content' => "Kami adalah penjual durian asli Bali yang bekerja sama langsung dengan petani di daerah Tabanan dan Buleleng.\n\nSetiap durian dipilih satu per satu, dipetik saat matang, dan dikirim segar ke pelanggan di seluruh Bali.",
+            'home_meta_title' => 'Kebun Sangkara – Jual Durian, Alpukat, Jeruk & Manggis Bali',
+            'home_meta_description' => 'Kebun Sangkara menjual buah segar langsung dari kebun di Bali: durian matang pohon, alpukat mentega, jeruk & manggis. Antar se-Bali, pesan via WhatsApp!',
+            'about_content' => "**Kebun Sangkara** adalah kebun buah di Bali yang menanam dan menjual durian, alpukat, jeruk, dan manggis langsung kepada pelanggan.\n\nSetiap buah kami petik saat matang, dipilih satu per satu, lalu dikirim segar ke rumah, villa, maupun hotel Anda di seluruh Bali — tanpa perantara, sehingga kualitas dan harga tetap terjaga.",
             'google_site_verification' => '',
             'google_analytics_id' => '',
         ];
