@@ -53,12 +53,15 @@
         ],
     ];
 
+    $viewingSeedling = request()->route('product') instanceof App\Models\Product && request()->route('product')->isSeedling();
+
     $navigation = [
-        ['label' => 'Beranda', 'route' => 'home', 'active' => 'home'],
-        ['label' => 'Produk & Harga', 'route' => 'products.index', 'active' => 'products.*'],
-        ['label' => 'Artikel', 'route' => 'articles.index', 'active' => 'articles.*'],
-        ['label' => 'Tentang Kami', 'route' => 'about', 'active' => 'about'],
-        ['label' => 'Kontak', 'route' => 'contact', 'active' => 'contact'],
+        ['label' => 'Beranda', 'route' => 'home', 'active' => request()->routeIs('home')],
+        ['label' => 'Buah Segar', 'route' => 'products.index', 'active' => request()->routeIs('products.*') && ! $viewingSeedling],
+        ['label' => 'Bibit', 'route' => 'seedlings.index', 'active' => request()->routeIs('seedlings.*') || $viewingSeedling],
+        ['label' => 'Artikel', 'route' => 'articles.index', 'active' => request()->routeIs('articles.*')],
+        ['label' => 'Tentang Kami', 'route' => 'about', 'active' => request()->routeIs('about')],
+        ['label' => 'Kontak', 'route' => 'contact', 'active' => request()->routeIs('contact')],
     ];
 @endphp
 <!DOCTYPE html>
@@ -131,7 +134,7 @@
             <nav aria-label="Menu utama" class="hidden items-center lg:flex">
                 @foreach ($navigation as $item)
                     <a href="{{ route($item['route']) }}" class="nav-link px-4 py-2.5 text-sm font-semibold"
-                       @if (request()->routeIs($item['active'])) aria-current="page" @endif>{{ $item['label'] }}</a>
+                       @if ($item['active']) aria-current="page" @endif>{{ $item['label'] }}</a>
                 @endforeach
             </nav>
 
@@ -149,8 +152,8 @@
                         @foreach ($navigation as $item)
                             <a href="{{ route($item['route']) }}" @class([
                                 'flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition',
-                                'bg-husk-50 text-husk-800' => request()->routeIs($item['active']),
-                                'hover:bg-stone-50' => ! request()->routeIs($item['active']),
+                                'bg-husk-50 text-husk-800' => $item['active'],
+                                'hover:bg-stone-50' => ! $item['active'],
                             ])>
                                 {{ $item['label'] }} <span aria-hidden="true" class="text-flesh-500">&rarr;</span>
                             </a>
@@ -197,6 +200,7 @@
                         @foreach (App\Enums\FruitCategory::cases() as $fruit)
                             <li><a href="{{ route('products.category', $fruit) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ $fruit->label() }} Bali</a></li>
                         @endforeach
+                        <li><a href="{{ route('seedlings.index') }}" class="inline-block transition hover:translate-x-1 hover:text-white">Bibit Buah Unggul</a></li>
                     </ul>
                     <p class="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Jelajahi</p>
                     <ul class="mt-5 space-y-3 text-sm">
@@ -223,7 +227,7 @@
         <p class="relative select-none overflow-hidden whitespace-nowrap text-center font-display text-[18vw] font-bold leading-[0.8] text-white/[0.04]" aria-hidden="true">Kebun Sangkara</p>
 
         <div class="relative border-t border-white/10">
-            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. Buah segar dari kebun Bali – durian, alpukat, jeruk &amp; manggis.</p>
+            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. Buah segar &amp; bibit unggul dari kebun Bali – durian, alpukat, jeruk &amp; manggis.</p>
         </div>
     </footer>
 

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\FruitCategory;
+use App\Enums\ProductType;
 use App\Models\Article;
 use App\Models\Faq;
 use App\Models\Product;
@@ -107,8 +108,103 @@ class ContentSeeder extends Seeder
             ],
         ];
 
+        $seedlings = [
+            [
+                'name' => 'Bibit Durian Montong Okulasi',
+                'slug' => 'bibit-durian-montong-okulasi',
+                'category' => FruitCategory::Durian,
+                'variety' => 'Montong',
+                'propagation_method' => 'Okulasi',
+                'plant_height' => '60–80 cm',
+                'short_description' => 'Bibit durian Montong hasil okulasi dari pohon induk di kebun kami. Batang sehat, akar kuat, siap tanam.',
+                'description' => 'Bibit **durian Montong okulasi** diperbanyak dari pohon induk yang sudah terbukti berbuah di kebun kami. Bibit okulasi umumnya **lebih cepat berbuah** dan sifatnya sama dengan pohon induk.
+
+## Spesifikasi
+
+- Metode: okulasi
+- Tinggi: sekitar 60–80 cm
+- Media: polybag
+
+## Bonus
+
+Konsultasi gratis cara tanam dan perawatan via WhatsApp. Baca juga [panduan menanam bibit durian okulasi](/artikel/cara-menanam-bibit-durian-okulasi).',
+                'price' => 85000,
+                'sort_order' => 11,
+                'is_featured' => true,
+            ],
+            [
+                'name' => 'Bibit Alpukat Mentega Sambung Pucuk',
+                'slug' => 'bibit-alpukat-mentega-sambung-pucuk',
+                'category' => FruitCategory::Alpukat,
+                'variety' => 'Mentega',
+                'propagation_method' => 'Sambung pucuk',
+                'plant_height' => '50–70 cm',
+                'short_description' => 'Bibit alpukat mentega sambung pucuk dari pohon induk berbuah lebat. Cocok untuk pekarangan maupun kebun.',
+                'description' => 'Bibit **alpukat mentega sambung pucuk** diambil dari pohon induk dengan buah berdaging tebal dan pulen. Bibit sambung pucuk mewarisi sifat unggul pohon induknya.
+
+## Spesifikasi
+
+- Metode: sambung pucuk
+- Tinggi: sekitar 50–70 cm
+- Media: polybag
+
+Konsultasi gratis cara tanam via WhatsApp.',
+                'price' => 65000,
+                'sort_order' => 12,
+            ],
+            [
+                'name' => 'Bibit Jeruk Siam Okulasi',
+                'slug' => 'bibit-jeruk-siam-okulasi',
+                'category' => FruitCategory::Jeruk,
+                'variety' => 'Siam',
+                'propagation_method' => 'Okulasi',
+                'plant_height' => '50–60 cm',
+                'short_description' => 'Bibit jeruk siam okulasi, cocok ditanam di pekarangan atau dalam pot besar (tabulampot).',
+                'description' => 'Bibit **jeruk siam okulasi** dengan pertumbuhan cepat dan cocok untuk lahan pekarangan maupun **tabulampot** (tanaman buah dalam pot).
+
+## Spesifikasi
+
+- Metode: okulasi
+- Tinggi: sekitar 50–60 cm
+- Media: polybag
+
+Konsultasi gratis cara tanam via WhatsApp.',
+                'price' => 35000,
+                'sort_order' => 13,
+            ],
+            [
+                'name' => 'Bibit Manggis',
+                'slug' => 'bibit-manggis',
+                'category' => FruitCategory::Manggis,
+                'variety' => 'Manggis lokal',
+                'propagation_method' => 'Sambung pucuk',
+                'plant_height' => '40–60 cm',
+                'short_description' => 'Bibit manggis dari pohon induk di kebun kami. Tanaman berumur panjang yang cocok untuk investasi kebun.',
+                'description' => 'Bibit **manggis** dari pohon induk dengan buah manis dan kulit mulus. Manggis adalah tanaman berumur panjang yang cocok sebagai investasi kebun jangka panjang.
+
+## Spesifikasi
+
+- Metode: sambung pucuk
+- Tinggi: sekitar 40–60 cm
+- Media: polybag
+
+Konsultasi gratis cara tanam via WhatsApp.',
+                'price' => 75000,
+                'sort_order' => 14,
+            ],
+        ];
+
         foreach ($products as $product) {
-            Product::updateOrCreate(['slug' => $product['slug']], $product);
+            Product::updateOrCreate(['slug' => $product['slug']], [...$product, 'type' => ProductType::Buah]);
+        }
+
+        foreach ($seedlings as $seedling) {
+            Product::updateOrCreate(['slug' => $seedling['slug']], [
+                ...$seedling,
+                'type' => ProductType::Bibit,
+                'origin' => 'Kebun Sangkara',
+                'price_unit' => 'per batang',
+            ]);
         }
     }
 
@@ -121,6 +217,8 @@ class ContentSeeder extends Seeder
             ['Apakah bisa diantar ke hotel atau villa?', 'Bisa. Kami mengantar ke rumah, hotel, maupun villa di seluruh Bali. Untuk durian, pastikan dulu aturan hotel karena beberapa hotel melarang durian dibawa ke kamar.'],
             ['Bagaimana jika buah yang diterima busuk atau rusak?', 'Kami memberikan garansi ganti. Kirimkan foto buah melalui WhatsApp maksimal beberapa jam setelah diterima, dan kami akan menggantinya.'],
             ['Apakah melayani pesanan dalam jumlah besar?', 'Ya. Kami melayani pesanan untuk kafe, restoran, hotel, usaha jus, maupun acara. Hubungi kami via WhatsApp untuk harga khusus.'],
+            ['Apa bedanya bibit okulasi, sambung pucuk, dan bibit dari biji?', 'Bibit okulasi dan sambung pucuk diperbanyak dari pohon induk yang sudah terbukti berbuah, sehingga sifatnya sama dengan induknya dan umumnya lebih cepat berbuah. Bibit dari biji butuh waktu lebih lama dan sifat buahnya belum tentu sama dengan induknya.'],
+            ['Apakah bibit bisa dikirim, dan apakah ada panduan menanam?', 'Bisa. Bibit dikemas dalam polybag agar aman selama perjalanan. Setiap pembelian bibit mendapat konsultasi gratis cara tanam dan perawatan melalui WhatsApp.'],
             ['Metode pembayaran apa saja yang tersedia?', 'Pembayaran bisa melalui transfer bank, QRIS, atau tunai saat buah diantar (COD) untuk area tertentu. Detailnya diinformasikan saat pemesanan via WhatsApp.'],
         ];
 
@@ -253,6 +351,43 @@ Selain durian, Kebun Sangkara juga memanen alpukat, jeruk, dan manggis. Setiap b
 ## Kesimpulan
 
 Buah yang dipetik langsung dari kebun selalu lebih segar. Lihat [daftar harga buah kami](/produk) dan pesan langsung via WhatsApp.
+MD,
+            ],
+            [
+                'title' => 'Cara Menanam Bibit Durian Okulasi agar Tumbuh Subur',
+                'slug' => 'cara-menanam-bibit-durian-okulasi',
+                'excerpt' => 'Panduan langkah demi langkah menanam bibit durian okulasi: memilih lokasi, menyiapkan lubang tanam, pemupukan, hingga perawatan awal.',
+                'body' => <<<'MD'
+Menanam durian sendiri kini semakin diminati. Dengan **bibit okulasi** yang berasal dari pohon induk unggul, pohon durian umumnya bisa mulai berbuah lebih cepat dibanding bibit dari biji. Berikut langkah-langkah menanamnya.
+
+## 1. Pilih Lokasi yang Tepat
+
+- Durian menyukai **sinar matahari penuh** dan tanah yang **gembur serta tidak tergenang air**.
+- Beri jarak tanam yang cukup lebar, umumnya **8–10 meter** antar pohon, karena tajuk durian akan tumbuh besar.
+
+## 2. Siapkan Lubang Tanam
+
+1. Gali lubang sekitar **60 × 60 × 60 cm**.
+2. Pisahkan tanah bagian atas dan bawah.
+3. Campurkan tanah bagian atas dengan **pupuk kandang matang**, lalu diamkan beberapa hari sebelum ditanami.
+
+## 3. Menanam Bibit
+
+1. Sobek polybag dengan hati-hati agar **akar dan tanah tidak pecah**.
+2. Letakkan bibit di tengah lubang, pastikan **sambungan okulasi berada di atas permukaan tanah**.
+3. Timbun dengan campuran tanah dan pupuk, padatkan perlahan, lalu siram.
+4. Pasang ajir (tongkat penyangga) agar bibit tidak goyah tertiup angin.
+
+## 4. Perawatan Awal
+
+- **Siram rutin** terutama di musim kemarau, tetapi jangan sampai tergenang.
+- Beri **naungan sementara** pada minggu-minggu awal jika matahari sangat terik.
+- **Buang tunas liar** yang tumbuh di bawah sambungan okulasi.
+- Berikan pupuk secara berkala sesuai umur tanaman.
+
+## Butuh Bibit atau Bantuan?
+
+Kebun Sangkara menyediakan [bibit durian, alpukat, jeruk, dan manggis](/bibit) dari pohon induk di kebun kami sendiri — lengkap dengan konsultasi tanam gratis via WhatsApp.
 MD,
             ],
             [

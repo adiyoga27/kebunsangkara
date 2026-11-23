@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\FruitCategory;
+use App\Enums\ProductType;
 use App\Models\Concerns\RecordsActivity;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -16,7 +17,7 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 #[Fillable([
-    'name', 'slug', 'category', 'variety', 'origin', 'short_description', 'description', 'price', 'price_unit',
+    'name', 'slug', 'category', 'type', 'variety', 'origin', 'propagation_method', 'plant_height', 'short_description', 'description', 'price', 'price_unit',
     'image_path', 'is_available', 'is_featured', 'sort_order', 'meta_title', 'meta_description',
 ])]
 class Product extends Model
@@ -31,6 +32,7 @@ class Product extends Model
     {
         return [
             'category' => FruitCategory::class,
+            'type' => ProductType::class,
             'price' => 'integer',
             'is_available' => 'boolean',
             'is_featured' => 'boolean',
@@ -86,12 +88,32 @@ class Product extends Model
      */
     public function displayImageUrl(): string
     {
-        return $this->imageUrl() ?? asset(($this->category ?? FruitCategory::Durian)->imagePath());
+        if ($this->imageUrl()) {
+            return $this->imageUrl();
+        }
+
+        return $this->isSeedling()
+            ? asset('images/bibit.svg')
+            : asset(($this->category ?? FruitCategory::Durian)->imagePath());
+    }
+
+    public function isSeedling(): bool
+    {
+        return $this->type === ProductType::Bibit;
+    }
+
+    /**
+     * @param  Builder<Product>  $query
+     */
+    #[Scope]
+    protected function ofType(Builder $query, ProductType $type): void
+    {
+        $query->where('type', $type);
     }
 
     public function seoTitle(): string
     {
-        return $this->meta_title ?: $this->name.' Segar – Harga '.$this->formattedPrice().' '.$this->price_unit;
+        return $this->meta_title ?: $this->name.($this->isSeedling() ? ' Siap Tanam' : ' Segar').' – Harga '.$this->formattedPrice().' '.$this->price_unit;
     }
 
     public function seoDescription(): string

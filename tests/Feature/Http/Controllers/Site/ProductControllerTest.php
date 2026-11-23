@@ -64,3 +64,23 @@ it('uses the category photo when a product has no uploaded image', function () {
         ->assertOk()
         ->assertSee(asset(FruitCategory::Manggis->imagePath()), false);
 });
+
+it('lists seedlings on the bibit page with their propagation details', function () {
+    Product::factory()->seedling()->create(['name' => 'Bibit Alpukat Mentega', 'propagation_method' => 'Sambung pucuk']);
+    Product::factory()->create(['name' => 'Alpukat Segar']);
+
+    $this->get(route('seedlings.index'))
+        ->assertOk()
+        ->assertSee('Bibit Alpukat Mentega')
+        ->assertSee('Sambung pucuk')
+        ->assertDontSee('Alpukat Segar');
+});
+
+it('separates seedlings from fruit on the category page', function () {
+    Product::factory()->category(FruitCategory::Jeruk)->create(['name' => 'Jeruk Siam Segar']);
+    Product::factory()->category(FruitCategory::Jeruk)->seedling()->create(['name' => 'Bibit Jeruk Siam']);
+
+    $this->get(route('products.category', FruitCategory::Jeruk))
+        ->assertOk()
+        ->assertSeeInOrder(['Jeruk Siam Segar', 'Bibit Jeruk', 'Bibit Jeruk Siam']);
+});

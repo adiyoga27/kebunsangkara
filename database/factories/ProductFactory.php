@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\FruitCategory;
+use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -23,6 +24,7 @@ class ProductFactory extends Factory
             'name' => $name = 'Durian '.fake()->unique()->words(2, true),
             'slug' => Str::slug($name),
             'category' => FruitCategory::Durian,
+            'type' => ProductType::Buah,
             'variety' => fake()->randomElement(['Montong', 'Lokal Bali', 'Musang King', 'Bawor']),
             'origin' => fake()->randomElement(['Pupuan, Tabanan', 'Munduk, Buleleng', 'Jembrana']),
             'short_description' => fake()->sentence(12),
@@ -41,6 +43,18 @@ class ProductFactory extends Factory
             'category' => $category,
             'name' => $name = $category->label().' '.fake()->unique()->words(2, true),
             'slug' => Str::slug($name),
+        ]);
+    }
+
+    public function seedling(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => ProductType::Bibit,
+            'name' => $name = 'Bibit '.fake()->unique()->words(2, true),
+            'slug' => Str::slug($name),
+            'propagation_method' => 'Okulasi',
+            'plant_height' => '60–80 cm',
+            'price_unit' => 'per batang',
         ]);
     }
 

@@ -13,4 +13,5 @@
             'bg-white text-stone-700 ring-1 ring-stone-200 hover:-translate-y-0.5 hover:ring-husk-300' => $active !== $fruit,
         ]) @if ($active === $fruit) aria-current="page" @endif>{{ $fruit->emoji() }} {{ $fruit->label() }}</a>
     @endforeach
+    <a href="{{ route('seedlings.index') }}" class="rounded-full bg-husk-100 px-5 py-2.5 text-sm font-semibold text-husk-800 ring-1 ring-husk-200 transition hover:-translate-y-0.5 hover:bg-husk-200">🌱 Bibit</a>
 </nav>

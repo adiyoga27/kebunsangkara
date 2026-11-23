@@ -10,11 +10,11 @@
         ],
     ];
 
-    if ($products->isNotEmpty()) {
+    if ($products->isNotEmpty() || $seedlings->isNotEmpty()) {
         $schemas[] = [
             '@type' => 'ItemList',
             'name' => 'Harga '.$category->label().' '.$site->get('site_name'),
-            'itemListElement' => $products->values()->map(fn ($product, $index) => [
+            'itemListElement' => $products->concat($seedlings)->values()->map(fn ($product, $index) => [
                 '@type' => 'ListItem',
                 'position' => $index + 1,
                 'url' => route('products.show', $product),
@@ -47,14 +47,33 @@
             @forelse ($products as $product)
                 <div data-reveal><x-site.product-card :product="$product" heading-level="h2" class="h-full" /></div>
             @empty
+                @if ($seedlings->isEmpty())
                 <div data-reveal class="col-span-full flex flex-col items-center rounded-[2rem] bg-white px-6 py-16 text-center ring-1 ring-stone-200/70">
                     <span class="text-5xl">{{ $category->emoji() }}</span>
                     <p class="mt-4 font-display text-2xl font-bold text-husk-950">{{ $category->label() }} sedang menunggu musim panen</p>
                     <p class="mt-2 max-w-md text-stone-600">Tanyakan jadwal panen berikutnya atau pesan lebih dulu melalui WhatsApp.</p>
                     <x-site.whatsapp-link class="mt-6">Tanya Stok {{ $category->label() }}</x-site.whatsapp-link>
                 </div>
+                @endif
             @endforelse
         </div>
+
+        @if ($seedlings->isNotEmpty())
+            <section class="mt-20 rounded-[2.5rem] bg-husk-50 p-6 sm:p-10" aria-labelledby="bibit-kategori">
+                <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
+                    <div>
+                        <p class="text-sm font-bold uppercase tracking-[0.2em] text-husk-600">🌱 Tanam sendiri</p>
+                        <h2 id="bibit-kategori" class="mt-2 font-display text-3xl font-bold text-husk-950 sm:text-4xl">Bibit {{ $category->label() }}</h2>
+                    </div>
+                    <a href="{{ route('seedlings.index') }}" class="text-sm font-semibold text-husk-700 hover:underline">Semua bibit &rarr;</a>
+                </div>
+                <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger="100">
+                    @foreach ($seedlings as $seedling)
+                        <div data-reveal><x-site.product-card :product="$seedling" class="h-full" /></div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
 
         <section class="mt-24" aria-labelledby="buah-lain">
             <h2 id="buah-lain" data-reveal class="font-display text-4xl font-bold text-husk-950">Buah Lain dari Kebun Kami</h2>

@@ -8,7 +8,11 @@
         <span class="tilt-glare pointer-events-none absolute inset-0"></span>
 
         <span class="absolute left-3 top-3 flex flex-wrap gap-1.5">
-            <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-husk-900 backdrop-blur">{{ $product->category->emoji() }} {{ $product->category->label() }}</span>
+            @if ($product->isSeedling())
+                <span class="rounded-full bg-husk-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">🌱 Bibit {{ $product->category->label() }}</span>
+            @else
+                <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-husk-900 backdrop-blur">{{ $product->category->emoji() }} {{ $product->category->label() }}</span>
+            @endif
             @if ($product->is_featured)
                 <span class="rounded-full bg-husk-950/85 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-flesh-300 backdrop-blur">★ Terlaris</span>
             @endif
@@ -25,12 +29,18 @@
         <{{ $headingLevel }} class="font-display text-xl font-bold leading-snug text-stone-900">
             <a href="{{ route('products.show', $product) }}" class="after:absolute after:inset-0 after:rounded-[2rem]">{{ $product->name }}</a>
         </{{ $headingLevel }}>
+        @if ($product->isSeedling() && ($product->propagation_method || $product->plant_height))
+            <p class="mt-2 flex flex-wrap gap-1.5 text-xs font-semibold text-husk-700">
+                @if ($product->propagation_method)<span class="rounded-full bg-husk-50 px-2.5 py-1">✂️ {{ $product->propagation_method }}</span>@endif
+                @if ($product->plant_height)<span class="rounded-full bg-husk-50 px-2.5 py-1">📏 {{ $product->plant_height }}</span>@endif
+            </p>
+        @endif
         <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-stone-500">{{ $product->short_description }}</p>
 
-        <div class="mt-auto flex items-end justify-between gap-3 pt-5">
+        <div class="mt-auto flex flex-wrap items-end justify-between gap-3 pt-5">
             <p>
                 <span class="block text-xs font-medium text-stone-400">Harga {{ $product->price_unit }}</span>
-                <span class="font-display text-2xl font-bold text-husk-800">{{ $product->formattedPrice() }}</span>
+                <span class="font-display text-2xl font-bold whitespace-nowrap text-husk-800">{{ $product->formattedPrice() }}</span>
             </p>
             @if ($product->is_available)
                 <x-site.whatsapp-link :product="$product" size="sm" class="relative z-10">Pesan</x-site.whatsapp-link>

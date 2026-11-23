@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Enums\ProductType;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Faq;
@@ -14,7 +15,8 @@ class HomeController extends Controller
     public function __invoke(): View
     {
         return view('site.home', [
-            'products' => Product::query()->ordered()->limit(6)->get(),
+            'products' => Product::query()->ofType(ProductType::Buah)->ordered()->limit(6)->get(),
+            'seedlings' => Product::query()->ofType(ProductType::Bibit)->ordered()->limit(4)->get(),
             'categoryCounts' => Product::query()->where('is_available', true)->toBase()
                 ->selectRaw('category, COUNT(*) as total')->groupBy('category')->pluck('total', 'category'),
             'testimonials' => Testimonial::query()->where('is_published', true)->latest()->limit(6)->get(),

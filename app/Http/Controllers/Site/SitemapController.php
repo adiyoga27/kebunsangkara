@@ -17,6 +17,7 @@ class SitemapController extends Controller
         $urls = collect([
             ['loc' => route('home'), 'lastmod' => $latestProductUpdate, 'priority' => '1.0'],
             ['loc' => route('products.index'), 'lastmod' => $latestProductUpdate, 'priority' => '0.9'],
+            ['loc' => route('seedlings.index'), 'lastmod' => $latestProductUpdate, 'priority' => '0.9'],
             ['loc' => route('articles.index'), 'lastmod' => Article::query()->published()->max('updated_at'), 'priority' => '0.7'],
             ...collect(FruitCategory::cases())->map(fn (FruitCategory $category): array => [
                 'loc' => route('products.category', $category),

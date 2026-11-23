@@ -26,7 +26,7 @@ class SiteSettings
     {
         return [
             'site_name' => 'Kebun Sangkara',
-            'tagline' => 'Buah Segar Langsung dari Kebun Bali',
+            'tagline' => 'Buah Segar & Bibit Unggul Langsung dari Kebun Bali',
             'whatsapp_number' => '6281234567890',
             'whatsapp_message' => 'Halo Kebun Sangkara, saya ingin memesan buah.',
             'phone_display' => '0812-3456-7890',
@@ -43,8 +43,8 @@ class SiteSettings
             'instagram_url' => '',
             'facebook_url' => '',
             'tiktok_url' => '',
-            'home_meta_title' => 'Kebun Sangkara – Jual Durian, Alpukat, Jeruk & Manggis Bali',
-            'home_meta_description' => 'Kebun Sangkara menjual buah segar langsung dari kebun di Bali: durian matang pohon, alpukat mentega, jeruk & manggis. Antar se-Bali, pesan via WhatsApp!',
+            'home_meta_title' => 'Kebun Sangkara – Jual Buah & Bibit Durian, Alpukat, Jeruk Bali',
+            'home_meta_description' => 'Kebun Sangkara Bali menjual buah segar & bibit unggul: durian, alpukat, jeruk & manggis langsung dari kebun. Bibit okulasi siap tanam. Pesan via WhatsApp!',
             'about_content' => "**Kebun Sangkara** adalah kebun buah di Bali yang menanam dan menjual durian, alpukat, jeruk, dan manggis langsung kepada pelanggan.\n\nSetiap buah kami petik saat matang, dipilih satu per satu, lalu dikirim segar ke rumah, villa, maupun hotel Anda di seluruh Bali — tanpa perantara, sehingga kualitas dan harga tetap terjaga.",
             'google_site_verification' => '',
             'google_analytics_id' => '',

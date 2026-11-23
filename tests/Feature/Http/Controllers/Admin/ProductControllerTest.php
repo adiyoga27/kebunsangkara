@@ -20,6 +20,7 @@ function validProductPayload(array $overrides = []): array
     return [
         'name' => 'Durian Montong Bali',
         'category' => 'durian',
+        'type' => 'buah',
         'short_description' => 'Daging tebal, manis lembut.',
         'description' => 'Durian Montong dari kebun Tabanan.',
         'price' => 70000,
@@ -100,4 +101,19 @@ it('rejects an unknown fruit category', function () {
     $this->actingAs($this->editor)
         ->post(route('admin.products.store'), validProductPayload(['category' => 'rambutan']))
         ->assertSessionHasErrors('category');
+});
+
+it('stores a seedling with its propagation details', function () {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload([
+            'type' => 'bibit',
+            'propagation_method' => 'Okulasi',
+            'plant_height' => '60–80 cm',
+        ]))
+        ->assertRedirect();
+
+    expect(Product::sole())
+        ->isSeedling()->toBeTrue()
+        ->propagation_method->toBe('Okulasi')
+        ->plant_height->toBe('60–80 cm');
 });

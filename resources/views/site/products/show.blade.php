@@ -7,7 +7,7 @@
             'description' => $product->seoDescription(),
             'image' => [$productImage],
             'sku' => 'KS-'.$product->id,
-            'category' => 'Buah '.$product->category->label(),
+            'category' => ($product->isSeedling() ? 'Bibit ' : 'Buah ').$product->category->label(),
             'brand' => ['@type' => 'Brand', 'name' => $site->get('site_name')],
             'countryOfOrigin' => 'ID',
             'offers' => [
@@ -26,7 +26,9 @@
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => route('home')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => $product->category->label(), 'item' => route('products.category', $product->category)],
+                $product->isSeedling()
+                    ? ['@type' => 'ListItem', 'position' => 2, 'name' => 'Bibit', 'item' => route('seedlings.index')]
+                    : ['@type' => 'ListItem', 'position' => 2, 'name' => $product->category->label(), 'item' => route('products.category', $product->category)],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $product->name, 'item' => route('products.show', $product)],
             ],
         ],
@@ -50,7 +52,9 @@
         <div data-reveal>
             <x-site.breadcrumbs :items="[
                 ['label' => 'Beranda', 'url' => route('home')],
-                ['label' => $product->category->label(), 'url' => route('products.category', $product->category)],
+                $product->isSeedling()
+                    ? ['label' => 'Bibit', 'url' => route('seedlings.index')]
+                    : ['label' => $product->category->label(), 'url' => route('products.category', $product->category)],
                 ['label' => $product->name, 'url' => null],
             ]" />
         </div>
@@ -64,7 +68,7 @@
                 </div>
                 <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-husk-950/50 via-transparent to-transparent"></div>
                 <img src="{{ asset('images/leaf.svg') }}" alt="" class="absolute -right-4 top-[8%] w-[22%] -rotate-12 animate-bob drop-shadow-xl" data-depth="35">
-                <span class="absolute bottom-5 left-5 rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-husk-900 backdrop-blur">{{ $product->category->emoji() }} {{ $product->category->label() }}</span>
+                <span class="absolute bottom-5 left-5 rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-husk-900 backdrop-blur">{{ $product->isSeedling() ? '🌱 Bibit '.$product->category->label() : $product->category->emoji().' '.$product->category->label() }}</span>
                 @if ($product->is_featured)
                     <span class="absolute left-5 top-5 rounded-full bg-flesh-400 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-husk-950">★ Terlaris</span>
                 @endif
@@ -91,7 +95,12 @@
                 </p>
 
                 <dl class="mt-8 grid grid-cols-2 gap-3 text-sm" data-reveal-stagger="80">
-                    @foreach (array_filter([
+                    @foreach (array_filter($product->isSeedling() ? [
+                        ['🌳', 'Varietas', $product->variety],
+                        ['✂️', 'Perbanyakan', $product->propagation_method],
+                        ['📏', 'Tinggi bibit', $product->plant_height],
+                        ['💬', 'Konsultasi tanam', 'Gratis via WhatsApp'],
+                    ] : [
                         ['🌱', 'Varietas', $product->variety],
                         ['🛵', 'Pengiriman', 'Seluruh Bali'],
                         ['🛡️', 'Garansi', 'Ganti jika busuk'],
