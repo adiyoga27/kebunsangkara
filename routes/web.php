@@ -63,6 +63,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 
         Route::resource('products', Admin\ProductController::class)->except('show');
         Route::resource('articles', Admin\ArticleController::class)->except('show');
+        Route::patch('testimonials/{testimonial}/publikasi', [Admin\TestimonialController::class, 'togglePublication'])->name('testimonials.toggle-publication');
         Route::resource('testimonials', Admin\TestimonialController::class)->except('show');
         Route::resource('faqs', Admin\FaqController::class)->except('show');
 

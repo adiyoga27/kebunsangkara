@@ -7,13 +7,24 @@ use App\Http\Requests\Admin\SaveTestimonialRequest;
 use App\Models\Product;
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class TestimonialController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('admin.testimonials.index', ['testimonials' => Testimonial::query()->with('product')->latest()->paginate(20)]);
+        return view('admin.testimonials.index', [
+            'testimonials' => Testimonial::query()
+                ->with('product')
+                ->when($request->string('q')->trim()->value(), fn ($query, string $search) => $query->whereAny(['name', 'content'], 'like', "%{$search}%"))
+                ->when($request->string('status')->value() === 'tampil', fn ($query) => $query->where('is_published', true))
+                ->when($request->string('status')->value() === 'draf', fn ($query) => $query->where('is_published', false))
+                ->latest()
+                ->latest('id')
+                ->paginate(20)
+                ->withQueryString(),
+        ]);
     }
 
     public function create(): View
@@ -38,6 +49,13 @@ class TestimonialController extends Controller
         $testimonial->update($request->validated());
 
         return redirect()->route('admin.testimonials.index')->with('status', 'Testimoni berhasil diperbarui.');
+    }
+
+    public function togglePublication(Testimonial $testimonial): RedirectResponse
+    {
+        $testimonial->update(['is_published' => ! $testimonial->is_published]);
+
+        return back()->with('status', $testimonial->is_published ? 'Testimoni sekarang tampil di website.' : 'Testimoni disembunyikan dari website.');
     }
 
     public function destroy(Testimonial $testimonial): RedirectResponse

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Article;
 use App\Models\Faq;
-use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,10 +22,10 @@ class ContentSeeder extends Seeder
             BibitSeeder::class,
             PupukSeeder::class,
             ProdukKesehatanSeeder::class,
+            TestimoniSeeder::class,
         ]);
 
         $this->seedFaqs();
-        $this->seedTestimonials();
         $this->seedArticles();
 
         $this->call(EnglishTranslationSeeder::class);
@@ -50,21 +49,6 @@ class ContentSeeder extends Seeder
 
         foreach ($faqs as $index => [$question, $answer]) {
             Faq::updateOrCreate(['question' => $question], ['answer' => $answer, 'sort_order' => $index + 1, 'is_published' => true]);
-        }
-    }
-
-    /**
-     * Example testimonials are NOT published: replace them with real customer reviews before showing them.
-     */
-    private function seedTestimonials(): void
-    {
-        $testimonials = [
-            ['name' => 'Contoh: Putu', 'location' => 'Denpasar', 'content' => 'Contoh testimoni — ganti dengan ulasan asli dari pelanggan Anda sebelum ditampilkan.'],
-            ['name' => 'Contoh: Sarah', 'location' => 'Canggu', 'content' => 'Contoh testimoni — ganti dengan ulasan asli dari pelanggan Anda sebelum ditampilkan.'],
-        ];
-
-        foreach ($testimonials as $testimonial) {
-            Testimonial::updateOrCreate(['name' => $testimonial['name']], [...$testimonial, 'rating' => 5, 'is_published' => false]);
         }
     }
 

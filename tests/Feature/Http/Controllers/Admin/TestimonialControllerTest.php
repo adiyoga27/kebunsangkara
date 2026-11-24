@@ -48,3 +48,43 @@ it('keeps the testimonial when its product is deleted', function () {
 
     expect($testimonial->fresh()->product_id)->toBeNull();
 });
+
+it('publishes and hides a testimonial from the list', function () {
+    $testimonial = Testimonial::factory()->create(['content' => 'Manggisnya segar', 'is_published' => false]);
+
+    $this->patch(route('admin.testimonials.toggle-publication', $testimonial))->assertSessionHas('status', 'Testimoni sekarang tampil di website.');
+    $this->get(route('home'))->assertSee('Manggisnya segar');
+
+    $this->patch(route('admin.testimonials.toggle-publication', $testimonial))->assertSessionHas('status', 'Testimoni disembunyikan dari website.');
+    $this->get(route('home'))->assertDontSee('Manggisnya segar');
+});
+
+it('requires a login to change the publication of a testimonial', function () {
+    $testimonial = Testimonial::factory()->create(['is_published' => false]);
+    auth()->logout();
+
+    $this->patch(route('admin.testimonials.toggle-publication', $testimonial))->assertRedirect(route('admin.login'));
+
+    expect($testimonial->fresh()->is_published)->toBeFalse();
+});
+
+it('filters the list by status and search term', function (array $query, array $visible, array $hidden) {
+    Testimonial::factory()->create(['name' => 'Putu', 'content' => 'Duriannya manis', 'is_published' => true]);
+    Testimonial::factory()->create(['name' => 'Komang', 'content' => 'Bibitnya sehat', 'is_published' => false]);
+
+    $response = $this->get(route('admin.testimonials.index', $query))->assertOk();
+
+    foreach ($visible as $text) {
+        $response->assertSee($text);
+    }
+
+    foreach ($hidden as $text) {
+        $response->assertDontSee($text);
+    }
+})->with([
+    'all' => [[], ['Duriannya manis', 'Bibitnya sehat'], []],
+    'published' => [['status' => 'tampil'], ['Duriannya manis'], ['Bibitnya sehat']],
+    'drafts' => [['status' => 'draf'], ['Bibitnya sehat'], ['Duriannya manis']],
+    'search by name' => [['q' => 'Komang'], ['Bibitnya sehat'], ['Duriannya manis']],
+    'search within status' => [['q' => 'sehat', 'status' => 'tampil'], ['Tidak ada testimoni yang cocok.'], ['Bibitnya sehat', 'Duriannya manis']],
+]);

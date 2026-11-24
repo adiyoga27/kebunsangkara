@@ -269,14 +269,6 @@
                         @endforeach
                         <li><a href="{{ route('seedlings.index') }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ __('Bibit Buah Unggul') }}</a></li>
                     </ul>
-                    <p class="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">{{ __('Jelajahi') }}</p>
-                    <ul class="mt-5 space-y-3 text-sm">
-                        @foreach ($navigation as $item)
-                            @foreach ($item['children'] ?? [$item] as $link)
-                                <li><a href="{{ $link['url'] }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ $link['label'] }}</a></li>
-                            @endforeach
-                        @endforeach
-                    </ul>
                 </div>
 
                 <address class="not-italic">
@@ -292,8 +284,6 @@
                 </address>
             </div>
         </div>
-
-        <p class="relative select-none overflow-hidden whitespace-nowrap text-center font-display text-[18vw] font-bold leading-[0.8] text-white/[0.04]" aria-hidden="true">Kebun Sangkara</p>
 
         <div class="relative border-t border-white/10">
             <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. {{ __('Buah segar & bibit unggul dari kebun Bali – durian, alpukat & manggis.') }}</p>

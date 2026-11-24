@@ -1,8 +1,8 @@
-@props(['model', 'fields', 'locale' => App\Enums\Locale::English])
+@props(['model', 'fields', 'locale' => App\Enums\Locale::English, 'hint' => null])
 
 {{-- $fields: list of [attribute, label, rows]; rows above 1 render a textarea. --}}
 <x-admin.card :title="'Terjemahan '.$locale->label().' (/'.$locale->value.')'">
-    <p class="mb-5 text-xs text-stone-500">Opsional. Halaman versi ini baru masuk Google setelah {{ implode(', ', array_map(fn (string $key): string => Str::lower(collect($fields)->firstWhere(0, $key)[1]), $model::requiredTranslations())) }} diisi.</p>
+    <p class="mb-5 text-xs text-stone-500">Opsional. @if ($hint){{ $hint }}@else Halaman versi ini baru masuk Google setelah {{ implode(', ', array_map(fn (string $key): string => Str::lower(collect($fields)->firstWhere(0, $key)[1]), $model::requiredTranslations())) }} diisi.@endif</p>
     <div class="space-y-4">
         @foreach ($fields as [$attribute, $label, $rows])
             @php($key = "translations.{$locale->value}.{$attribute}")
