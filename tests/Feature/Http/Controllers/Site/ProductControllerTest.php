@@ -2,6 +2,7 @@
 
 use App\Enums\FruitCategory;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 it('renders a product page with Product structured data and price', function () {
     $product = Product::factory()->create(['name' => 'Durian Lokal Pupuan', 'price' => 75000, 'price_unit' => 'per buah']);
@@ -44,13 +45,13 @@ it('returns 404 for an unknown product slug', function () {
 
 it('shows only products of the requested fruit category', function () {
     Product::factory()->category(FruitCategory::Alpukat)->create(['name' => 'Alpukat Mentega']);
-    Product::factory()->category(FruitCategory::Jeruk)->create(['name' => 'Jeruk Siam']);
+    Product::factory()->category(FruitCategory::Manggis)->create(['name' => 'Manggis Kaligesing']);
 
     $this->get(route('products.category', FruitCategory::Alpukat))
         ->assertOk()
         ->assertSee('<title>'.FruitCategory::Alpukat->seoTitle(), false)
         ->assertSee('Alpukat Mentega')
-        ->assertDontSee('Jeruk Siam');
+        ->assertDontSee('Manggis Kaligesing');
 });
 
 it('returns 404 for an unknown fruit category', function () {
@@ -77,10 +78,22 @@ it('lists seedlings on the bibit page with their propagation details', function 
 });
 
 it('separates seedlings from fruit on the category page', function () {
-    Product::factory()->category(FruitCategory::Jeruk)->create(['name' => 'Jeruk Siam Segar']);
-    Product::factory()->category(FruitCategory::Jeruk)->seedling()->create(['name' => 'Bibit Jeruk Siam']);
+    Product::factory()->category(FruitCategory::Manggis)->create(['name' => 'Manggis Kaligesing Segar']);
+    Product::factory()->category(FruitCategory::Manggis)->seedling()->create(['name' => 'Bibit Manggis Kaligesing']);
 
-    $this->get(route('products.category', FruitCategory::Jeruk))
+    $this->get(route('products.category', FruitCategory::Manggis))
         ->assertOk()
-        ->assertSeeInOrder(['Jeruk Siam Segar', 'Bibit Jeruk', 'Bibit Jeruk Siam']);
+        ->assertSeeInOrder(['Manggis Kaligesing Segar', 'Bibit Manggis', 'Bibit Manggis Kaligesing']);
+});
+
+it('hides products whose fruit category is no longer sold without deleting them', function () {
+    $product = Product::factory()->create(['name' => 'Jeruk Siam Bali']);
+    DB::table('products')->where('id', $product->id)->update(['category' => 'jeruk']);
+
+    $this->get(route('products.index'))->assertOk()->assertDontSee('Jeruk Siam Bali');
+    $this->get(route('products.show', $product->slug))->assertNotFound();
+    $this->get('/buah/jeruk')->assertNotFound();
+    $this->get(route('sitemap'))->assertOk()->assertDontSee($product->slug);
+
+    $this->assertDatabaseHas('products', ['id' => $product->id]);
 });

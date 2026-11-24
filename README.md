@@ -1,6 +1,6 @@
 # 🌳 Kebun Sangkara
 
-Website **[kebunsangkara.com](https://kebunsangkara.com)** — penjualan buah segar langsung dari kebun di Bali (**durian, alpukat, jeruk, dan manggis**), dioptimasi untuk SEO Google, dengan pemesanan langsung via **WhatsApp**, panel admin untuk mengelola konten, dan **log aktivitas pengguna**.
+Website **[kebunsangkara.com](https://kebunsangkara.com)** — penjualan buah segar langsung dari kebun di Bali (**durian, alpukat, dan manggis**), dioptimasi untuk SEO Google, dengan pemesanan langsung via **WhatsApp**, panel admin untuk mengelola konten, dan **log aktivitas pengguna**.
 
 Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaScript tambahan.
 
@@ -10,7 +10,7 @@ Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaSc
 
 ### Website publik
 - **Beranda** dengan hero foto kebun beranimasi, kategori buah, cerita kebun, daftar harga, cara pesan, galeri kebun, testimoni, artikel, dan FAQ.
-- **Produk & Harga** (`/produk`), halaman per jenis buah (`/buah/durian`, `/buah/alpukat`, `/buah/jeruk`, `/buah/manggis`), dan detail produk (`/produk/{slug}`).
+- **Produk & Harga** (`/produk`), halaman per jenis buah (`/buah/durian`, `/buah/alpukat`, `/buah/manggis`), dan detail produk (`/produk/{slug}`).
 - **Artikel / blog** (`/artikel`) dengan konten Markdown, mendukung jadwal terbit.
 - **Tentang Kami** dan **Kontak** (dengan peta lokasi).
 - **Tombol WhatsApp** di setiap halaman dengan pesan otomatis berisi nama produk, harga, dan link. Setiap klik tercatat sebagai calon pembeli.

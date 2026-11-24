@@ -77,7 +77,7 @@
 
         <section class="mt-24" aria-labelledby="buah-lain">
             <h2 id="buah-lain" data-reveal class="font-display text-4xl font-bold text-husk-950">Buah Lain dari Kebun Kami</h2>
-            <div class="mt-10 grid gap-5 sm:grid-cols-3" data-reveal-stagger="120">
+            <div class="mt-10 grid gap-5 sm:grid-cols-2" data-reveal-stagger="120">
                 @foreach ($otherCategories as $fruit)
                     <a data-reveal href="{{ route('products.category', $fruit) }}" class="group relative isolate flex h-56 flex-col justify-end overflow-hidden rounded-[2rem] p-6 text-white">
                         <img src="{{ asset($fruit->imagePath()) }}" alt="{{ $fruit->label() }} segar" loading="lazy" class="absolute inset-0 -z-10 size-full object-cover transition duration-1000 group-hover:scale-110">

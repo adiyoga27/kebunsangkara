@@ -1,6 +1,6 @@
 <x-layouts.site
     title="Artikel & Tips Buah Segar{{ $articles->currentPage() > 1 ? ' – Halaman '.$articles->currentPage() : '' }}"
-    description="Tips memilih durian, alpukat, jeruk & manggis yang matang, info musim buah di Bali, dan panduan dari {{ $site->get('site_name') }}."
+    description="Tips memilih durian, alpukat & manggis yang matang, info musim buah di Bali, dan panduan dari {{ $site->get('site_name') }}."
     :canonical="$articles->currentPage() > 1 ? $articles->url($articles->currentPage()) : route('articles.index')"
 >
     <x-site.page-hero title="Artikel & Tips Seputar Buah" eyebrow="Blog" image="images/kebun/alpukat-di-pohon.webp"

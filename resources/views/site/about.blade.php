@@ -1,9 +1,9 @@
 <x-layouts.site
     title="Tentang Kami – Kebun Buah di Bali"
-    description="Kenali {{ $site->get('site_name') }}, kebun buah di {{ $site->get('city') }}, Bali yang menjual durian, alpukat, jeruk & manggis langsung dari kebun ke pelanggan."
+    description="Kenali {{ $site->get('site_name') }}, kebun buah di {{ $site->get('city') }}, Bali yang menjual durian, alpukat & manggis langsung dari kebun ke pelanggan."
     :canonical="route('about')"
 >
-    <x-site.page-hero :title="'Tentang '.$site->get('site_name')" eyebrow="Cerita kami" image="images/kebun/petani-memetik-jeruk.webp"
+    <x-site.page-hero :title="'Tentang '.$site->get('site_name')" eyebrow="Cerita kami" image="images/kebun/kebun-alpukat.webp"
         :breadcrumbs="[['label' => 'Beranda', 'url' => route('home')], ['label' => 'Tentang Kami', 'url' => null]]">
         {{ $site->get('tagline') }}.
     </x-site.page-hero>

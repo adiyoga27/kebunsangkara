@@ -1,6 +1,6 @@
 <x-layouts.site
     title="Kontak & Lokasi – Pesan Buah via WhatsApp"
-    description="Hubungi {{ $site->get('site_name') }} untuk pesan durian, alpukat, jeruk & manggis segar. WhatsApp {{ $site->get('phone_display') }}. Lokasi {{ $site->get('city') }}, Bali. Antar ke seluruh Bali."
+    description="Hubungi {{ $site->get('site_name') }} untuk pesan durian, alpukat & manggis segar. WhatsApp {{ $site->get('phone_display') }}. Lokasi {{ $site->get('city') }}, Bali. Antar ke seluruh Bali."
     :canonical="route('contact')"
 >
     <x-site.page-hero title="Hubungi Kami" eyebrow="Kontak"

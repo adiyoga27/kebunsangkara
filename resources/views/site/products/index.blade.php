@@ -1,6 +1,6 @@
 <x-layouts.site
     title="Produk & Harga Buah Segar Bali {{ now()->year }}"
-    description="Daftar harga buah segar dari {{ $site->get('site_name') }} Bali: durian, alpukat, jeruk & manggis. Dipetik langsung dari kebun, antar ke seluruh Bali, pesan via WhatsApp."
+    description="Daftar harga buah segar dari {{ $site->get('site_name') }} Bali: durian, alpukat & manggis. Dipetik langsung dari kebun, antar ke seluruh Bali, pesan via WhatsApp."
     :canonical="route('products.index')"
     :schemas="[[
         '@type' => 'BreadcrumbList',

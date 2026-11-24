@@ -26,6 +26,16 @@ class Product extends Model
     use HasFactory, RecordsActivity;
 
     /**
+     * Hide products whose category is no longer sold; their rows stay in the database.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('sold_category', function (Builder $query): void {
+            $query->whereIn($query->qualifyColumn('category'), array_column(FruitCategory::cases(), 'value'));
+        });
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

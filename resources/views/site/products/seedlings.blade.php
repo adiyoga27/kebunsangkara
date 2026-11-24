@@ -24,15 +24,15 @@
 @endphp
 
 <x-layouts.site
-    title="Jual Bibit Durian, Alpukat, Jeruk & Manggis Unggul di Bali"
-    description="Bibit buah unggul dari {{ $site->get('site_name') }} Bali: bibit durian, alpukat, jeruk & manggis hasil okulasi/sambung pucuk dari pohon induk kebun kami. Konsultasi tanam gratis."
+    title="Jual Bibit Durian, Alpukat & Manggis Unggul di Bali"
+    description="Bibit buah unggul dari {{ $site->get('site_name') }} Bali: bibit durian, alpukat & manggis hasil okulasi/sambung pucuk dari pohon induk kebun kami. Konsultasi tanam gratis."
     :canonical="route('seedlings.index')"
     :image="asset('images/kebun/kebun-alpukat.webp')"
     :schemas="$schemas"
 >
     <x-site.page-hero title="Bibit Buah Unggul dari Kebun Kami" eyebrow="🌱 Siap tanam" image="images/kebun/kebun-alpukat.webp"
         :breadcrumbs="[['label' => 'Beranda', 'url' => route('home')], ['label' => 'Bibit', 'url' => null]]">
-        Ingin punya kebun sendiri? Kami menyediakan bibit durian, alpukat, jeruk, dan manggis yang diperbanyak dari pohon induk unggul di kebun kami — lengkap dengan panduan tanam gratis.
+        Ingin punya kebun sendiri? Kami menyediakan bibit durian, alpukat, dan manggis yang diperbanyak dari pohon induk unggul di kebun kami — lengkap dengan panduan tanam gratis.
     </x-site.page-hero>
 
     <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6">

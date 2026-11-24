@@ -9,7 +9,7 @@
         <div class="space-y-6 lg:col-span-2">
             <x-admin.card title="Informasi Produk">
                 <div class="space-y-4">
-                    <x-admin.input name="name" label="Nama Produk" :value="$product->name" required help="Contoh: Durian Montong Bali, Alpukat Mentega, Jeruk Siam." />
+                    <x-admin.input name="name" label="Nama Produk" :value="$product->name" required help="Contoh: Durian Montong Bali, Alpukat Mentega, Manggis Bali." />
                     <div>
                         <label for="category" class="block text-sm font-semibold text-stone-700">Kategori Buah</label>
                         <select id="category" name="category" class="mt-1.5 block w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm">

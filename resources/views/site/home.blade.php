@@ -61,7 +61,7 @@
                 </h1>
 
                 <p data-reveal style="--reveal-delay: 200ms" class="mt-8 max-w-xl text-lg leading-relaxed text-husk-100/80">
-                    <strong class="font-semibold text-white">{{ $site->get('site_name') }}</strong> menjual durian, alpukat, jeruk, dan manggis yang dipetik matang dari kebun, juga <a href="{{ route('seedlings.index') }}" class="font-semibold text-flesh-300 underline decoration-flesh-400/50 underline-offset-4 hover:text-flesh-200">bibit unggul</a> siap tanam — tanpa perantara, diantar segar ke {{ Str::before($site->get('service_area'), ',') }} hingga seluruh Bali.
+                    <strong class="font-semibold text-white">{{ $site->get('site_name') }}</strong> menjual durian, alpukat, dan manggis yang dipetik matang dari kebun, juga <a href="{{ route('seedlings.index') }}" class="font-semibold text-flesh-300 underline decoration-flesh-400/50 underline-offset-4 hover:text-flesh-200">bibit unggul</a> siap tanam — tanpa perantara, diantar segar ke {{ Str::before($site->get('service_area'), ',') }} hingga seluruh Bali.
                 </p>
 
                 <div data-reveal style="--reveal-delay: 300ms" class="mt-10 flex flex-wrap items-center gap-4">
@@ -100,10 +100,6 @@
                     <img src="{{ asset('images/kebun/buah-manggis.webp') }}" alt="Buah manggis segar" width="300" height="225" class="aspect-square w-full rounded-[1.2rem] object-cover">
                     <figcaption class="px-2 py-1.5 text-center text-xs font-bold text-husk-900">🟣 Manggis</figcaption>
                 </figure>
-                <figure class="absolute -bottom-6 left-[6%] w-[30%] animate-bob overflow-hidden rounded-3xl bg-white p-1.5 shadow-2xl [animation-delay:-4s]" data-depth="50">
-                    <img src="{{ asset('images/kebun/petani-memetik-jeruk.webp') }}" alt="Memetik jeruk di kebun" width="300" height="200" class="aspect-square w-full rounded-[1.2rem] object-cover object-[40%_center]">
-                    <figcaption class="px-2 py-1.5 text-center text-xs font-bold text-husk-900">🍊 Jeruk</figcaption>
-                </figure>
 
                 <div class="absolute -bottom-4 right-[4%] animate-bob rounded-2xl bg-husk-900/80 px-4 py-3 shadow-2xl ring-1 ring-white/15 backdrop-blur-md [animation-delay:-3s]" data-depth="25">
                     <p class="text-[11px] font-semibold uppercase tracking-wider text-husk-200">Mulai dari</p>
@@ -122,7 +118,7 @@
     <div id="marquee" class="relative z-10 -mt-6 -rotate-2 overflow-hidden bg-flesh-400 py-5 shadow-xl shadow-flesh-500/20" aria-hidden="true">
         <div class="flex w-max animate-marquee">
             @foreach (range(1, 2) as $copy)
-                @foreach (['🍈 Durian Matang Pohon', '🥑 Alpukat Mentega', '🍊 Jeruk Segar', '🟣 Manggis Manis', '🌱 Bibit Okulasi', '🌿 Langsung dari Kebun', '🛵 Antar se-Bali', '🛡️ Garansi Ganti'] as $word)
+                @foreach (['🍈 Durian Matang Pohon', '🥑 Alpukat Mentega', '🟣 Manggis Manis', '🌱 Bibit Okulasi', '🌿 Langsung dari Kebun', '🛵 Antar se-Bali', '🛡️ Garansi Ganti'] as $word)
                     <span class="flex items-center gap-6 px-6 font-display text-2xl font-bold text-husk-950 sm:text-3xl">
                         {{ $word }} <span class="text-husk-950/30">✦</span>
                     </span>
@@ -138,10 +134,10 @@
                 <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Hasil kebun kami</p>
                 <h2 id="kategori-title" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Pilih Buah Favorit Anda</h2>
             </div>
-            <p class="max-w-sm text-stone-600">Empat jenis buah unggulan yang kami tanam dan rawat sendiri di kebun Bali.</p>
+            <p class="max-w-sm text-stone-600">Tiga jenis buah unggulan yang kami tanam dan rawat sendiri di kebun Bali.</p>
         </div>
 
-        <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="120">
+        <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger="120">
             @foreach ($categories as $fruit)
                 <a data-reveal href="{{ route('products.category', $fruit) }}" @class([
                     'group relative isolate flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[2rem] p-6 text-white shadow-lg transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-husk-900/30',
@@ -234,7 +230,7 @@
                 <div class="max-w-2xl">
                     <p class="text-sm font-bold uppercase tracking-[0.2em] text-husk-600">🌱 Juga tersedia</p>
                     <h2 id="bibit" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">Bibit Unggul untuk Kebun Anda</h2>
-                    <p class="mt-4 text-lg text-stone-600">Tanam sendiri durian, alpukat, jeruk, dan manggis dengan bibit dari pohon induk di kebun kami — gratis konsultasi cara tanam.</p>
+                    <p class="mt-4 text-lg text-stone-600">Tanam sendiri durian, alpukat, dan manggis dengan bibit dari pohon induk di kebun kami — gratis konsultasi cara tanam.</p>
                 </div>
                 <a href="{{ route('seedlings.index') }}" class="group inline-flex items-center gap-2 rounded-full bg-husk-700 px-6 py-3 font-semibold text-white transition hover:bg-husk-800">
                     Semua bibit <span class="transition group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
@@ -293,7 +289,6 @@
                     @foreach ([
                         ['images/kebun/pohon-durian.webp', 'Pohon durian berbuah lebat'],
                         ['images/kebun/alpukat-di-pohon.webp', 'Alpukat menggantung di pohon'],
-                        ['images/kebun/petani-memetik-jeruk.webp', 'Memetik jeruk di kebun'],
                         ['images/kebun/buah-manggis.webp', 'Manggis hasil panen'],
                         ['images/kebun/kebun-alpukat.webp', 'Barisan pohon alpukat'],
                         ['images/kebun/durian-matang-di-pohon.webp', 'Durian matang di pohon'],
@@ -338,11 +333,11 @@
     <section class="mx-auto max-w-4xl px-4 sm:px-6" aria-labelledby="tentang-kebun">
         <div data-reveal>
             <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">Tentang {{ $site->get('site_name') }}</p>
-            <h2 id="tentang-kebun" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950">Kebun Buah &amp; Bibit di Bali: Durian, Alpukat, Jeruk &amp; Manggis</h2>
+            <h2 id="tentang-kebun" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950">Kebun Buah &amp; Bibit di Bali: Durian, Alpukat &amp; Manggis</h2>
             <div class="prose-kebun mt-6 text-lg">
-                <p><strong>{{ $site->get('site_name') }}</strong> adalah kebun buah di Bali yang menjual hasil panennya langsung kepada pelanggan. Kami menanam <a href="{{ route('products.category', App\Enums\FruitCategory::Durian) }}">durian</a>, <a href="{{ route('products.category', App\Enums\FruitCategory::Alpukat) }}">alpukat</a>, <a href="{{ route('products.category', App\Enums\FruitCategory::Jeruk) }}">jeruk</a>, dan <a href="{{ route('products.category', App\Enums\FruitCategory::Manggis) }}">manggis</a> di tanah Bali yang subur.</p>
+                <p><strong>{{ $site->get('site_name') }}</strong> adalah kebun buah di Bali yang menjual hasil panennya langsung kepada pelanggan. Kami menanam <a href="{{ route('products.category', App\Enums\FruitCategory::Durian) }}">durian</a>, <a href="{{ route('products.category', App\Enums\FruitCategory::Alpukat) }}">alpukat</a>, dan <a href="{{ route('products.category', App\Enums\FruitCategory::Manggis) }}">manggis</a> di tanah Bali yang subur.</p>
                 <p>Karena dijual langsung dari kebun, buah yang Anda terima lebih segar dan dipetik pada waktu yang tepat. Cocok untuk konsumsi keluarga, oleh-oleh, hingga kebutuhan villa, hotel, dan kafe di Bali.</p>
-                <p>Kami juga menyediakan <a href="{{ route('seedlings.index') }}">bibit durian, alpukat, jeruk, dan manggis</a> hasil perbanyakan dari pohon induk di kebun sendiri, untuk Anda yang ingin menanam di pekarangan atau membuka kebun baru.</p>
+                <p>Kami juga menyediakan <a href="{{ route('seedlings.index') }}">bibit durian, alpukat, dan manggis</a> hasil perbanyakan dari pohon induk di kebun sendiri, untuk Anda yang ingin menanam di pekarangan atau membuka kebun baru.</p>
                 <p>Ingin tahu cara memilih buah yang benar-benar matang? Baca panduan lengkap di <a href="{{ route('articles.index') }}">artikel kami</a>.</p>
             </div>
         </div>

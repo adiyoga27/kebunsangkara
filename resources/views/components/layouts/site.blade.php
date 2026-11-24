@@ -227,7 +227,7 @@
         <p class="relative select-none overflow-hidden whitespace-nowrap text-center font-display text-[18vw] font-bold leading-[0.8] text-white/[0.04]" aria-hidden="true">Kebun Sangkara</p>
 
         <div class="relative border-t border-white/10">
-            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. Buah segar &amp; bibit unggul dari kebun Bali – durian, alpukat, jeruk &amp; manggis.</p>
+            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. Buah segar &amp; bibit unggul dari kebun Bali – durian, alpukat &amp; manggis.</p>
         </div>
     </footer>
 

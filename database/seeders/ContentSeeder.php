@@ -71,18 +71,6 @@ class ContentSeeder extends Seeder
                 'meta_title' => 'Alpukat Mentega Bali Segar – Kebun Sangkara',
             ],
             [
-                'name' => 'Jeruk Siam Bali',
-                'slug' => 'jeruk-siam-bali',
-                'category' => FruitCategory::Jeruk,
-                'variety' => 'Siam',
-                'origin' => 'Kebun Sangkara',
-                'short_description' => 'Jeruk siam segar dipetik langsung dari pohon. Kulit tipis, mudah dikupas, rasa manis segar dan kaya air.',
-                'description' => "**Jeruk siam** dari kebun kami memiliki kulit tipis yang mudah dikupas, dengan rasa **manis segar** dan kandungan air yang melimpah.\n\n## Cocok Untuk\n\n- Dimakan langsung sebagai camilan sehat\n- Jus jeruk segar tanpa pemanis\n- Hantaran dan parsel buah\n\nPesan dalam jumlah besar untuk usaha jus atau acara? Hubungi kami untuk harga khusus.",
-                'price' => 25000,
-                'price_unit' => 'per kg',
-                'sort_order' => 4,
-            ],
-            [
                 'name' => 'Manggis Bali',
                 'slug' => 'manggis-bali',
                 'category' => FruitCategory::Manggis,
@@ -100,8 +88,8 @@ class ContentSeeder extends Seeder
                 'category' => FruitCategory::Durian,
                 'variety' => 'Campuran',
                 'origin' => 'Kebun Sangkara',
-                'short_description' => 'Paket campuran 1 durian lokal, 1 kg alpukat, 1 kg jeruk, dan 1 kg manggis. Pas untuk keluarga atau hantaran.',
-                'description' => "**Paket Buah Kebun** berisi pilihan terbaik dari kebun kami: 1 buah durian lokal, 1 kg alpukat mentega, 1 kg jeruk siam, dan 1 kg manggis (menyesuaikan musim panen).\n\nCocok untuk hantaran, oleh-oleh, atau stok buah keluarga selama seminggu.",
+                'short_description' => 'Paket campuran 1 durian lokal, 1 kg alpukat, dan 1 kg manggis. Pas untuk keluarga atau hantaran.',
+                'description' => "**Paket Buah Kebun** berisi pilihan terbaik dari kebun kami: 1 buah durian lokal, 1 kg alpukat mentega, dan 1 kg manggis (menyesuaikan musim panen).\n\nCocok untuk hantaran, oleh-oleh, atau stok buah keluarga selama seminggu.",
                 'price' => 175000,
                 'price_unit' => 'per paket',
                 'sort_order' => 6,
@@ -153,26 +141,6 @@ Konsultasi gratis cara tanam via WhatsApp.',
                 'sort_order' => 12,
             ],
             [
-                'name' => 'Bibit Jeruk Siam Okulasi',
-                'slug' => 'bibit-jeruk-siam-okulasi',
-                'category' => FruitCategory::Jeruk,
-                'variety' => 'Siam',
-                'propagation_method' => 'Okulasi',
-                'plant_height' => '50–60 cm',
-                'short_description' => 'Bibit jeruk siam okulasi, cocok ditanam di pekarangan atau dalam pot besar (tabulampot).',
-                'description' => 'Bibit **jeruk siam okulasi** dengan pertumbuhan cepat dan cocok untuk lahan pekarangan maupun **tabulampot** (tanaman buah dalam pot).
-
-## Spesifikasi
-
-- Metode: okulasi
-- Tinggi: sekitar 50–60 cm
-- Media: polybag
-
-Konsultasi gratis cara tanam via WhatsApp.',
-                'price' => 35000,
-                'sort_order' => 13,
-            ],
-            [
                 'name' => 'Bibit Manggis',
                 'slug' => 'bibit-manggis',
                 'category' => FruitCategory::Manggis,
@@ -211,8 +179,8 @@ Konsultasi gratis cara tanam via WhatsApp.',
     private function seedFaqs(): void
     {
         $faqs = [
-            ['Apakah buahnya benar-benar dari kebun di Bali?', 'Ya. Durian, alpukat, jeruk, dan manggis kami berasal dari kebun Kebun Sangkara di Bali dan dipetik saat matang. Kami tidak menjual buah impor atau buah dari luar pulau.'],
-            ['Kapan musim durian dan manggis di Bali?', 'Musim durian di Bali umumnya sekitar akhir tahun hingga awal tahun (kurang lebih November–Maret), dan musim manggis biasanya berdekatan. Alpukat dan jeruk lebih sering tersedia sepanjang tahun. Waktu pastinya mengikuti cuaca, jadi tanyakan stok via WhatsApp.'],
+            ['Apakah buahnya benar-benar dari kebun di Bali?', 'Ya. Durian, alpukat, dan manggis kami berasal dari kebun Kebun Sangkara di Bali dan dipetik saat matang. Kami tidak menjual buah impor atau buah dari luar pulau.'],
+            ['Kapan musim durian dan manggis di Bali?', 'Musim durian di Bali umumnya sekitar akhir tahun hingga awal tahun (kurang lebih November–Maret), dan musim manggis biasanya berdekatan. Alpukat lebih sering tersedia sepanjang tahun. Waktu pastinya mengikuti cuaca, jadi tanyakan stok via WhatsApp.'],
             ['Bagaimana cara memesan buah?', 'Klik tombol "Pesan via WhatsApp" di website ini, sebutkan jenis buah, jumlah, dan alamat pengiriman. Kami akan mengonfirmasi stok, total harga, dan jadwal pengiriman.'],
             ['Apakah bisa diantar ke hotel atau villa?', 'Bisa. Kami mengantar ke rumah, hotel, maupun villa di seluruh Bali. Untuk durian, pastikan dulu aturan hotel karena beberapa hotel melarang durian dibawa ke kamar.'],
             ['Bagaimana jika buah yang diterima busuk atau rusak?', 'Kami memberikan garansi ganti. Kirimkan foto buah melalui WhatsApp maksimal beberapa jam setelah diterima, dan kami akan menggantinya.'],
@@ -324,23 +292,17 @@ Ingin menikmati durian Bali tanpa harus pergi ke kebun? [Lihat harga durian hari
 MD,
             ],
             [
-                'title' => 'Cara Memilih Alpukat, Jeruk, dan Manggis yang Matang dan Manis',
-                'slug' => 'cara-memilih-alpukat-jeruk-manggis',
-                'excerpt' => 'Panduan praktis memilih alpukat yang pulen, jeruk yang manis, dan manggis yang segar — supaya tidak salah beli buah.',
+                'title' => 'Cara Memilih Alpukat dan Manggis yang Matang dan Manis',
+                'slug' => 'cara-memilih-alpukat-manggis',
+                'excerpt' => 'Panduan praktis memilih alpukat yang pulen dan manggis yang segar — supaya tidak salah beli buah.',
                 'body' => <<<'MD'
-Selain durian, Kebun Sangkara juga memanen alpukat, jeruk, dan manggis. Setiap buah punya ciri matang yang berbeda. Berikut panduan singkatnya.
+Selain durian, Kebun Sangkara juga memanen alpukat dan manggis. Setiap buah punya ciri matang yang berbeda. Berikut panduan singkatnya.
 
 ## Cara Memilih Alpukat
 
 - **Tekan perlahan** bagian dekat tangkai. Alpukat matang terasa sedikit empuk, tetapi tidak lembek.
 - **Cek tangkainya.** Jika tangkai mudah dicabut dan bagian bawahnya berwarna hijau kekuningan, alpukat siap dimakan.
 - Alpukat yang masih keras bisa disimpan di suhu ruang 2–4 hari sampai matang.
-
-## Cara Memilih Jeruk
-
-- Pilih jeruk yang **terasa berat** dibanding ukurannya — artinya kaya air.
-- **Kulit mengkilap dan halus** biasanya menandakan buah segar.
-- Hindari jeruk dengan bagian kulit yang lembek atau berjamur.
 
 ## Cara Memilih Manggis
 
@@ -387,7 +349,7 @@ Menanam durian sendiri kini semakin diminati. Dengan **bibit okulasi** yang bera
 
 ## Butuh Bibit atau Bantuan?
 
-Kebun Sangkara menyediakan [bibit durian, alpukat, jeruk, dan manggis](/bibit) dari pohon induk di kebun kami sendiri — lengkap dengan konsultasi tanam gratis via WhatsApp.
+Kebun Sangkara menyediakan [bibit durian, alpukat, dan manggis](/bibit) dari pohon induk di kebun kami sendiri — lengkap dengan konsultasi tanam gratis via WhatsApp.
 MD,
             ],
             [
