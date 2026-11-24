@@ -23,6 +23,7 @@ class ContentSeeder extends Seeder
             PupukSeeder::class,
             ProdukKesehatanSeeder::class,
             TestimoniSeeder::class,
+            LayananSeeder::class,
         ]);
 
         $this->seedFaqs();
@@ -37,7 +38,7 @@ class ContentSeeder extends Seeder
             ['Apakah buahnya benar-benar dari kebun di Bali?', 'Ya. Durian, alpukat, dan manggis kami berasal dari kebun Kebun Sangkara di Bali dan dipetik saat matang. Kami tidak menjual buah impor atau buah dari luar pulau.'],
             ['Kapan musim durian dan manggis di Bali?', 'Musim durian di Bali umumnya sekitar akhir tahun hingga awal tahun (kurang lebih November–Maret), dan musim manggis biasanya berdekatan. Alpukat lebih sering tersedia sepanjang tahun. Waktu pastinya mengikuti cuaca, jadi tanyakan stok via WhatsApp.'],
             ['Bagaimana cara memesan buah?', 'Klik tombol "Pesan via WhatsApp" di website ini, sebutkan jenis buah, jumlah, dan alamat pengiriman. Kami akan mengonfirmasi stok, total harga, dan jadwal pengiriman.'],
-            ['Apakah bisa diantar ke hotel atau villa?', 'Bisa. Kami mengantar ke rumah, hotel, maupun villa di seluruh Bali. Untuk durian, pastikan dulu aturan hotel karena beberapa hotel melarang durian dibawa ke kamar.'],
+            ['Apakah bisa diantar ke hotel atau villa?', 'Bisa. Kami mengirim ke rumah, hotel, maupun villa di seluruh Indonesia. Untuk durian, pastikan dulu aturan hotel karena beberapa hotel melarang durian dibawa ke kamar.'],
             ['Bagaimana jika buah yang diterima busuk atau rusak?', 'Kami memberikan garansi ganti. Kirimkan foto buah melalui WhatsApp maksimal beberapa jam setelah diterima, dan kami akan menggantinya.'],
             ['Apakah melayani pesanan dalam jumlah besar?', 'Ya. Kami melayani pesanan untuk kafe, restoran, hotel, usaha jus, maupun acara. Hubungi kami via WhatsApp untuk harga khusus.'],
             ['Apa bedanya bibit okulasi, sambung pucuk, dan bibit dari biji?', 'Bibit okulasi dan sambung pucuk diperbanyak dari pohon induk yang sudah terbukti berbuah, sehingga sifatnya sama dengan induknya dan umumnya lebih cepat berbuah. Bibit dari biji butuh waktu lebih lama dan sifat buahnya belum tentu sama dengan induknya.'],

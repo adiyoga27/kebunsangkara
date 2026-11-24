@@ -84,7 +84,7 @@ Konsultasi gratis cara tanam via WhatsApp.',
         ];
 
         foreach ($seedlings as $seedling) {
-            Product::updateOrCreate(['slug' => $seedling['slug']], [
+            Product::withTrashed()->updateOrCreate(['slug' => $seedling['slug']], [
                 ...$seedling,
                 'type' => ProductType::Bibit,
                 'origin' => 'Kebun Sangkara',

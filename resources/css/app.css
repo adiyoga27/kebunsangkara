@@ -312,3 +312,25 @@
 @keyframes draw {
     to { stroke-dashoffset: 0; }
 }
+
+@layer components {
+    .sidebar-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+    }
+}
+
+@layer components {
+    .rich-text {
+        & > :first-child { @apply mt-3; }
+        & h2 { @apply mt-6 mb-2; }
+        & h3 { @apply mt-5 mb-2; }
+        & p { @apply my-3; }
+        & li > p { @apply my-0; }
+        & th,
+        & td { @apply min-w-16 border border-stone-300; }
+        & img { @apply max-w-full rounded-xl; }
+        & hr { @apply my-6 border-stone-300; }
+        & .selectedCell { @apply bg-husk-100; }
+    }
+}

@@ -21,6 +21,25 @@ class SiteSettings
     ];
 
     /**
+     * Texts of the home page, edited under Custom Page. Stored per language like TRANSLATABLE.
+     */
+    public const HOME_PAGE_TRANSLATABLE = ['home_marquee'];
+
+    /**
+     * Social media profiles by setting key.
+     */
+    public const SOCIAL_MEDIA = [
+        'instagram_url' => 'Instagram', 'facebook_url' => 'Facebook', 'tiktok_url' => 'TikTok', 'youtube_url' => 'YouTube',
+    ];
+
+    /**
+     * Online shops on marketplaces by setting key.
+     */
+    public const MARKETPLACES = [
+        'tokopedia_url' => 'Tokopedia', 'shopee_url' => 'Shopee', 'lazada_url' => 'Lazada',
+    ];
+
+    /**
      * @var array<string, string|null>|null
      */
     private ?array $loaded = null;
@@ -46,21 +65,28 @@ class SiteSettings
             'latitude' => '-8.3405',
             'longitude' => '115.0920',
             'opening_hours' => 'Setiap hari, 08.00 – 20.00 WITA',
-            'service_area' => 'Denpasar, Badung, Gianyar, Tabanan, Kuta, Seminyak, Canggu, Ubud, Nusa Dua & seluruh Bali',
+            'service_area' => 'Denpasar, Badung, Gianyar, Tabanan, Kuta, Seminyak, Canggu, Ubud, Nusa Dua & seluruh Indonesia',
             'google_maps_url' => '',
             'instagram_url' => '',
             'facebook_url' => '',
             'tiktok_url' => '',
+            'youtube_url' => '',
+            'tokopedia_url' => '',
+            'shopee_url' => '',
+            'lazada_url' => '',
             'home_meta_title' => 'Kebun Sangkara – Jual Buah & Bibit Durian, Alpukat & Manggis Bali',
             'home_meta_description' => 'Kebun Sangkara Bali menjual buah segar & bibit unggul: durian, alpukat & manggis langsung dari kebun. Bibit okulasi siap tanam. Pesan via WhatsApp!',
-            'about_content' => "**Kebun Sangkara** adalah kebun buah di Bali yang menanam dan menjual durian, alpukat, dan manggis langsung kepada pelanggan.\n\nSetiap buah kami petik saat matang, dipilih satu per satu, lalu dikirim segar ke rumah, villa, maupun hotel Anda di seluruh Bali — tanpa perantara, sehingga kualitas dan harga tetap terjaga.",
+            'about_content' => "**Kebun Sangkara** adalah kebun buah di Bali yang menanam dan menjual durian, alpukat, dan manggis langsung kepada pelanggan.\n\nSetiap buah kami petik saat matang, dipilih satu per satu, lalu dikirim segar ke rumah, villa, maupun hotel Anda di seluruh Indonesia — tanpa perantara, sehingga kualitas dan harga tetap terjaga.",
             'tagline_en' => 'Fresh Fruit & Quality Seedlings Straight from a Bali Farm',
             'whatsapp_message_en' => 'Hello Kebun Sangkara, I would like to order some fruit.',
             'opening_hours_en' => 'Every day, 8 am – 8 pm WITA',
-            'service_area_en' => 'Denpasar, Badung, Gianyar, Tabanan, Kuta, Seminyak, Canggu, Ubud, Nusa Dua & all of Bali',
+            'service_area_en' => 'Denpasar, Badung, Gianyar, Tabanan, Kuta, Seminyak, Canggu, Ubud, Nusa Dua & all of Indonesia',
             'home_meta_title_en' => 'Kebun Sangkara – Durian, Avocado & Mangosteen Farm in Bali',
             'home_meta_description_en' => 'Kebun Sangkara Bali sells fresh fruit & quality seedlings: durian, avocado & mangosteen straight from the farm. Order via WhatsApp!',
-            'about_content_en' => "**Kebun Sangkara** is a fruit farm in Bali that grows durian, avocado and mangosteen and sells them directly to customers.\n\nWe pick every fruit when it is ripe, select it by hand, and deliver it fresh to your home, villa or hotel anywhere in Bali — with no middlemen, so quality and prices stay fair.",
+            'about_content_en' => "**Kebun Sangkara** is a fruit farm in Bali that grows durian, avocado and mangosteen and sells them directly to customers.\n\nWe pick every fruit when it is ripe, select it by hand, and deliver it fresh to your home, villa or hotel anywhere in Indonesia — with no middlemen, so quality and prices stay fair.",
+            'home_marquee_enabled' => '1',
+            'home_marquee' => "🍈 Durian Matang Pohon\n🥑 Alpukat Mentega\n🟣 Manggis Manis\n🌱 Bibit Okulasi\n🌿 Langsung dari Kebun\n🚚 Kirim ke Seluruh Indonesia\n🛡️ Garansi Ganti",
+            'home_marquee_en' => "🍈 Tree-Ripened Durian\n🥑 Butter Avocado\n🟣 Sweet Mangosteen\n🌱 Budded Seedlings\n🌿 Straight from the Farm\n🚚 Shipping across Indonesia\n🛡️ Replacement Guarantee",
             'google_site_verification' => '',
             'google_analytics_id' => '',
         ];
@@ -70,11 +96,40 @@ class SiteSettings
     {
         $value = $this->all()[$key] ?? null;
 
-        if (! Locale::current()->isDefault() && in_array($key, self::TRANSLATABLE, true)) {
+        if (! Locale::current()->isDefault() && in_array($key, [...self::TRANSLATABLE, ...self::HOME_PAGE_TRANSLATABLE], true)) {
             $value = ($this->all()[$key.'_'.Locale::current()->value] ?? null) ?: $value;
         }
 
         return $value === null || $value === '' ? $default : $value;
+    }
+
+    /**
+     * The lines of a setting that holds one item per line.
+     *
+     * @return list<string>
+     */
+    public function lines(string $key): array
+    {
+        return array_values(array_filter(array_map(trim(...), explode("\n", (string) $this->get($key))), filled(...)));
+    }
+
+    /**
+     * The links of the given keys that have been filled in, as label => URL.
+     *
+     * @param  array<string, string>  $labels
+     * @return array<string, string>
+     */
+    public function links(array $labels): array
+    {
+        $links = [];
+
+        foreach ($labels as $key => $label) {
+            if ($url = $this->get($key)) {
+                $links[$label] = $url;
+            }
+        }
+
+        return $links;
     }
 
     /**

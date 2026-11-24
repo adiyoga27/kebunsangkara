@@ -40,9 +40,9 @@
             'postalCode' => $site->get('postal_code'),
             'addressCountry' => 'ID',
         ],
-        'areaServed' => ['@type' => 'State', 'name' => 'Bali'],
+        'areaServed' => ['@type' => 'Country', 'name' => 'Indonesia'],
         'sameAs' => array_values(array_filter([
-            $site->get('instagram_url'), $site->get('facebook_url'), $site->get('tiktok_url'), $site->get('google_maps_url'),
+            ...array_values($site->links(App\Support\SiteSettings::SOCIAL_MEDIA)), ...array_values($site->links(App\Support\SiteSettings::MARKETPLACES)), $site->get('google_maps_url'),
         ])),
     ];
 
@@ -252,13 +252,14 @@
                 <div class="md:col-span-2">
                     <p class="font-display text-2xl font-bold text-white">{{ $siteName }}</p>
                     <p class="mt-3 max-w-md text-sm leading-relaxed text-husk-200/80">{{ $site->get('tagline') }}. {{ __('Melayani pengiriman buah segar ke :area.', ['area' => $site->get('service_area')]) }}</p>
-                    <div class="mt-6 flex gap-3">
-                        @foreach (['instagram_url' => 'Instagram', 'facebook_url' => 'Facebook', 'tiktok_url' => 'TikTok'] as $key => $label)
-                            @if ($site->get($key))
-                                <a href="{{ $site->get($key) }}" rel="noopener me" target="_blank" class="rounded-full bg-white/5 px-4 py-2 text-xs font-semibold ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-flesh-400 hover:text-husk-950">{{ $label }}</a>
-                            @endif
-                        @endforeach
-                    </div>
+                    @if ($socialMedia = $site->links(App\Support\SiteSettings::SOCIAL_MEDIA))
+                        <p class="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">{{ __('Ikuti Kami') }}</p>
+                        <x-site.brand-links :links="$socialMedia" theme="dark" icon-only rel="noopener me" class="mt-3" />
+                    @endif
+                    @if ($marketplaces = $site->links(App\Support\SiteSettings::MARKETPLACES))
+                        <p class="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">{{ __('Belanja Juga di') }}</p>
+                        <x-site.brand-links :links="$marketplaces" theme="dark" class="mt-3" />
+                    @endif
                 </div>
 
                 <div>

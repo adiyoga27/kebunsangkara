@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Locale;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -9,6 +10,7 @@ use Illuminate\Database\Seeder;
 
 /**
  * Example health products: replace names, descriptions and prices with the real products from the admin panel.
+ * Products that already exist, also in the trash, are left untouched.
  * Descriptions must stay free of medical claims.
  */
 class ProdukKesehatanSeeder extends Seeder
@@ -51,10 +53,11 @@ class ProdukKesehatanSeeder extends Seeder
         ];
 
         foreach ($healthProducts as $healthProduct) {
-            Product::updateOrCreate(['slug' => $healthProduct['slug']], [
+            Product::withTrashed()->firstOrCreate(['slug' => $healthProduct['slug']], [
                 ...$healthProduct,
                 'type' => ProductType::Kesehatan,
                 'category' => null,
+                'translations' => array_filter([Locale::English->value => EnglishTranslationSeeder::products()[$healthProduct['slug']] ?? null]),
             ]);
         }
     }

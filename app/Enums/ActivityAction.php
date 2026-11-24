@@ -10,6 +10,8 @@ enum ActivityAction: string
     case Created = 'created';
     case Updated = 'updated';
     case Deleted = 'deleted';
+    case Restored = 'restored';
+    case ForceDeleted = 'force_deleted';
 
     public function label(): string
     {
@@ -20,6 +22,8 @@ enum ActivityAction: string
             self::Created => 'Tambah',
             self::Updated => 'Ubah',
             self::Deleted => 'Hapus',
+            self::Restored => 'Pulihkan',
+            self::ForceDeleted => 'Hapus Permanen',
         };
     }
 
@@ -35,6 +39,8 @@ enum ActivityAction: string
             self::Created => 'bg-sky-100 text-sky-800',
             self::Updated => 'bg-amber-100 text-amber-800',
             self::Deleted => 'bg-rose-100 text-rose-800',
+            self::Restored => 'bg-sky-100 text-sky-800',
+            self::ForceDeleted => 'bg-red-100 text-red-800',
         };
     }
 }

@@ -16,22 +16,37 @@ class ProductController extends Controller
 {
     use HandlesImageUploads;
 
+    /**
+     * Products are managed per type; fruit is shown when no type is chosen.
+     */
     public function index(Request $request): View
     {
+        $type = $this->requestedType($request);
+
         return view('admin.products.index', [
+            'type' => $type,
             'products' => Product::query()
+                ->ofType($type)
                 ->when($request->string('q')->trim()->value(), fn ($query, string $search) => $query->where('name', 'like', "%{$search}%"))
-                ->when(FruitCategory::tryFrom($request->string('category')->value()), fn ($query, FruitCategory $category) => $query->where('category', $category))
-                ->when(ProductType::tryFrom($request->string('type')->value()), fn ($query, ProductType $type) => $query->where('type', $type))
+                ->when($type->hasFruitCategory() ? FruitCategory::tryFrom($request->string('category')->value()) : null, fn ($query, FruitCategory $category) => $query->where('category', $category))
                 ->ordered()
                 ->paginate(20)
                 ->withQueryString(),
+            'typeCounts' => Product::query()->toBase()->selectRaw('type, COUNT(*) as total')->groupBy('type')->pluck('total', 'type'),
+            'trashedCount' => Product::onlyTrashed()->count(),
         ]);
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('admin.products.form', ['product' => new Product(['is_available' => true, 'price_unit' => 'per kg', 'category' => FruitCategory::Durian, 'type' => ProductType::Buah])]);
+        $type = $this->requestedType($request);
+
+        return view('admin.products.form', ['product' => new Product([
+            'is_available' => true,
+            'price_unit' => $type->defaultPriceUnit(),
+            'category' => $type->hasFruitCategory() ? FruitCategory::Durian : null,
+            'type' => $type,
+        ])]);
     }
 
     public function store(SaveProductRequest $request): RedirectResponse
@@ -43,7 +58,7 @@ class ProductController extends Controller
 
         $this->syncGallery($request, $product);
 
-        return redirect()->route('admin.products.index')->with('status', 'Produk berhasil ditambahkan.');
+        return redirect()->route('admin.products.index', ['type' => $product->type->value])->with('status', 'Produk berhasil ditambahkan.');
     }
 
     public function edit(Product $product): View
@@ -60,17 +75,22 @@ class ProductController extends Controller
 
         $this->syncGallery($request, $product);
 
-        return redirect()->route('admin.products.index')->with('status', 'Produk berhasil diperbarui.');
+        return redirect()->route('admin.products.index', ['type' => $product->type->value])->with('status', 'Produk berhasil diperbarui.');
     }
 
+    /**
+     * Move a product to the trash. Its photos are kept so it can be restored.
+     */
     public function destroy(Product $product): RedirectResponse
     {
-        $paths = [$product->image_path, ...$product->images->pluck('path')];
-
         $product->delete();
-        array_map($this->deleteImage(...), $paths);
 
-        return redirect()->route('admin.products.index')->with('status', 'Produk berhasil dihapus.');
+        return redirect()->route('admin.products.index', ['type' => $product->type->value])->with('status', 'Produk dipindahkan ke Sampah dan masih bisa dipulihkan.');
+    }
+
+    private function requestedType(Request $request): ProductType
+    {
+        return ProductType::tryFrom($request->string('type')->value()) ?? ProductType::Buah;
     }
 
     /**

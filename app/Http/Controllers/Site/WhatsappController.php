@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Enums\Offering;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Service;
 use App\Models\WhatsappClick;
 use App\Support\SiteSettings;
 use Illuminate\Http\RedirectResponse;
@@ -27,6 +28,8 @@ class WhatsappController extends Controller
 
         $offering = is_string($request->query('layanan')) ? Offering::tryFrom($request->query('layanan')) : null;
 
+        $service = is_string($request->query('jasa')) ? Service::query()->published()->find((int) $request->query('jasa')) : null;
+
         $message = match (true) {
             $product !== null => __('Halo, saya ingin memesan *:name* (:price :unit). Apakah masih tersedia? :url', [
                 'name' => $product->name,
@@ -34,7 +37,8 @@ class WhatsappController extends Controller
                 'unit' => $product->price_unit,
                 'url' => route('products.show', $product),
             ]),
-            $offering !== null => __('Halo, saya ingin bertanya tentang *:topic*. :url', ['topic' => $offering->label(), 'url' => route('offerings.show', $offering)]),
+            $service !== null => __('Halo, saya ingin bertanya tentang *:topic*. :url', ['topic' => $service->name, 'url' => route('offerings.show', Offering::Service).'#'.$service->anchor()]),
+            $offering !== null => __('Halo, saya ingin bertanya tentang *:topic*. :url', ['topic' => $offering->topic(), 'url' => route('offerings.show', $offering)]),
             default => $site->get('whatsapp_message'),
         };
 

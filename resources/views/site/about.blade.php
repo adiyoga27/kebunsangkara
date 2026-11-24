@@ -34,7 +34,7 @@
                 @foreach ($testimonials as $testimonial)
                     <figure data-reveal class="rounded-[2rem] bg-white p-7 ring-1 ring-stone-200/70">
                         <blockquote class="text-stone-700">“{{ $testimonial->content }}”</blockquote>
-                        <figcaption class="mt-3 text-sm font-semibold">{{ $testimonial->name }}@if ($testimonial->location)<span class="font-normal text-stone-500"> · {{ $testimonial->location }}</span>@endif</figcaption>
+                        <figcaption class="mt-4 flex items-center gap-3 text-sm font-semibold"><x-site.testimonial-avatar :testimonial="$testimonial" /><span>{{ $testimonial->name }}@if ($testimonial->location)<span class="font-normal text-stone-500"> · {{ $testimonial->location }}</span>@endif</span></figcaption>
                     </figure>
                 @endforeach
             </div>

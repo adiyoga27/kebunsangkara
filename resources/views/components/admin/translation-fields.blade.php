@@ -1,6 +1,6 @@
-@props(['model', 'fields', 'locale' => App\Enums\Locale::English, 'hint' => null])
+@props(['model', 'fields', 'locale' => App\Enums\Locale::English, 'hint' => null, 'richText' => []])
 
-{{-- $fields: list of [attribute, label, rows]; rows above 1 render a textarea. --}}
+{{-- $fields: list of [attribute, label, rows]; rows above 1 render a textarea. $richText: attributes that get the visual editor. --}}
 <x-admin.card :title="'Terjemahan '.$locale->label().' (/'.$locale->value.')'">
     <p class="mb-5 text-xs text-stone-500">Opsional. @if ($hint){{ $hint }}@else Halaman versi ini baru masuk Google setelah {{ implode(', ', array_map(fn (string $key): string => Str::lower(collect($fields)->firstWhere(0, $key)[1]), $model::requiredTranslations())) }} diisi.@endif</p>
     <div class="space-y-4">
@@ -12,7 +12,7 @@
             <div>
                 <label for="{{ $id }}" class="block text-sm font-semibold text-stone-700">{{ $label }}</label>
                 @if ($rows > 1)
-                    <textarea id="{{ $id }}" name="translations[{{ $locale->value }}][{{ $attribute }}]" lang="{{ $locale->value }}" rows="{{ $rows }}" maxlength="{{ $model::translatableAttributes()[$attribute] }}" class="{{ $class }}">{{ $value }}</textarea>
+                    <textarea id="{{ $id }}" name="translations[{{ $locale->value }}][{{ $attribute }}]" lang="{{ $locale->value }}" rows="{{ $rows }}" maxlength="{{ $model::translatableAttributes()[$attribute] }}" class="{{ $class }}" @if (in_array($attribute, $richText, true)) data-rich-text @endif>{{ $value }}</textarea>
                 @else
                     <input id="{{ $id }}" name="translations[{{ $locale->value }}][{{ $attribute }}]" lang="{{ $locale->value }}" maxlength="{{ $model::translatableAttributes()[$attribute] }}" value="{{ $value }}" class="{{ $class }}">
                 @endif

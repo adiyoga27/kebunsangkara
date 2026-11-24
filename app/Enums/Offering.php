@@ -16,8 +16,16 @@ enum Offering: string
         return match ($this) {
             self::Pupuk => __('Pupuk'),
             self::ProdukKesehatan => __('Produk Kesehatan'),
-            self::Service => __('Service'),
+            self::Service => __('Layanan Kami'),
         };
+    }
+
+    /**
+     * The subject of a question about this offering, e.g. "Tanya Layanan".
+     */
+    public function topic(): string
+    {
+        return $this === self::Service ? __('Layanan') : $this->label();
     }
 
     public function emoji(): string

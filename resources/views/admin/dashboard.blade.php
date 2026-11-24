@@ -15,6 +15,21 @@
         @endforeach
     </div>
 
+    @if ($socialMedia || $marketplaces)
+        <x-admin.card title="Media Sosial & Marketplace" class="mt-6">
+            <div class="grid gap-6 sm:grid-cols-2">
+                @foreach (['Media Sosial' => $socialMedia, 'Marketplace' => $marketplaces] as $heading => $links)
+                    @if ($links)
+                        <div>
+                            <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-stone-500">{{ $heading }}</p>
+                            <x-site.brand-links :links="$links" />
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </x-admin.card>
+    @endif
+
     <div class="mt-6 grid gap-6 lg:grid-cols-3">
         <x-admin.card title="Klik WhatsApp 14 hari terakhir" class="lg:col-span-2">
             @php($max = max(1, $chart->max('total')))

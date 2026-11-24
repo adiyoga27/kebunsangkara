@@ -34,6 +34,8 @@ class SaveTestimonialRequest extends FormRequest
             'location' => ['nullable', 'string', 'max:100'],
             'content' => ['required', 'string', 'max:1000'],
             'rating' => ['required', 'integer', 'between:1,5'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'remove_image' => ['sometimes', 'boolean'],
             'is_published' => ['boolean'],
         ];
     }

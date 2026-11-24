@@ -20,7 +20,7 @@
             <tbody class="divide-y divide-stone-100">
                 @forelse ($testimonials as $testimonial)
                     <tr>
-                        <td class="px-4 py-3 font-semibold">{{ $testimonial->name }}<p class="text-xs font-normal text-stone-500">{{ $testimonial->location }}</p></td>
+                        <td class="px-4 py-3 font-semibold"><div class="flex items-center gap-3"><x-site.testimonial-avatar :testimonial="$testimonial" /><div>{{ $testimonial->name }}<p class="text-xs font-normal text-stone-500">{{ $testimonial->location }}</p></div></div></td>
                         <td class="px-4 py-3 text-stone-600">{{ $testimonial->product?->name ?? '—' }}</td>
                         <td class="max-w-md px-4 py-3 text-stone-600">{{ Str::limit($testimonial->content, 100) }}</td>
                         <td class="whitespace-nowrap px-4 py-3 text-flesh-500">{{ str_repeat('★', $testimonial->rating) }}</td>

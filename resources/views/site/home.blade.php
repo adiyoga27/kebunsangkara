@@ -22,6 +22,12 @@
     $featuredProduct = $products->firstWhere('is_featured', true) ?? $products->first();
     $lowestPrice = $products->min('price');
     $categories = App\Enums\FruitCategory::cases();
+    // One copy of the moving text must be wider than the screen, so a short list is repeated. Longer texts get more time to keep the speed equal.
+    $marqueeWords = $site->get('home_marquee_enabled') === '1' ? $site->lines('home_marquee') : [];
+    $marqueeLength = mb_strlen(implode('', $marqueeWords)) + 8 * count($marqueeWords);
+    $marqueeRepeats = $marqueeLength > 0 ? (int) ceil(150 / $marqueeLength) : 0;
+    $marqueeWords = array_merge(...array_fill(0, $marqueeRepeats, $marqueeWords));
+    $marqueeSeconds = max(20, (int) round($marqueeLength * $marqueeRepeats * 0.2));
     $testimonialUrl = $site->whatsappUrl(__('Halo, saya ingin memberi testimoni tentang produk yang saya beli.'));
 @endphp
 
@@ -62,7 +68,7 @@
                 </h1>
 
                 <p data-reveal style="--reveal-delay: 200ms" class="mt-8 max-w-xl text-lg leading-relaxed text-husk-100/80">
-                    {!! __(':site menjual durian, alpukat, dan manggis yang dipetik matang dari kebun, juga :seedlings siap tanam — tanpa perantara, diantar segar ke :area hingga seluruh Bali.', [
+                    {!! __(':site menjual durian, alpukat, dan manggis yang dipetik matang dari kebun, juga :seedlings siap tanam — tanpa perantara, dikirim segar ke :area hingga seluruh Indonesia.', [
                         'site' => '<strong class="font-semibold text-white">'.e($site->get('site_name')).'</strong>',
                         'seedlings' => '<a href="'.e(route('seedlings.index')).'" class="font-semibold text-flesh-300 underline decoration-flesh-400/50 underline-offset-4 hover:text-flesh-200">'.e(__('bibit unggul')).'</a>',
                         'area' => e(Str::before($site->get('service_area'), ',')),
@@ -113,24 +119,26 @@
             </div>
         </div>
 
-        <a href="#marquee" class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs font-medium uppercase tracking-[0.25em] text-husk-200/60 lg:flex" aria-label="{{ __('Gulir ke bawah') }}">
+        <a href="{{ $marqueeWords ? '#marquee' : '#kategori' }}" class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs font-medium uppercase tracking-[0.25em] text-husk-200/60 lg:flex" aria-label="{{ __('Gulir ke bawah') }}">
             {{ __('Scroll') }}
             <span class="flex h-10 w-6 justify-center rounded-full ring-1 ring-white/25"><span class="mt-2 size-1.5 animate-bounce rounded-full bg-flesh-300"></span></span>
         </a>
     </section>
 
     {{-- ============ MARQUEE ============ --}}
-    <div id="marquee" class="relative z-10 -mt-6 -rotate-2 overflow-hidden bg-flesh-400 py-5 shadow-xl shadow-flesh-500/20" aria-hidden="true">
-        <div class="flex w-max animate-marquee">
-            @foreach (range(1, 2) as $copy)
-                @foreach (['🍈 '.__('Durian Matang Pohon'), '🥑 '.__('Alpukat Mentega'), '🟣 '.__('Manggis Manis'), '🌱 '.__('Bibit Okulasi'), '🌿 '.__('Langsung dari Kebun'), '🛵 '.__('Antar se-Bali'), '🛡️ '.__('Garansi Ganti')] as $word)
-                    <span class="flex items-center gap-6 px-6 font-display text-2xl font-bold text-husk-950 sm:text-3xl">
-                        {{ $word }} <span class="text-husk-950/30">✦</span>
-                    </span>
+    @if ($marqueeWords)
+        <div id="marquee" class="relative z-10 -mt-6 -rotate-2 overflow-hidden bg-flesh-400 py-5 shadow-xl shadow-flesh-500/20" aria-hidden="true">
+            <div class="flex w-max animate-marquee" style="animation-duration: {{ $marqueeSeconds }}s">
+                @foreach (range(1, 2) as $copy)
+                    @foreach ($marqueeWords as $word)
+                        <span class="flex items-center gap-6 whitespace-nowrap px-6 font-display text-2xl font-bold text-husk-950 sm:text-3xl">
+                            {{ $word }} <span class="text-husk-950/30">✦</span>
+                        </span>
+                    @endforeach
                 @endforeach
-            @endforeach
+            </div>
         </div>
-    </div>
+    @endif
 
     {{-- ============ KATEGORI ============ --}}
     <section id="kategori" class="mx-auto max-w-7xl scroll-mt-20 px-4 py-28 sm:px-6" aria-labelledby="kategori-title">
@@ -190,7 +198,7 @@
                         ['☀️', __('Matang alami'), __('Dipanen saat matang di pohon, bukan diperam.')],
                         ['🤝', __('Tanpa perantara'), __('Langsung dari kebun, harga lebih bersahabat.')],
                         ['🛡️', __('Garansi ganti'), __('Buah busuk atau rusak? Kami ganti.')],
-                        ['🛵', __('Antar se-Bali'), __('Ke rumah, villa, hingga hotel Anda.')],
+                        ['🚚', __('Kirim ke Seluruh Indonesia'), __('Ke rumah, villa, hingga hotel Anda.')],
                     ] as [$icon, $title, $text])
                         <div data-reveal class="group rounded-3xl bg-white/5 p-5 ring-1 ring-white/10 transition duration-500 hover:-translate-y-1 hover:bg-white/10">
                             <span class="inline-flex size-11 items-center justify-center rounded-2xl bg-flesh-400 text-xl transition duration-500 group-hover:-rotate-12 group-hover:scale-110">{{ $icon }}</span>
@@ -279,14 +287,28 @@
                 @endforeach
             </ol>
             <div class="mt-14 text-center" data-reveal><x-site.whatsapp-link size="lg">{{ __('Mulai Pesan Sekarang') }}</x-site.whatsapp-link></div>
+            @if ($marketplaces = $site->links(App\Support\SiteSettings::MARKETPLACES))
+                <div id="marketplace" class="mt-10 text-center" data-reveal>
+                    <p class="text-sm font-medium text-stone-600">{{ __('Atau belanja lewat marketplace') }}</p>
+                    <x-site.brand-links :links="$marketplaces" class="mt-4 justify-center" />
+                </div>
+            @endif
         </div>
     </section>
 
     {{-- ============ PANEN / GALERI ============ --}}
     <section class="py-28" aria-labelledby="galeri">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6" data-reveal>
-            <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">{{ __('Suasana kebun') }}</p>
-            <h2 id="galeri" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">{{ __('Intip Kebun Kami') }}</h2>
+        <div class="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-6 px-4 sm:px-6" data-reveal>
+            <div>
+                <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">{{ __('Suasana kebun') }}</p>
+                <h2 id="galeri" class="mt-3 font-display text-4xl font-bold text-husk-950 sm:text-5xl">{{ __('Intip Kebun Kami') }}</h2>
+            </div>
+            @if ($socialMedia = $site->links(App\Support\SiteSettings::SOCIAL_MEDIA))
+                <div id="media-sosial">
+                    <p class="mb-3 text-sm font-medium text-stone-600">{{ __('Ikuti Kami') }}</p>
+                    <x-site.brand-links :links="$socialMedia" icon-only rel="noopener me" />
+                </div>
+            @endif
         </div>
         <div class="mask-fade-x mt-12 overflow-hidden">
             <div class="flex w-max animate-marquee-slow gap-5 hover:[animation-play-state:paused]">
@@ -376,7 +398,7 @@
                         <div class="text-lg tracking-widest text-flesh-400" role="img" aria-label="{{ __('Rating :rating dari 5', ['rating' => $testimonial->rating]) }}">{{ str_repeat('★', $testimonial->rating) }}<span class="text-stone-200">{{ str_repeat('★', 5 - $testimonial->rating) }}</span></div>
                         <blockquote class="mt-4 flex-1 leading-relaxed text-stone-700" @unless ($testimonial->isAvailableIn(App\Enums\Locale::current())) lang="{{ App\Enums\Locale::default()->value }}" @endunless>“{{ $testimonial->content }}”</blockquote>
                         <figcaption class="mt-6 flex items-center gap-3 border-t border-stone-100 pt-5 text-sm">
-                            <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-husk-500 to-husk-800 font-bold text-white" aria-hidden="true">{{ Str::upper(Str::substr($testimonial->name, 0, 1)) }}</span>
+                            <x-site.testimonial-avatar :testimonial="$testimonial" />
                             <span class="min-w-0">
                                 <strong class="block text-stone-900">{{ $testimonial->name }}@if ($testimonial->location)<span class="font-normal text-stone-500"> · {{ $testimonial->location }}</span>@endif</strong>
                                 @if ($testimonial->product)

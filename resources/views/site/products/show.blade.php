@@ -20,7 +20,7 @@
                 'itemCondition' => 'https://schema.org/NewCondition',
                 'availability' => $product->is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
                 'seller' => ['@id' => route('home').'#store'],
-                'areaServed' => ['@type' => 'State', 'name' => 'Bali'],
+                'areaServed' => ['@type' => 'Country', 'name' => 'Indonesia'],
             ],
         ],
         [
@@ -127,7 +127,7 @@
                 <dl class="mt-8 grid grid-cols-2 gap-3 text-sm" data-reveal-stagger="80">
                     @foreach (array_filter(! $product->type->hasFruitCategory() ? [
                         ['🏷️', __('Jenis'), $product->variety],
-                        ['🛵', __('Pengiriman'), __('Seluruh Bali')],
+                        ['🚚', __('Pengiriman'), __('Seluruh Indonesia')],
                         ['💬', __('Tanya produk'), __('Via WhatsApp')],
                     ] : ($product->isSeedling() ? [
                         ['🌳', __('Varietas'), $product->variety],
@@ -136,7 +136,7 @@
                         ['💬', __('Konsultasi tanam'), __('Gratis via WhatsApp')],
                     ] : [
                         ['🌱', __('Varietas'), $product->variety],
-                        ['🛵', __('Pengiriman'), __('Seluruh Bali')],
+                        ['🚚', __('Pengiriman'), __('Seluruh Indonesia')],
                         ['🛡️', __('Garansi'), __('Ganti jika busuk')],
                         ['☀️', __('Kondisi'), __('Segar dari kebun')],
                     ]), fn ($item) => filled($item[2])) as [$icon, $label, $value])

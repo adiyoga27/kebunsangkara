@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['product_id', 'name', 'location', 'content', 'rating', 'is_published'])]
+#[Fillable(['product_id', 'name', 'location', 'content', 'rating', 'image_path', 'is_published'])]
 class Testimonial extends Model
 {
     /** @use HasFactory<TestimonialFactory> */
@@ -35,6 +35,14 @@ class Testimonial extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Photo of the customer. Uses the domain of the current request, so it also works when APP_URL differs from it.
+     */
+    public function imageUrl(): ?string
+    {
+        return $this->image_path ? asset('storage/'.$this->image_path) : null;
     }
 
     public static function translatableAttributes(): array

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Locale;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Database\Seeders\BibitSeeder;
@@ -32,3 +33,17 @@ it('seeds every product type with pages that render', function () {
         $this->get($path)->assertOk();
     }
 });
+
+it('seeds fertilizers and health products in both languages and keeps changes made in the admin panel', function (string $seeder) {
+    $other = Product::factory()->create();
+
+    $this->seed($seeder);
+    $products = Product::query()->whereKeyNot($other->getKey())->get();
+    $products->each(fn (Product $product) => expect($product->isAvailableIn(Locale::English))->toBeTrue());
+    $products->first()->update(['name' => 'Nama Saya', 'price' => 12345]);
+
+    $this->seed($seeder);
+
+    expect($products->first()->fresh())->name->toBe('Nama Saya')->price->toBe(12345);
+    expect(Product::query()->count())->toBe(4);
+})->with([PupukSeeder::class, ProdukKesehatanSeeder::class]);

@@ -22,10 +22,12 @@ class WhatsappClick extends Model
     }
 
     /**
+     * The ordered product, including one that has been moved to the trash.
+     *
      * @return BelongsTo<Product, $this>
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 }

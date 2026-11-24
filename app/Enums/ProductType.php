@@ -30,6 +30,32 @@ enum ProductType: string
     }
 
     /**
+     * Unit prefilled in the admin form for new products.
+     */
+    public function defaultPriceUnit(): string
+    {
+        return match ($this) {
+            self::Buah => 'per kg',
+            self::Bibit => 'per batang',
+            self::Pupuk => 'per karung',
+            self::Kesehatan => 'per kemasan',
+        };
+    }
+
+    /**
+     * Example product name shown in the admin form.
+     */
+    public function exampleName(): string
+    {
+        return match ($this) {
+            self::Buah => 'Durian Montong Bali, Alpukat Mentega',
+            self::Bibit => 'Bibit Durian Montong Okulasi',
+            self::Pupuk => 'Pupuk Kompos Organik',
+            self::Kesehatan => 'Madu Murni',
+        };
+    }
+
+    /**
      * Whether products of this type belong to a fruit category.
      */
     public function hasFruitCategory(): bool

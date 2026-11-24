@@ -59,9 +59,9 @@ enum FruitCategory: string
     public function seoDescription(): string
     {
         return match ($this) {
-            self::Durian => __('Beli durian asli Bali dari Kebun Sangkara: durian lokal & Montong matang pohon, garansi ganti jika busuk. Antar ke seluruh Bali, pesan via WhatsApp.'),
-            self::Alpukat => __('Beli alpukat mentega segar dari Kebun Sangkara Bali. Daging tebal, pulen, cocok untuk jus & salad. Antar ke seluruh Bali, pesan via WhatsApp.'),
-            self::Manggis => __('Beli manggis segar dari Kebun Sangkara Bali. Kulit ungu mulus, daging putih manis-asam. Antar ke seluruh Bali, pesan via WhatsApp.'),
+            self::Durian => __('Beli durian asli Bali dari Kebun Sangkara: durian lokal & Montong matang pohon, garansi ganti jika busuk. Kirim ke seluruh Indonesia, pesan via WhatsApp.'),
+            self::Alpukat => __('Beli alpukat mentega segar dari Kebun Sangkara Bali. Daging tebal, pulen, cocok untuk jus & salad. Kirim ke seluruh Indonesia, pesan via WhatsApp.'),
+            self::Manggis => __('Beli manggis segar dari Kebun Sangkara Bali. Kulit ungu mulus, daging putih manis-asam. Kirim ke seluruh Indonesia, pesan via WhatsApp.'),
         };
     }
 

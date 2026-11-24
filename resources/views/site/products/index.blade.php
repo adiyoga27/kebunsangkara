@@ -1,6 +1,6 @@
 <x-layouts.site
     :title="__('Produk & Harga Hasil Perkebunan Bali :year', ['year' => now()->year])"
-    :description="__('Daftar harga hasil perkebunan dari :site Bali: durian, alpukat & manggis. Dipetik langsung dari kebun, antar ke seluruh Bali, pesan via WhatsApp.', ['site' => $site->get('site_name')])"
+    :description="__('Daftar harga hasil perkebunan dari :site Bali: durian, alpukat & manggis. Dipetik langsung dari kebun, kirim ke seluruh Indonesia, pesan via WhatsApp.', ['site' => $site->get('site_name')])"
     :canonical="route('products.index')"
     :schemas="[[
         '@type' => 'BreadcrumbList',

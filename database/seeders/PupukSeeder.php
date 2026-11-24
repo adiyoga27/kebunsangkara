@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Locale;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -9,6 +10,7 @@ use Illuminate\Database\Seeder;
 
 /**
  * Example fertilizers: replace names, descriptions and prices with the real products from the admin panel.
+ * Products that already exist, also in the trash, are left untouched.
  */
 class PupukSeeder extends Seeder
 {
@@ -50,10 +52,11 @@ class PupukSeeder extends Seeder
         ];
 
         foreach ($fertilizers as $fertilizer) {
-            Product::updateOrCreate(['slug' => $fertilizer['slug']], [
+            Product::withTrashed()->firstOrCreate(['slug' => $fertilizer['slug']], [
                 ...$fertilizer,
                 'type' => ProductType::Pupuk,
                 'category' => null,
+                'translations' => array_filter([Locale::English->value => EnglishTranslationSeeder::products()[$fertilizer['slug']] ?? null]),
             ]);
         }
     }

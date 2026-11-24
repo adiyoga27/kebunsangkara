@@ -4,9 +4,10 @@ namespace App\Models\Concerns;
 
 use App\Enums\ActivityAction;
 use App\Support\ActivityLogger;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Automatically writes an activity log entry whenever the model is created, updated or deleted.
+ * Automatically writes an activity log entry whenever the model is created, updated, deleted or restored.
  */
 trait RecordsActivity
 {
@@ -15,7 +16,7 @@ trait RecordsActivity
      *
      * @var list<string>
      */
-    protected static array $hiddenFromActivityLog = ['remember_token', 'updated_at', 'created_at'];
+    protected static array $hiddenFromActivityLog = ['remember_token', 'updated_at', 'created_at', 'deleted_at'];
 
     /**
      * Attributes whose change is logged, but whose value is masked.
@@ -43,8 +44,19 @@ trait RecordsActivity
         });
 
         static::deleted(function (self $model): void {
-            $model->recordActivity(ActivityAction::Deleted, $model->loggableAttributes($model->getAttributes()));
+            $isPermanent = in_array(SoftDeletes::class, class_uses_recursive($model), true) && $model->isForceDeleting();
+
+            $model->recordActivity(
+                $isPermanent ? ActivityAction::ForceDeleted : ActivityAction::Deleted,
+                $model->loggableAttributes($model->getAttributes()),
+            );
         });
+
+        if (in_array(SoftDeletes::class, class_uses_recursive(static::class), true)) {
+            static::restored(function (self $model): void {
+                $model->recordActivity(ActivityAction::Restored, []);
+            });
+        }
     }
 
     /**
@@ -66,6 +78,8 @@ trait RecordsActivity
             ActivityAction::Created => 'Menambahkan',
             ActivityAction::Updated => 'Mengubah',
             ActivityAction::Deleted => 'Menghapus',
+            ActivityAction::Restored => 'Memulihkan',
+            ActivityAction::ForceDeleted => 'Menghapus permanen',
             default => $action->label(),
         };
 

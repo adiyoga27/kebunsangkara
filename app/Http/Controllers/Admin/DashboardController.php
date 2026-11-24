@@ -7,12 +7,13 @@ use App\Models\ActivityLog;
 use App\Models\Article;
 use App\Models\Product;
 use App\Models\WhatsappClick;
+use App\Support\SiteSettings;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request): View
+    public function __invoke(Request $request, SiteSettings $site): View
     {
         $since = now()->subDays(30);
 
@@ -36,6 +37,8 @@ class DashboardController extends Controller
                 'clicks30Days' => WhatsappClick::query()->where('created_at', '>=', $since)->count(),
                 'clicksToday' => WhatsappClick::query()->where('created_at', '>=', today())->count(),
             ],
+            'socialMedia' => $site->links(SiteSettings::SOCIAL_MEDIA),
+            'marketplaces' => $site->links(SiteSettings::MARKETPLACES),
             'chart' => $chart,
             'topProducts' => Product::query()
                 ->withCount(['whatsappClicks' => fn ($query) => $query->where('created_at', '>=', $since)])

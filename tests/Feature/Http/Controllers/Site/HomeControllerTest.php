@@ -46,3 +46,8 @@ it('invites buyers to send a testimonial when none is published', function () {
         ->assertSee('Sudah pernah membeli produk kami?')
         ->assertSee(rawurlencode('Halo, saya ingin memberi testimoni tentang produk yang saya beli.'), false);
 });
+
+it('promises shipping to all of Indonesia in both languages', function () {
+    $this->get('/id')->assertSee('Kirim ke Seluruh Indonesia')->assertDontSee('Antar se-Bali')->assertDontSee('seluruh Bali');
+    $this->get('/en')->assertSee('Shipping across Indonesia')->assertDontSee('across Bali');
+});

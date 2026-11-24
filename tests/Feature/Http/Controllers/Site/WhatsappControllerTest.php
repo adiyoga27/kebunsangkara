@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Product;
+use App\Models\Service;
 use App\Models\WhatsappClick;
 use App\Support\SiteSettings;
 
@@ -57,3 +58,23 @@ it('stores the click time in the application timezone', function () {
 
     expect(WhatsappClick::sole()->created_at->format('H:i'))->toBe('09:30');
 });
+
+it('mentions the requested service in the WhatsApp message', function () {
+    $service = Service::factory()->create(['name' => 'Edukasi Pertanian']);
+
+    $response = $this->get(route('whatsapp.order', ['jasa' => $service->id]));
+
+    expect(rawurldecode($response->headers->get('Location')))->toContain('*Edukasi Pertanian*')->toContain('#layanan-'.$service->id);
+});
+
+it('uses the default message for a service that is not on the website', function (Closure $parameter) {
+    app(SiteSettings::class)->update(['whatsapp_message' => 'Halo, mau pesan durian']);
+
+    $response = $this->get(route('whatsapp.order', ['jasa' => $parameter()]));
+
+    expect(rawurldecode($response->headers->get('Location')))->toContain('Halo, mau pesan durian');
+})->with([
+    'draft' => [fn () => Service::factory()->create(['is_published' => false])->id],
+    'unknown' => [fn () => 999],
+    'array value' => [fn () => ['1']],
+]);

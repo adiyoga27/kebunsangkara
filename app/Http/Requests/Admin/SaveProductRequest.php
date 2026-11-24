@@ -97,6 +97,16 @@ class SaveProductRequest extends FormRequest
     /**
      * @return array<string, string>
      */
+    public function messages(): array
+    {
+        return [
+            'slug.unique' => 'Slug URL ini sudah dipakai produk lain, termasuk produk di Sampah. Gunakan slug lain atau pulihkan produk tersebut.',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
     public function attributes(): array
     {
         return [

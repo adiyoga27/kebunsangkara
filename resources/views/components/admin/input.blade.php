@@ -1,7 +1,7 @@
-@props(['name', 'label', 'value' => null, 'type' => 'text', 'help' => null])
+@props(['name', 'label', 'value' => null, 'type' => 'text', 'help' => null, 'brand' => null])
 
 <div>
-    <label for="{{ $name }}" class="block text-sm font-semibold text-stone-700">{{ $label }}</label>
+    <label for="{{ $name }}" @class(['text-sm font-semibold text-stone-700', 'flex items-center gap-2' => $brand, 'block' => ! $brand])>@if ($brand)<x-site.brand-icon :brand="$brand" colored />@endif{{ $label }}</label>
     <input id="{{ $name }}" name="{{ $name }}" type="{{ $type }}"
            @unless (in_array($type, ['password', 'file'])) value="{{ old($name, $value) }}" @endunless
            @error($name) aria-invalid="true" aria-describedby="{{ $name }}-error" @enderror

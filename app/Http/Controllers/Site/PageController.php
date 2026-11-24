@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Enums\Offering;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Service;
 use App\Models\Testimonial;
 use Illuminate\View\View;
 
@@ -23,6 +24,7 @@ class PageController extends Controller
 
         return view('site.offering', [
             'offering' => $offering,
+            'services' => $offering === Offering::Service ? Service::query()->published()->ordered()->get() : collect(),
             'products' => $type ? Product::query()->ofType($type)->ordered()->get() : collect(),
         ]);
     }

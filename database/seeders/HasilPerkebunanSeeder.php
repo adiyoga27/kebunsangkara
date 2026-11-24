@@ -85,7 +85,7 @@ class HasilPerkebunanSeeder extends Seeder
         ];
 
         foreach ($products as $product) {
-            Product::updateOrCreate(['slug' => $product['slug']], [...$product, 'type' => ProductType::Buah]);
+            Product::withTrashed()->updateOrCreate(['slug' => $product['slug']], [...$product, 'type' => ProductType::Buah]);
         }
     }
 }

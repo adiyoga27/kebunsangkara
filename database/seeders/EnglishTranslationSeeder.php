@@ -19,7 +19,7 @@ class EnglishTranslationSeeder extends Seeder
 
     public function run(): void
     {
-        foreach ($this->products() as $slug => $fields) {
+        foreach (self::products() as $slug => $fields) {
             $this->translate(Product::query()->firstWhere('slug', $slug), $fields);
         }
 
@@ -49,7 +49,7 @@ class EnglishTranslationSeeder extends Seeder
     /**
      * @return array<string, array<string, string>>
      */
-    private function products(): array
+    public static function products(): array
     {
         return [
             'durian-lokal-bali-pupuan' => [
@@ -167,7 +167,7 @@ class EnglishTranslationSeeder extends Seeder
             'Apakah buahnya benar-benar dari kebun di Bali?' => ['Does the fruit really come from a farm in Bali?', 'Yes. Our durian, avocado and mangosteen come from the Kebun Sangkara farm in Bali and are picked ripe. We do not sell imported fruit or fruit from other islands.'],
             'Kapan musim durian dan manggis di Bali?' => ['When is durian and mangosteen season in Bali?', 'Durian season in Bali usually runs from late in the year to early the next (roughly November–March), and mangosteen season is usually close to it. Avocado is available more often throughout the year. Exact timing depends on the weather, so please ask about stock via WhatsApp.'],
             'Bagaimana cara memesan buah?' => ['How do I order fruit?', 'Click "Order via WhatsApp" on this website and tell us the fruit, quantity and delivery address. We will confirm stock, the total price and the delivery schedule.'],
-            'Apakah bisa diantar ke hotel atau villa?' => ['Can you deliver to a hotel or villa?', 'Yes. We deliver to homes, hotels and villas all over Bali. For durian, please check your hotel\'s rules first, as some hotels do not allow durian in the rooms.'],
+            'Apakah bisa diantar ke hotel atau villa?' => ['Can you deliver to a hotel or villa?', 'Yes. We deliver to homes, hotels and villas all over Indonesia. For durian, please check your hotel\'s rules first, as some hotels do not allow durian in the rooms.'],
             'Bagaimana jika buah yang diterima busuk atau rusak?' => ['What if the fruit I receive is rotten or damaged?', 'We offer a replacement guarantee. Send a photo of the fruit via WhatsApp within a few hours of receiving it, and we will replace it.'],
             'Apakah melayani pesanan dalam jumlah besar?' => ['Do you accept bulk orders?', 'Yes. We supply cafes, restaurants, hotels, juice businesses and events. Contact us via WhatsApp for special prices.'],
             'Apa bedanya bibit okulasi, sambung pucuk, dan bibit dari biji?' => ['What is the difference between budded, grafted and seed-grown seedlings?', 'Budded and grafted seedlings are propagated from mother trees that have already fruited, so they keep the same traits and usually bear fruit sooner. Seed-grown seedlings take longer, and their fruit may differ from the parent tree.'],

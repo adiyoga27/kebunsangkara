@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HandlesImageUploads;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SaveTestimonialRequest;
 use App\Models\Product;
@@ -12,6 +13,8 @@ use Illuminate\View\View;
 
 class TestimonialController extends Controller
 {
+    use HandlesImageUploads;
+
     public function index(Request $request): View
     {
         return view('admin.testimonials.index', [
@@ -34,7 +37,10 @@ class TestimonialController extends Controller
 
     public function store(SaveTestimonialRequest $request): RedirectResponse
     {
-        Testimonial::create($request->validated());
+        Testimonial::create([
+            ...$request->safe()->except(['image', 'remove_image']),
+            'image_path' => $this->resolveImagePath($request, 'testimonials'),
+        ]);
 
         return redirect()->route('admin.testimonials.index')->with('status', 'Testimoni berhasil ditambahkan.');
     }
@@ -46,7 +52,10 @@ class TestimonialController extends Controller
 
     public function update(SaveTestimonialRequest $request, Testimonial $testimonial): RedirectResponse
     {
-        $testimonial->update($request->validated());
+        $testimonial->update([
+            ...$request->safe()->except(['image', 'remove_image']),
+            'image_path' => $this->resolveImagePath($request, 'testimonials', $testimonial->image_path),
+        ]);
 
         return redirect()->route('admin.testimonials.index')->with('status', 'Testimoni berhasil diperbarui.');
     }
@@ -61,6 +70,7 @@ class TestimonialController extends Controller
     public function destroy(Testimonial $testimonial): RedirectResponse
     {
         $testimonial->delete();
+        $this->deleteImage($testimonial->image_path);
 
         return redirect()->route('admin.testimonials.index')->with('status', 'Testimoni berhasil dihapus.');
     }
@@ -69,7 +79,10 @@ class TestimonialController extends Controller
     {
         return view('admin.testimonials.form', [
             'testimonial' => $testimonial,
-            'products' => Product::query()->ordered()->pluck('name', 'id'),
+            'products' => Product::withTrashed()
+                ->where(fn ($query) => $query->whereNull('deleted_at')->orWhere('id', $testimonial->product_id))
+                ->ordered()
+                ->pluck('name', 'id'),
         ]);
     }
 }

@@ -368,3 +368,95 @@ if (!reducedMotion) {
         element.textContent = Number(element.dataset.countTo).toLocaleString('id-ID') + (element.dataset.countSuffix ?? '');
     });
 }
+
+/**
+ * Admin sidebar on small screens: slides in from the left, closes on backdrop click, Escape or the close button.
+ */
+function initAdminSidebar() {
+    const sidebar = document.querySelector('[data-sidebar]');
+
+    if (!sidebar) {
+        return;
+    }
+
+    const backdrop = document.querySelector('[data-sidebar-backdrop]');
+    const openButton = document.querySelector('[data-sidebar-open]');
+    const closeButton = sidebar.querySelector('[data-sidebar-close]');
+
+    const toggle = (isOpen) => {
+        sidebar.toggleAttribute('data-open', isOpen);
+        backdrop.toggleAttribute('data-open', isOpen);
+        openButton.setAttribute('aria-expanded', String(isOpen));
+        document.documentElement.classList.toggle('max-lg:overflow-hidden', isOpen);
+        (isOpen ? closeButton : openButton).focus();
+    };
+
+    openButton.addEventListener('click', () => toggle(true));
+    closeButton.addEventListener('click', () => toggle(false));
+    backdrop.addEventListener('click', () => toggle(false));
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && sidebar.hasAttribute('data-open')) {
+            toggle(false);
+        }
+    });
+
+    sidebar.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'nearest' });
+}
+
+initAdminSidebar();
+
+/**
+ * Tabs: switch by click or arrow keys. A browser validation error in a hidden panel opens that panel first.
+ */
+function initTabs() {
+    document.querySelectorAll('[data-tabs]').forEach((container) => {
+        const tabs = [...container.querySelectorAll('[role="tab"]')];
+        const panelOf = (tab) => document.getElementById(tab.getAttribute('aria-controls'));
+
+        const select = (selected) => {
+            tabs.forEach((tab) => {
+                const isSelected = tab === selected;
+                tab.setAttribute('aria-selected', String(isSelected));
+                tab.tabIndex = isSelected ? 0 : -1;
+                panelOf(tab).hidden = !isSelected;
+            });
+        };
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => select(tab));
+            tab.addEventListener('keydown', (event) => {
+                const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+
+                if (step) {
+                    const next = tabs[(index + step + tabs.length) % tabs.length];
+                    event.preventDefault();
+                    select(next);
+                    next.focus();
+                }
+            });
+        });
+
+        // Invalid events do not bubble. Only the first one counts: that is the field the browser focuses.
+        let isHandled = false;
+        container.addEventListener('invalid', (event) => {
+            const tab = tabs.find((candidate) => panelOf(candidate).contains(event.target));
+
+            if (tab && !isHandled) {
+                isHandled = true;
+                select(tab);
+                setTimeout(() => (isHandled = false));
+            }
+        }, true);
+    });
+}
+
+initTabs();
+
+/**
+ * Visual editor for Markdown fields, loaded only on pages that have one.
+ */
+const richTextFields = document.querySelectorAll('textarea[data-rich-text]');
+
+if (richTextFields.length) {
+    import('./rich-text-editor.js').then(({ mountRichTextEditor }) => richTextFields.forEach((field) => mountRichTextEditor(field)));
+}

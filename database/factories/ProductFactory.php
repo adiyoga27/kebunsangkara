@@ -85,6 +85,11 @@ class ProductFactory extends Factory
         return $this->state(fn (array $attributes): array => ['is_available' => false]);
     }
 
+    public function trashed(): static
+    {
+        return $this->state(fn (array $attributes): array => ['deleted_at' => now()]);
+    }
+
     public function featured(): static
     {
         return $this->state(fn (array $attributes): array => ['is_featured' => true]);

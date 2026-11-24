@@ -1,22 +1,32 @@
-<x-layouts.admin title="Produk">
-    <x-admin.page-header title="Produk" description="Kelola produk, harga, dan stok.">
-        <x-slot:actions><x-admin.button-link href="{{ route('admin.products.create') }}">+ Tambah Produk</x-admin.button-link></x-slot:actions>
+<x-layouts.admin :title="$type->label()">
+    <x-admin.page-header :title="$type->emoji().' '.$type->label()" description="Kelola produk, harga, dan stok.">
+        <x-slot:actions>
+            <a href="{{ route('admin.trashed-products.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold hover:bg-stone-100">🗑️ Sampah ({{ $trashedCount }})</a>
+            <x-admin.button-link href="{{ route('admin.products.create', ['type' => $type->value]) }}">+ Tambah {{ $type->label() }}</x-admin.button-link>
+        </x-slot:actions>
     </x-admin.page-header>
 
+    <nav class="mb-6 flex flex-wrap gap-2" aria-label="Jenis produk">
+        @foreach (App\Enums\ProductType::cases() as $productType)
+            <a href="{{ route('admin.products.index', ['type' => $productType->value]) }}" @class([
+                'rounded-xl px-4 py-2.5 text-sm font-semibold transition',
+                'bg-husk-700 text-white' => $productType === $type,
+                'border border-stone-300 bg-white hover:bg-stone-100' => $productType !== $type,
+            ]) @if ($productType === $type) aria-current="page" @endif>{{ $productType->emoji() }} {{ $productType->label() }} ({{ $typeCounts[$productType->value] ?? 0 }})</a>
+        @endforeach
+    </nav>
+
     <form class="mb-4 flex flex-wrap gap-2">
-        <input name="q" value="{{ request('q') }}" placeholder="Cari produk..." class="w-full max-w-xs rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm">
-        <select name="type" onchange="this.form.submit()" class="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm" aria-label="Tipe">
-            <option value="">Semua tipe</option>
-            @foreach (App\Enums\ProductType::cases() as $productType)
-                <option value="{{ $productType->value }}" @selected(request('type') === $productType->value)>{{ $productType->label() }}</option>
-            @endforeach
-        </select>
-        <select name="category" onchange="this.form.submit()" class="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm" aria-label="Kategori">
-            <option value="">Semua kategori</option>
-            @foreach (App\Enums\FruitCategory::cases() as $fruit)
-                <option value="{{ $fruit->value }}" @selected(request('category') === $fruit->value)>{{ $fruit->label() }}</option>
-            @endforeach
-        </select>
+        <input type="hidden" name="type" value="{{ $type->value }}">
+        <input name="q" value="{{ request('q') }}" placeholder="Cari {{ Str::lower($type->label()) }}..." aria-label="Cari produk" class="w-full max-w-xs rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm">
+        @if ($type->hasFruitCategory())
+            <select name="category" onchange="this.form.submit()" class="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm" aria-label="Kategori">
+                <option value="">Semua kategori</option>
+                @foreach (App\Enums\FruitCategory::cases() as $fruit)
+                    <option value="{{ $fruit->value }}" @selected(request('category') === $fruit->value)>{{ $fruit->label() }}</option>
+                @endforeach
+            </select>
+        @endif
     </form>
 
     <div class="overflow-x-auto rounded-2xl border border-stone-200 bg-white shadow-sm">
@@ -43,10 +53,10 @@
                             @if ($product->is_featured)<span class="ml-1 rounded-full bg-flesh-100 px-2.5 py-0.5 text-xs font-semibold text-flesh-500">Unggulan</span>@endif
                         </td>
                         <td class="px-4 py-3">{{ $product->sort_order }}</td>
-                        <td class="px-4 py-3"><x-admin.row-actions :edit="route('admin.products.edit', $product)" :destroy="route('admin.products.destroy', $product)" /></td>
+                        <td class="px-4 py-3"><x-admin.row-actions :edit="route('admin.products.edit', $product)" :destroy="route('admin.products.destroy', $product)" confirm="Pindahkan produk ini ke Sampah? Produk masih bisa dipulihkan." /></td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="px-4 py-8 text-center text-stone-500">Belum ada produk.</td></tr>
+                    <tr><td colspan="6" class="px-4 py-8 text-center text-stone-500">{{ request()->hasAny(['q', 'category']) ? 'Tidak ada produk yang cocok.' : 'Belum ada '.Str::lower($type->label()).'.' }}</td></tr>
                 @endforelse
             </tbody>
         </table>
