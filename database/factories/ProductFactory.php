@@ -58,6 +58,28 @@ class ProductFactory extends Factory
         ]);
     }
 
+    public function fertilizer(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => ProductType::Pupuk,
+            'category' => null,
+            'name' => $name = 'Pupuk '.fake()->unique()->words(2, true),
+            'slug' => Str::slug($name),
+            'price_unit' => 'per karung',
+        ]);
+    }
+
+    public function healthProduct(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => ProductType::Kesehatan,
+            'category' => null,
+            'name' => $name = 'Herbal '.fake()->unique()->words(2, true),
+            'slug' => Str::slug($name),
+            'price_unit' => 'per kemasan',
+        ]);
+    }
+
     public function unavailable(): static
     {
         return $this->state(fn (array $attributes): array => ['is_available' => false]);

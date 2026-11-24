@@ -182,8 +182,60 @@ function initAccordions() {
     });
 }
 
+/**
+ * Header submenus: open on mouse hover, toggle on tap or keyboard, close on Escape or outside click.
+ */
+function initDropdowns() {
+    const dropdowns = [...document.querySelectorAll('[data-dropdown]')];
+
+    dropdowns.forEach((dropdown) => {
+        const summary = dropdown.querySelector('summary');
+        let pointerType = '';
+
+        dropdown.addEventListener('pointerenter', (event) => {
+            if (event.pointerType === 'mouse') {
+                dropdown.open = true;
+            }
+        });
+        dropdown.addEventListener('pointerleave', (event) => {
+            if (event.pointerType === 'mouse') {
+                dropdown.open = false;
+            }
+        });
+
+        // Hover already opened the menu, so a mouse click must not toggle it closed again.
+        summary.addEventListener('pointerdown', (event) => (pointerType = event.pointerType));
+        summary.addEventListener('click', (event) => {
+            if (event.detail > 0 && pointerType === 'mouse') {
+                event.preventDefault();
+            }
+        });
+
+        dropdown.addEventListener('focusout', (event) => {
+            if (event.relatedTarget && !dropdown.contains(event.relatedTarget)) {
+                dropdown.open = false;
+            }
+        });
+        dropdown.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && dropdown.open) {
+                dropdown.open = false;
+                summary.focus();
+            }
+        });
+    });
+
+    document.addEventListener('click', (event) => {
+        dropdowns.forEach((dropdown) => {
+            if (!dropdown.contains(event.target)) {
+                dropdown.open = false;
+            }
+        });
+    });
+}
+
 initReveal();
 initHeader();
+initDropdowns();
 initAccordions();
 
 if (!reducedMotion) {

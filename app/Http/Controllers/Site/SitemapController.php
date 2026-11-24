@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Enums\FruitCategory;
+use App\Enums\Offering;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Product;
@@ -25,7 +26,11 @@ class SitemapController extends Controller
                 'priority' => '0.9',
             ]),
             ['loc' => route('about'), 'lastmod' => null, 'priority' => '0.5'],
-            ['loc' => route('contact'), 'lastmod' => null, 'priority' => '0.6'],
+            ...collect(Offering::cases())->map(fn (Offering $offering): array => [
+                'loc' => route('offerings.show', $offering),
+                'lastmod' => null,
+                'priority' => '0.6',
+            ]),
         ])
             ->concat(Product::query()->ordered()->get(['slug', 'updated_at'])->map(fn (Product $product): array => [
                 'loc' => route('products.show', $product),

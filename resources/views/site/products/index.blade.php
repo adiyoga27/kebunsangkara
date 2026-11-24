@@ -1,6 +1,6 @@
 <x-layouts.site
-    title="Produk & Harga Buah Segar Bali {{ now()->year }}"
-    description="Daftar harga buah segar dari {{ $site->get('site_name') }} Bali: durian, alpukat & manggis. Dipetik langsung dari kebun, antar ke seluruh Bali, pesan via WhatsApp."
+    title="Produk & Harga Hasil Perkebunan Bali {{ now()->year }}"
+    description="Daftar harga hasil perkebunan dari {{ $site->get('site_name') }} Bali: durian, alpukat & manggis. Dipetik langsung dari kebun, antar ke seluruh Bali, pesan via WhatsApp."
     :canonical="route('products.index')"
     :schemas="[[
         '@type' => 'BreadcrumbList',
@@ -10,7 +10,7 @@
         ],
     ]]"
 >
-    <x-site.page-hero title="Produk & Harga Buah Segar {{ now()->year }}" eyebrow="Daftar harga" image="images/kebun/kebun-alpukat.webp"
+    <x-site.page-hero title="Produk & Harga Hasil Perkebunan {{ now()->year }}" eyebrow="Daftar harga" image="images/kebun/kebun-alpukat.webp"
         :breadcrumbs="[['label' => 'Beranda', 'url' => route('home')], ['label' => 'Produk & Harga', 'url' => null]]">
         Semua buah dipetik langsung dari kebun kami di Bali. Harga mengikuti musim panen — konfirmasi stok terbaru via WhatsApp.
     </x-site.page-hero>

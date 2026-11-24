@@ -19,11 +19,19 @@ class SaveProductRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
+            'category' => $this->needsFruitCategory() ? $this->input('category') : null,
             'slug' => Str::slug($this->input('slug') ?: $this->input('name')),
             'is_available' => $this->boolean('is_available'),
             'is_featured' => $this->boolean('is_featured'),
             'sort_order' => (int) $this->input('sort_order', 0),
         ]);
+    }
+
+    private function needsFruitCategory(): bool
+    {
+        $type = $this->input('type');
+
+        return (is_string($type) ? ProductType::tryFrom($type) : null)?->hasFruitCategory() ?? true;
     }
 
     /**
@@ -34,7 +42,7 @@ class SaveProductRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:160', 'alpha_dash', Rule::unique('products', 'slug')->ignore($this->route('product'))],
-            'category' => ['required', Rule::enum(FruitCategory::class)],
+            'category' => [Rule::requiredIf($this->needsFruitCategory()), 'nullable', Rule::enum(FruitCategory::class)],
             'type' => ['required', Rule::enum(ProductType::class)],
             'propagation_method' => ['nullable', 'string', 'max:50'],
             'plant_height' => ['nullable', 'string', 'max:50'],

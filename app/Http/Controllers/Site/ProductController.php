@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function index(): View
     {
         return view('site.products.index', [
-            'products' => Product::query()->ordered()->get(),
+            'products' => Product::query()->withFruitCategory()->ordered()->get(),
             'faqs' => Faq::query()->where('is_published', true)->orderBy('sort_order')->get(),
         ]);
     }
@@ -46,7 +46,7 @@ class ProductController extends Controller
             'relatedProducts' => Product::query()
                 ->whereKeyNot($product->getKey())
                 ->orderByRaw('type = ? desc', [$product->type->value])
-                ->orderByRaw('category = ? desc', [$product->category->value])
+                ->orderByRaw('category = ? desc', [$product->category?->value])
                 ->where('is_available', true)
                 ->ordered()
                 ->limit(3)

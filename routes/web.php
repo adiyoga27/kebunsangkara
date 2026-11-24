@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Offering;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Site;
 use App\Http\Middleware\EnsureUserIsActive;
@@ -19,7 +20,10 @@ Route::get('/buah/{category}', [Site\ProductController::class, 'category'])->nam
 Route::get('/artikel', [Site\ArticleController::class, 'index'])->name('articles.index');
 Route::get('/artikel/{article}', [Site\ArticleController::class, 'show'])->name('articles.show');
 Route::get('/tentang-kami', [Site\PageController::class, 'about'])->name('about');
-Route::get('/kontak', [Site\PageController::class, 'contact'])->name('contact');
+Route::redirect('/kontak', '/tentang-kami#kontak', 301);
+Route::get('/{offering}', [Site\PageController::class, 'offering'])
+    ->whereIn('offering', Offering::cases())
+    ->name('offerings.show');
 
 Route::get('/pesan/{product?}', Site\WhatsappController::class)
     ->middleware('throttle:whatsapp')

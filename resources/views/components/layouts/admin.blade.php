@@ -39,7 +39,7 @@
                 </summary>
                 <div class="flex flex-col lg:h-full">
                     <a href="{{ route('admin.dashboard') }}" class="hidden items-center gap-2 px-6 py-6 lg:flex">
-                        <img src="{{ asset('images/logo.svg') }}" alt="" class="size-9 rounded-xl">
+                        <img src="{{ asset('images/logo.svg') }}" alt="" class="size-9 rounded-full">
                         <span class="font-display text-lg font-bold leading-tight text-white">{{ $site->get('site_name') }}<span class="block text-[10px] font-sans font-semibold uppercase tracking-[0.25em] text-husk-200/70">Admin Panel</span></span>
                     </a>
                     <nav class="flex-1 space-y-1 px-3 pb-4" aria-label="Menu admin">

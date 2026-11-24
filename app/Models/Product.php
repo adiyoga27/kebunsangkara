@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\FruitCategory;
+use App\Enums\Offering;
 use App\Enums\ProductType;
 use App\Models\Concerns\RecordsActivity;
 use Database\Factories\ProductFactory;
@@ -26,12 +27,14 @@ class Product extends Model
     use HasFactory, RecordsActivity;
 
     /**
-     * Hide products whose category is no longer sold; their rows stay in the database.
+     * Hide fruit and seedlings whose category is no longer sold; their rows stay in the database.
      */
     protected static function booted(): void
     {
         static::addGlobalScope('sold_category', function (Builder $query): void {
-            $query->whereIn($query->qualifyColumn('category'), array_column(FruitCategory::cases(), 'value'));
+            $query->where(fn (Builder $query) => $query
+                ->whereIn($query->qualifyColumn('category'), FruitCategory::cases())
+                ->orWhereNotIn($query->qualifyColumn('type'), ProductType::withFruitCategory()));
         });
     }
 
@@ -102,14 +105,58 @@ class Product extends Model
             return $this->imageUrl();
         }
 
-        return $this->isSeedling()
-            ? asset('images/bibit.svg')
-            : asset(($this->category ?? FruitCategory::Durian)->imagePath());
+        return asset(match ($this->type) {
+            ProductType::Bibit => 'images/bibit.svg',
+            ProductType::Pupuk => 'images/pupuk.svg',
+            ProductType::Kesehatan => 'images/produk-kesehatan.svg',
+            default => ($this->category ?? FruitCategory::Durian)->imagePath(),
+        });
     }
 
     public function isSeedling(): bool
     {
         return $this->type === ProductType::Bibit;
+    }
+
+    public function imageAlt(): string
+    {
+        return $this->type->hasFruitCategory() ? $this->name.' segar dari kebun Bali' : $this->name;
+    }
+
+    /**
+     * Short badge text, e.g. "🍈 Durian", "🌱 Bibit Durian" or "🌾 Pupuk".
+     */
+    public function badge(): string
+    {
+        return match ($this->type) {
+            ProductType::Buah => $this->category->emoji().' '.$this->category->label(),
+            ProductType::Bibit => $this->type->emoji().' Bibit '.$this->category->label(),
+            default => $this->type->emoji().' '.$this->type->label(),
+        };
+    }
+
+    /**
+     * The page this product is listed on, used for breadcrumbs.
+     *
+     * @return array{label: string, url: string}
+     */
+    public function listingPage(): array
+    {
+        return match ($this->type) {
+            ProductType::Buah => ['label' => $this->category->label(), 'url' => route('products.category', $this->category)],
+            ProductType::Bibit => ['label' => 'Bibit', 'url' => route('seedlings.index')],
+            ProductType::Pupuk => ['label' => Offering::Pupuk->label(), 'url' => route('offerings.show', Offering::Pupuk)],
+            ProductType::Kesehatan => ['label' => Offering::ProdukKesehatan->label(), 'url' => route('offerings.show', Offering::ProdukKesehatan)],
+        };
+    }
+
+    /**
+     * @param  Builder<Product>  $query
+     */
+    #[Scope]
+    protected function withFruitCategory(Builder $query): void
+    {
+        $query->whereIn('type', ProductType::withFruitCategory());
     }
 
     /**
@@ -123,7 +170,16 @@ class Product extends Model
 
     public function seoTitle(): string
     {
-        return $this->meta_title ?: $this->name.($this->isSeedling() ? ' Siap Tanam' : ' Segar').' – Harga '.$this->formattedPrice().' '.$this->price_unit;
+        return $this->meta_title ?: $this->name.$this->seoTitleSuffix().' – Harga '.$this->formattedPrice().' '.$this->price_unit;
+    }
+
+    private function seoTitleSuffix(): string
+    {
+        return match ($this->type) {
+            ProductType::Buah => ' Segar',
+            ProductType::Bibit => ' Siap Tanam',
+            default => '',
+        };
     }
 
     public function seoDescription(): string

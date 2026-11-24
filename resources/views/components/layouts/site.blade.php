@@ -53,15 +53,28 @@
         ],
     ];
 
-    $viewingSeedling = request()->route('product') instanceof App\Models\Product && request()->route('product')->isSeedling();
+    $viewedProduct = request()->route('product');
+    $viewedType = $viewedProduct instanceof App\Models\Product ? $viewedProduct->type : null;
+
+    $offeringItem = fn (App\Enums\Offering $offering): array => [
+        'label' => $offering->label(),
+        'url' => route('offerings.show', $offering),
+        'active' => request()->route('offering') === $offering || ($viewedType !== null && $viewedType === $offering->productType()),
+    ];
+
+    $productNavigation = [
+        ['label' => 'Hasil Perkebunan', 'url' => route('products.index'), 'active' => request()->routeIs('products.*') && in_array($viewedType, [null, App\Enums\ProductType::Buah], true)],
+        ['label' => 'Bibit', 'url' => route('seedlings.index'), 'active' => request()->routeIs('seedlings.*') || $viewedType === App\Enums\ProductType::Bibit],
+        $offeringItem(App\Enums\Offering::Pupuk),
+        $offeringItem(App\Enums\Offering::ProdukKesehatan),
+    ];
 
     $navigation = [
-        ['label' => 'Beranda', 'route' => 'home', 'active' => request()->routeIs('home')],
-        ['label' => 'Buah Segar', 'route' => 'products.index', 'active' => request()->routeIs('products.*') && ! $viewingSeedling],
-        ['label' => 'Bibit', 'route' => 'seedlings.index', 'active' => request()->routeIs('seedlings.*') || $viewingSeedling],
-        ['label' => 'Artikel', 'route' => 'articles.index', 'active' => request()->routeIs('articles.*')],
-        ['label' => 'Tentang Kami', 'route' => 'about', 'active' => request()->routeIs('about')],
-        ['label' => 'Kontak', 'route' => 'contact', 'active' => request()->routeIs('contact')],
+        ['label' => 'Beranda', 'url' => route('home'), 'active' => request()->routeIs('home')],
+        ['label' => 'Produk', 'children' => $productNavigation, 'active' => in_array(true, array_column($productNavigation, 'active'), true)],
+        $offeringItem(App\Enums\Offering::Service),
+        ['label' => 'Artikel', 'url' => route('articles.index'), 'active' => request()->routeIs('articles.*')],
+        ['label' => 'Tentang Kami', 'url' => route('about'), 'active' => request()->routeIs('about')],
     ];
 @endphp
 <!DOCTYPE html>
@@ -124,22 +137,43 @@
     <header data-header @if ($transparentHeader) data-transparent @endif class="site-header fixed inset-x-0 top-0 z-50">
         <div class="header-inner mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
             <a href="{{ route('home') }}" class="group flex items-center gap-2.5" aria-label="{{ $siteName }} – Beranda">
-                <img src="{{ asset('images/logo.svg') }}" alt="" width="44" height="44" class="size-11 rounded-2xl shadow-lg shadow-husk-950/30 transition duration-500 group-hover:-rotate-12 group-hover:scale-105">
+                <img src="{{ asset('images/logo.svg') }}" alt="" width="44" height="44" class="size-11 rounded-full shadow-lg shadow-husk-950/30 transition duration-500 group-hover:-rotate-12 group-hover:scale-105">
                 <span class="leading-none">
                     <span class="block font-display text-xl font-bold tracking-tight">{{ $siteName }}</span>
-                    <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.25em] opacity-60">Buah Segar Bali</span>
+                    <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.25em] opacity-60">Hasil Perkebunan Bali</span>
                 </span>
             </a>
 
             <nav aria-label="Menu utama" class="hidden items-center lg:flex">
                 @foreach ($navigation as $item)
-                    <a href="{{ route($item['route']) }}" class="nav-link px-4 py-2.5 text-sm font-semibold"
-                       @if ($item['active']) aria-current="page" @endif>{{ $item['label'] }}</a>
+                    @isset($item['children'])
+                        <details data-dropdown class="group relative">
+                            <summary class="nav-link flex cursor-pointer items-center gap-1.5 px-4 py-2.5 text-sm font-semibold"
+                                     @if ($item['active']) aria-current="true" @endif>
+                                {{ $item['label'] }}
+                                <svg class="size-3 transition duration-300 group-open:rotate-180" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m2.5 4.5 3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </summary>
+                            <div class="mobile-menu absolute left-0 top-full pt-2">
+                                <div class="w-60 rounded-3xl bg-white p-2 text-stone-800 shadow-2xl shadow-husk-950/20 ring-1 ring-stone-200">
+                                    @foreach ($item['children'] as $child)
+                                        <a href="{{ $child['url'] }}" @class([
+                                            'block rounded-2xl px-4 py-3 text-sm font-semibold transition',
+                                            'bg-husk-50 text-husk-800' => $child['active'],
+                                            'hover:bg-stone-50' => ! $child['active'],
+                                        ]) @if ($child['active']) aria-current="page" @endif>{{ $child['label'] }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </details>
+                    @else
+                        <a href="{{ $item['url'] }}" class="nav-link px-4 py-2.5 text-sm font-semibold"
+                           @if ($item['active']) aria-current="page" @endif>{{ $item['label'] }}</a>
+                    @endisset
                 @endforeach
             </nav>
 
             <div class="flex items-center gap-2">
-                <x-site.whatsapp-link class="hidden sm:inline-flex" size="sm">Pesan Sekarang</x-site.whatsapp-link>
+                <x-site.whatsapp-link class="max-sm:hidden" size="sm">Pesan Sekarang</x-site.whatsapp-link>
 
                 <details class="group relative lg:hidden">
                     <summary class="flex size-11 items-center justify-center rounded-full bg-current/10 ring-1 ring-current/15 backdrop-blur" aria-label="Buka menu">
@@ -150,13 +184,20 @@
                     </summary>
                     <nav aria-label="Menu seluler" class="mobile-menu absolute right-0 mt-3 w-72 origin-top-right rounded-3xl bg-white p-3 text-stone-800 shadow-2xl shadow-husk-950/20 ring-1 ring-stone-200">
                         @foreach ($navigation as $item)
-                            <a href="{{ route($item['route']) }}" @class([
-                                'flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition',
-                                'bg-husk-50 text-husk-800' => $item['active'],
-                                'hover:bg-stone-50' => ! $item['active'],
-                            ])>
-                                {{ $item['label'] }} <span aria-hidden="true" class="text-flesh-500">&rarr;</span>
-                            </a>
+                            @isset($item['children'])
+                                <p class="px-4 pb-1 pt-3 text-xs font-bold uppercase tracking-[0.2em] text-stone-500">{{ $item['label'] }}</p>
+                            @endisset
+                            @foreach ($item['children'] ?? [$item] as $link)
+                                <a href="{{ $link['url'] }}" @class([
+                                    'flex items-center justify-between rounded-2xl py-3 pr-4 text-sm font-semibold transition',
+                                    'pl-7' => isset($item['children']),
+                                    'pl-4' => ! isset($item['children']),
+                                    'bg-husk-50 text-husk-800' => $link['active'],
+                                    'hover:bg-stone-50' => ! $link['active'],
+                                ])>
+                                    {{ $link['label'] }} <span aria-hidden="true" class="text-flesh-500">&rarr;</span>
+                                </a>
+                            @endforeach
                         @endforeach
                         <x-site.whatsapp-link class="mt-2 w-full">Pesan via WhatsApp</x-site.whatsapp-link>
                     </nav>
@@ -205,7 +246,9 @@
                     <p class="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Jelajahi</p>
                     <ul class="mt-5 space-y-3 text-sm">
                         @foreach ($navigation as $item)
-                            <li><a href="{{ route($item['route']) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ $item['label'] }}</a></li>
+                            @foreach ($item['children'] ?? [$item] as $link)
+                                <li><a href="{{ $link['url'] }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ $link['label'] }}</a></li>
+                            @endforeach
                         @endforeach
                     </ul>
                 </div>

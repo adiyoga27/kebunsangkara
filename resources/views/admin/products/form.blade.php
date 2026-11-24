@@ -11,7 +11,7 @@
                 <div class="space-y-4">
                     <x-admin.input name="name" label="Nama Produk" :value="$product->name" required help="Contoh: Durian Montong Bali, Alpukat Mentega, Manggis Bali." />
                     <div>
-                        <label for="category" class="block text-sm font-semibold text-stone-700">Kategori Buah</label>
+                        <label for="category" class="block text-sm font-semibold text-stone-700">Kategori Buah <span class="font-normal text-stone-500">(diabaikan untuk pupuk &amp; produk kesehatan)</span></label>
                         <select id="category" name="category" class="mt-1.5 block w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm">
                             @foreach (App\Enums\FruitCategory::cases() as $fruit)
                                 <option value="{{ $fruit->value }}" @selected(old('category', $product->category?->value) === $fruit->value)>{{ $fruit->emoji() }} {{ $fruit->label() }}</option>
@@ -37,7 +37,7 @@
                         <x-admin.input name="origin" label="Asal Kebun / Daerah" :value="$product->origin" help="Contoh: Kebun Sangkara, Tabanan" />
                     </div>
                     <div class="grid gap-4 rounded-xl bg-husk-50 p-4 sm:grid-cols-2">
-                        <p class="text-xs font-semibold text-husk-800 sm:col-span-2">🌱 Khusus bibit (kosongkan untuk buah segar)</p>
+                        <p class="text-xs font-semibold text-husk-800 sm:col-span-2">🌱 Khusus bibit (kosongkan untuk tipe produk lain)</p>
                         <x-admin.input name="propagation_method" label="Metode Perbanyakan" :value="$product->propagation_method" help="Contoh: Okulasi, Sambung pucuk, Cangkok" />
                         <x-admin.input name="plant_height" label="Tinggi Bibit" :value="$product->plant_height" help="Contoh: 60–80 cm" />
                     </div>

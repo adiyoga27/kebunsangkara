@@ -1,12 +1,12 @@
 <x-layouts.admin title="Produk">
-    <x-admin.page-header title="Produk" description="Kelola produk buah, harga, dan stok.">
+    <x-admin.page-header title="Produk" description="Kelola produk, harga, dan stok.">
         <x-slot:actions><x-admin.button-link href="{{ route('admin.products.create') }}">+ Tambah Produk</x-admin.button-link></x-slot:actions>
     </x-admin.page-header>
 
     <form class="mb-4 flex flex-wrap gap-2">
         <input name="q" value="{{ request('q') }}" placeholder="Cari produk..." class="w-full max-w-xs rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm">
         <select name="type" onchange="this.form.submit()" class="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm" aria-label="Tipe">
-            <option value="">Buah &amp; bibit</option>
+            <option value="">Semua tipe</option>
             @foreach (App\Enums\ProductType::cases() as $productType)
                 <option value="{{ $productType->value }}" @selected(request('type') === $productType->value)>{{ $productType->label() }}</option>
             @endforeach
@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-4 py-3">{{ $product->isSeedling() ? '🌱 Bibit' : $product->category->emoji() }} {{ $product->category->label() }}</td>
+                        <td class="px-4 py-3">{{ $product->badge() }}</td>
                         <td class="px-4 py-3 font-medium">{{ $product->formattedPrice() }} <span class="text-xs text-stone-500">{{ $product->price_unit }}</span></td>
                         <td class="px-4 py-3">
                             <span @class(['rounded-full px-2.5 py-0.5 text-xs font-semibold', 'bg-husk-100 text-husk-800' => $product->is_available, 'bg-stone-200 text-stone-600' => ! $product->is_available])>{{ $product->is_available ? 'Tersedia' : 'Habis' }}</span>

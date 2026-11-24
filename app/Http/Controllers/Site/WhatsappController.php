@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Enums\Offering;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\WhatsappClick;
@@ -24,15 +25,19 @@ class WhatsappController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        $message = $product
-            ? sprintf(
+        $offering = is_string($request->query('layanan')) ? Offering::tryFrom($request->query('layanan')) : null;
+
+        $message = match (true) {
+            $product !== null => sprintf(
                 'Halo, saya ingin memesan *%s* (%s %s). Apakah masih tersedia? %s',
                 $product->name,
                 $product->formattedPrice(),
                 $product->price_unit,
                 route('products.show', $product),
-            )
-            : $site->get('whatsapp_message');
+            ),
+            $offering !== null => sprintf('Halo, saya ingin bertanya tentang *%s*. %s', $offering->label(), route('offerings.show', $offering)),
+            default => $site->get('whatsapp_message'),
+        };
 
         return redirect()->away($site->whatsappUrl($message));
     }

@@ -14,6 +14,7 @@ it('lists pages, products and published articles in the XML sitemap', function (
         ->assertHeader('Content-Type', 'application/xml; charset=UTF-8')
         ->assertSee('<loc>'.route('products.show', $product).'</loc>', false)
         ->assertSee('<loc>'.route('products.category', FruitCategory::Manggis).'</loc>', false)
+        ->assertSee('<loc>'.url('/pupuk').'</loc>', false)
         ->assertSee('<loc>'.route('articles.show', $published).'</loc>', false)
         ->assertDontSee(route('articles.show', $draft), false);
 });

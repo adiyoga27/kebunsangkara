@@ -32,6 +32,24 @@ it('redirects to WhatsApp with the default message when no product is given', fu
     expect(WhatsappClick::sole()->product_id)->toBeNull();
 });
 
+it('redirects to WhatsApp with a message about the requested offering', function () {
+    $response = $this->get(route('whatsapp.order', ['layanan' => 'produk-kesehatan']));
+
+    expect(rawurldecode($response->headers->get('Location')))->toContain('*Produk Kesehatan*');
+    expect(WhatsappClick::sole()->product_id)->toBeNull();
+});
+
+it('falls back to the default message for an invalid offering', function (array|string $offering) {
+    app(SiteSettings::class)->update(['whatsapp_message' => 'Halo, mau pesan durian']);
+
+    $response = $this->get(route('whatsapp.order', ['layanan' => $offering]));
+
+    expect($response->headers->get('Location'))->toBe('https://wa.me/6281211112222?text='.rawurlencode('Halo, mau pesan durian'));
+})->with([
+    'unknown value' => ['tidak-ada'],
+    'array value' => [['pupuk']],
+]);
+
 it('stores the click time in the application timezone', function () {
     $this->travelTo(now()->setTime(9, 30));
 

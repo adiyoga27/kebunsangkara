@@ -39,6 +39,26 @@ it('lists all products on the price page', function () {
     $this->get(route('products.index'))->assertOk()->assertSee('Durian Kupas Box');
 });
 
+it('excludes products without a fruit category from the price page', function () {
+    Product::factory()->fertilizer()->create(['name' => 'Kompos Organik']);
+
+    $this->get(route('products.index'))->assertOk()->assertDontSee('Kompos Organik');
+});
+
+it('renders a product without a fruit category under its own listing page', function (string $state, string $path, string $image) {
+    $product = Product::factory()->{$state}()->create(['name' => 'Produk Contoh']);
+
+    $this->get(route('products.show', $product))
+        ->assertOk()
+        ->assertSee('Produk Contoh')
+        ->assertSee(asset($image), false)
+        ->assertSeeInOrder(['href="'.url($path).'"', 'aria-current="page"'], false)
+        ->assertDontSee('Produk Contoh Segar');
+})->with([
+    'pupuk' => ['fertilizer', '/pupuk', 'images/pupuk.svg'],
+    'produk kesehatan' => ['healthProduct', '/produk-kesehatan', 'images/produk-kesehatan.svg'],
+]);
+
 it('returns 404 for an unknown product slug', function () {
     $this->get('/produk/tidak-ada')->assertNotFound();
 });

@@ -117,3 +117,22 @@ it('stores a seedling with its propagation details', function () {
         ->propagation_method->toBe('Okulasi')
         ->plant_height->toBe('60–80 cm');
 });
+
+it('stores a product without a fruit category for types that have none', function (string $type) {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload(['type' => $type, 'category' => 'durian']))
+        ->assertRedirect(route('admin.products.index'));
+
+    $product = Product::sole();
+    expect($product->type->value)->toBe($type)
+        ->and($product->category)->toBeNull();
+
+    $this->get(route('admin.products.index'))->assertOk()->assertSee($product->name);
+    $this->get(route('admin.products.edit', $product))->assertOk();
+})->with(['pupuk', 'kesehatan']);
+
+it('requires a fruit category for fruit and seedlings', function (string $type) {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload(['type' => $type, 'category' => '']))
+        ->assertSessionHasErrors('category');
+})->with(['buah', 'bibit']);

@@ -12,7 +12,7 @@
 <body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-husk-900 to-husk-700 px-4 font-sans antialiased">
     <main class="w-full max-w-sm rounded-3xl bg-white p-8 shadow-2xl">
         <div class="text-center">
-            <img src="{{ asset('images/logo.svg') }}" alt="" class="mx-auto size-16 rounded-2xl">
+            <img src="{{ asset('images/logo.svg') }}" alt="" class="mx-auto size-16 rounded-full">
             <h1 class="mt-4 font-display text-2xl font-bold text-husk-900">Admin {{ $site->get('site_name') }}</h1>
             <p class="mt-1 text-sm text-stone-500">Masuk untuk mengelola website</p>
         </div>

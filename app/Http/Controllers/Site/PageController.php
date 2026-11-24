@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Enums\Offering;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\Testimonial;
 use Illuminate\View\View;
 
@@ -15,8 +17,13 @@ class PageController extends Controller
         ]);
     }
 
-    public function contact(): View
+    public function offering(Offering $offering): View
     {
-        return view('site.contact');
+        $type = $offering->productType();
+
+        return view('site.offering', [
+            'offering' => $offering,
+            'products' => $type ? Product::query()->ofType($type)->ordered()->get() : collect(),
+        ]);
     }
 }
