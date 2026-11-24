@@ -12,6 +12,7 @@
                 <x-admin.checkbox name="is_published" label="Tampilkan di website" :checked="$faq->is_published" />
             </div>
         </x-admin.card>
+        <x-admin.translation-fields :model="$faq" :fields="[['question', 'Pertanyaan', 1], ['answer', 'Jawaban', 5]]" />
         <x-admin.form-actions :cancel="route('admin.faqs.index')" />
     </form>
 </x-layouts.admin>

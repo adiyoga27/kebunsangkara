@@ -12,10 +12,10 @@ enum ProductType: string
     public function label(): string
     {
         return match ($this) {
-            self::Buah => 'Hasil Perkebunan',
-            self::Bibit => 'Bibit',
-            self::Pupuk => 'Pupuk',
-            self::Kesehatan => 'Produk Kesehatan',
+            self::Buah => __('Hasil Perkebunan'),
+            self::Bibit => __('Bibit'),
+            self::Pupuk => __('Pupuk'),
+            self::Kesehatan => __('Produk Kesehatan'),
         };
     }
 

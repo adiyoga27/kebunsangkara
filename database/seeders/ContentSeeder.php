@@ -28,6 +28,8 @@ class ContentSeeder extends Seeder
         $this->seedFaqs();
         $this->seedTestimonials();
         $this->seedArticles();
+
+        $this->call(EnglishTranslationSeeder::class);
     }
 
     private function seedFaqs(): void

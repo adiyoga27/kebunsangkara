@@ -39,6 +39,13 @@ class UpdateSettingsRequest extends FormRequest
             'home_meta_title' => ['required', 'string', 'max:70'],
             'home_meta_description' => ['required', 'string', 'max:170'],
             'about_content' => ['required', 'string', 'max:10000'],
+            'tagline_en' => ['nullable', 'string', 'max:150'],
+            'whatsapp_message_en' => ['nullable', 'string', 'max:300'],
+            'opening_hours_en' => ['nullable', 'string', 'max:150'],
+            'service_area_en' => ['nullable', 'string', 'max:300'],
+            'home_meta_title_en' => ['nullable', 'string', 'max:70'],
+            'home_meta_description_en' => ['nullable', 'string', 'max:170'],
+            'about_content_en' => ['nullable', 'string', 'max:10000'],
             'google_site_verification' => ['nullable', 'string', 'max:100', 'alpha_dash'],
             'google_analytics_id' => ['nullable', 'string', 'max:30', 'regex:/^G-[A-Z0-9]+$/'],
         ];

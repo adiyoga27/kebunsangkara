@@ -12,7 +12,7 @@ class ArticleController extends Controller
     public function index(): View
     {
         return view('site.articles.index', [
-            'articles' => Article::query()->published()->latest('published_at')->paginate(9),
+            'articles' => Article::query()->published()->availableInCurrentLocale()->latest('published_at')->paginate(9),
         ]);
     }
 
@@ -22,7 +22,7 @@ class ArticleController extends Controller
 
         return view('site.articles.show', [
             'article' => $article->load('author'),
-            'latestArticles' => Article::query()->published()->whereKeyNot($article->getKey())->latest('published_at')->limit(3)->get(),
+            'latestArticles' => Article::query()->published()->availableInCurrentLocale()->whereKeyNot($article->getKey())->latest('published_at')->limit(3)->get(),
             'products' => Product::query()->where('is_available', true)->ordered()->limit(3)->get(),
         ]);
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\ValidatesTranslations;
+use App\Models\Article;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -9,6 +11,8 @@ use Illuminate\Validation\Rule;
 
 class SaveArticleRequest extends FormRequest
 {
+    use ValidatesTranslations;
+
     public function authorize(): bool
     {
         return true;
@@ -28,6 +32,7 @@ class SaveArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
+            ...$this->translationRules(Article::class),
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:160', 'alpha_dash', Rule::unique('articles', 'slug')->ignore($this->route('article'))],
             'excerpt' => ['required', 'string', 'max:320'],

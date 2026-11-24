@@ -47,6 +47,16 @@
                 </div>
             </x-admin.card>
             <x-admin.seo-fields :model="$product" />
+            <x-admin.translation-fields :model="$product" :fields="[
+                ['name', 'Nama Produk', 1],
+                ['short_description', 'Deskripsi Singkat', 2],
+                ['description', 'Deskripsi Lengkap', 10],
+                ['price_unit', 'Satuan', 1],
+                ['variety', 'Varietas', 1],
+                ['propagation_method', 'Metode Perbanyakan', 1],
+                ['meta_title', 'Meta Title', 1],
+                ['meta_description', 'Meta Description', 2],
+            ]" />
         </div>
 
         <div class="space-y-6">
@@ -60,7 +70,8 @@
                 </div>
             </x-admin.card>
             <x-admin.card title="Foto">
-                <x-admin.image-field :current-url="$product->imageUrl()" />
+                <x-admin.image-field label="Foto Utama" :current-url="$product->imageUrl()" data-image-resize />
+                <x-admin.gallery-field :product="$product" />
             </x-admin.card>
             <x-admin.form-actions :cancel="route('admin.products.index')" />
         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Enums\Locale;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 
@@ -11,6 +12,13 @@ use Illuminate\Support\Facades\Cache;
 class SiteSettings
 {
     private const CACHE_KEY = 'site-settings';
+
+    /**
+     * Settings with an English version stored under the same key suffixed with "_en".
+     */
+    public const TRANSLATABLE = [
+        'tagline', 'whatsapp_message', 'opening_hours', 'service_area', 'home_meta_title', 'home_meta_description', 'about_content',
+    ];
 
     /**
      * @var array<string, string|null>|null
@@ -46,6 +54,13 @@ class SiteSettings
             'home_meta_title' => 'Kebun Sangkara – Jual Buah & Bibit Durian, Alpukat & Manggis Bali',
             'home_meta_description' => 'Kebun Sangkara Bali menjual buah segar & bibit unggul: durian, alpukat & manggis langsung dari kebun. Bibit okulasi siap tanam. Pesan via WhatsApp!',
             'about_content' => "**Kebun Sangkara** adalah kebun buah di Bali yang menanam dan menjual durian, alpukat, dan manggis langsung kepada pelanggan.\n\nSetiap buah kami petik saat matang, dipilih satu per satu, lalu dikirim segar ke rumah, villa, maupun hotel Anda di seluruh Bali — tanpa perantara, sehingga kualitas dan harga tetap terjaga.",
+            'tagline_en' => 'Fresh Fruit & Quality Seedlings Straight from a Bali Farm',
+            'whatsapp_message_en' => 'Hello Kebun Sangkara, I would like to order some fruit.',
+            'opening_hours_en' => 'Every day, 8 am – 8 pm WITA',
+            'service_area_en' => 'Denpasar, Badung, Gianyar, Tabanan, Kuta, Seminyak, Canggu, Ubud, Nusa Dua & all of Bali',
+            'home_meta_title_en' => 'Kebun Sangkara – Durian, Avocado & Mangosteen Farm in Bali',
+            'home_meta_description_en' => 'Kebun Sangkara Bali sells fresh fruit & quality seedlings: durian, avocado & mangosteen straight from the farm. Order via WhatsApp!',
+            'about_content_en' => "**Kebun Sangkara** is a fruit farm in Bali that grows durian, avocado and mangosteen and sells them directly to customers.\n\nWe pick every fruit when it is ripe, select it by hand, and deliver it fresh to your home, villa or hotel anywhere in Bali — with no middlemen, so quality and prices stay fair.",
             'google_site_verification' => '',
             'google_analytics_id' => '',
         ];
@@ -54,6 +69,10 @@ class SiteSettings
     public function get(string $key, ?string $default = null): ?string
     {
         $value = $this->all()[$key] ?? null;
+
+        if (! Locale::current()->isDefault() && in_array($key, self::TRANSLATABLE, true)) {
+            $value = ($this->all()[$key.'_'.Locale::current()->value] ?? null) ?: $value;
+        }
 
         return $value === null || $value === '' ? $default : $value;
     }

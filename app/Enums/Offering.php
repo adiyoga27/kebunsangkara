@@ -14,9 +14,9 @@ enum Offering: string
     public function label(): string
     {
         return match ($this) {
-            self::Pupuk => 'Pupuk',
-            self::ProdukKesehatan => 'Produk Kesehatan',
-            self::Service => 'Service',
+            self::Pupuk => __('Pupuk'),
+            self::ProdukKesehatan => __('Produk Kesehatan'),
+            self::Service => __('Service'),
         };
     }
 
@@ -44,9 +44,9 @@ enum Offering: string
     public function intro(): string
     {
         return match ($this) {
-            self::Pupuk => 'Informasi pupuk dari Kebun Sangkara. Tanyakan jenis, harga, dan ketersediaan terbaru melalui WhatsApp.',
-            self::ProdukKesehatan => 'Informasi produk kesehatan dari Kebun Sangkara. Tanyakan pilihan produk, harga, dan ketersediaan terbaru melalui WhatsApp.',
-            self::Service => 'Informasi layanan dari Kebun Sangkara. Ceritakan kebutuhan Anda dan tanyakan layanan yang tersedia melalui WhatsApp.',
+            self::Pupuk => __('Informasi pupuk dari Kebun Sangkara. Tanyakan jenis, harga, dan ketersediaan terbaru melalui WhatsApp.'),
+            self::ProdukKesehatan => __('Informasi produk kesehatan dari Kebun Sangkara. Tanyakan pilihan produk, harga, dan ketersediaan terbaru melalui WhatsApp.'),
+            self::Service => __('Informasi layanan dari Kebun Sangkara. Ceritakan kebutuhan Anda dan tanyakan layanan yang tersedia melalui WhatsApp.'),
         };
     }
 }

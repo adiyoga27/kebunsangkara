@@ -28,3 +28,21 @@ it('escapes closing script tags inside JSON-LD data', function () {
         ->assertOk()
         ->assertDontSee('</script><script>alert(1)', false);
 });
+
+it('lists buyer testimonials with the product bought at the bottom of the page', function () {
+    $product = Product::factory()->create(['name' => 'Durian Lokal']);
+    Testimonial::factory()->for($product)->create(['name' => 'Made', 'content' => 'Durian paling enak']);
+
+    $this->get(route('home'))
+        ->assertSeeInOrder(['Hasil panen terbatas setiap harinya', 'Kata Pembeli Produk Kami', 'Durian paling enak', 'Made', 'Membeli', 'Durian Lokal', '<footer'], false)
+        ->assertSee(route('products.show', $product), false)
+        ->assertDontSee('Sudah pernah membeli produk kami?');
+});
+
+it('invites buyers to send a testimonial when none is published', function () {
+    Testimonial::factory()->create(['is_published' => false]);
+
+    $this->get(route('home'))
+        ->assertSee('Sudah pernah membeli produk kami?')
+        ->assertSee(rawurlencode('Halo, saya ingin memberi testimoni tentang produk yang saya beli.'), false);
+});

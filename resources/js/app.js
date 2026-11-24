@@ -233,10 +233,127 @@ function initDropdowns() {
     });
 }
 
+/**
+ * Product photo slider: arrows and thumbnails drive a native scroll-snap track, which also supports swiping.
+ */
+function initSliders() {
+    document.querySelectorAll('[data-slider]').forEach((slider) => {
+        const track = slider.querySelector('[data-slider-track]');
+        const thumbs = [...slider.querySelectorAll('[data-slider-thumb]')];
+        const current = slider.querySelector('[data-slider-current]');
+        const total = track.children.length;
+        let index = 0;
+        let target = null;
+
+        const show = (next) => {
+            index = target = (next + total) % total;
+            track.scrollTo({ left: index * track.clientWidth, behavior: reducedMotion ? 'auto' : 'smooth' });
+            update();
+        };
+        const update = () => {
+            current.textContent = index + 1;
+            thumbs.forEach((thumb, position) => thumb.setAttribute('aria-current', String(position === index)));
+        };
+
+        slider.querySelector('[data-slider-prev]').addEventListener('click', () => show(index - 1));
+        slider.querySelector('[data-slider-next]').addEventListener('click', () => show(index + 1));
+        thumbs.forEach((thumb, position) => thumb.addEventListener('click', () => show(position)));
+        track.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                event.preventDefault();
+                show(index + (event.key === 'ArrowRight' ? 1 : -1));
+            }
+        });
+
+        let settle;
+        track.addEventListener(
+            'scroll',
+            () => {
+                clearTimeout(settle);
+                settle = setTimeout(() => {
+                    const position = Math.round(track.scrollLeft / track.clientWidth);
+                    // A slow animation may pause before it reaches the photo that was clicked.
+                    if (target !== null && position !== target) {
+                        return;
+                    }
+                    target = null;
+                    index = position;
+                    update();
+                }, 120);
+            },
+            { passive: true },
+        );
+        ['pointerdown', 'touchstart', 'wheel'].forEach((name) => track.addEventListener(name, () => (target = null), { passive: true }));
+        window.addEventListener('resize', () => track.scrollTo({ left: index * track.clientWidth }));
+    });
+}
+
+/**
+ * Shrink photos in the browser before upload so several phone photos fit within the server upload limits.
+ */
+function initImageResize() {
+    const maxSide = 1600;
+    const maxBytes = 700 * 1024;
+
+    const shrink = async (file) => {
+        try {
+            const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+            const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+            if (scale === 1 && file.size <= maxBytes) {
+                return file;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(bitmap.width * scale);
+            canvas.height = Math.round(bitmap.height * scale);
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#fff';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+            for (const quality of [0.85, 0.7, 0.55]) {
+                const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality));
+                if (blob && (blob.size <= maxBytes || quality === 0.55)) {
+                    return blob.size < file.size ? new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' }) : file;
+                }
+            }
+        } catch {
+            // Unreadable images are sent as they are; the server reports the validation error.
+        }
+
+        return file;
+    };
+
+    document.querySelectorAll('[data-image-resize]').forEach((input) => {
+        input.addEventListener('change', async () => {
+            const status = input.closest('div').querySelector('[data-image-resize-status]');
+            const submits = input.form?.querySelectorAll('button:not([type=button])') ?? [];
+
+            submits.forEach((button) => (button.disabled = true));
+            if (status) {
+                status.textContent = 'Menyiapkan foto…';
+            }
+
+            const transfer = new DataTransfer();
+            for (const file of input.files) {
+                transfer.items.add(await shrink(file));
+            }
+            input.files = transfer.files;
+
+            submits.forEach((button) => (button.disabled = false));
+            if (status) {
+                status.textContent = input.files.length ? `${input.files.length} foto siap diunggah.` : '';
+            }
+        });
+    });
+}
+
 initReveal();
 initHeader();
 initDropdowns();
 initAccordions();
+initSliders();
+initImageResize();
 
 if (!reducedMotion) {
     initCounters();

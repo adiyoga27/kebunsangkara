@@ -4,7 +4,7 @@
     <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-husk-100 to-flesh-100">
         <img src="{{ $article->imageUrl() ?? asset('images/kebun/kebun-alpukat.webp') }}" alt="{{ $article->title }}" width="480" height="300" loading="lazy" decoding="async"
              class="size-full object-cover transition duration-700 ease-out group-hover:scale-110">
-        <span class="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-husk-800 backdrop-blur">{{ $article->readingMinutes() }} menit baca</span>
+        <span class="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-husk-800 backdrop-blur">{{ __(':minutes menit baca', ['minutes' => $article->readingMinutes()]) }}</span>
     </div>
     <div class="flex flex-1 flex-col p-6">
         <time datetime="{{ $article->published_at?->toDateString() }}" class="text-xs font-bold uppercase tracking-[0.15em] text-flesh-500">{{ $article->published_at?->translatedFormat('d F Y') }}</time>
@@ -13,7 +13,7 @@
         </h3>
         <p class="mt-2 line-clamp-2 text-sm text-stone-500">{{ $article->excerpt }}</p>
         <span class="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-semibold text-husk-700">
-            Baca selengkapnya <span class="transition duration-300 group-hover:translate-x-1.5" aria-hidden="true">&rarr;</span>
+            {{ __('Baca selengkapnya') }} <span class="transition duration-300 group-hover:translate-x-1.5" aria-hidden="true">&rarr;</span>
         </span>
     </div>
 </article>

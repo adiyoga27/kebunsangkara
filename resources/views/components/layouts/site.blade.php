@@ -8,12 +8,18 @@
     'noindex' => false,
     'fullTitle' => false,
     'transparentHeader' => false,
+    'locales' => App\Enums\Locale::cases(),
 ])
 
 @php
     $siteName = $site->get('site_name');
     $pageTitle = $fullTitle ? $title : $title.' | '.$siteName;
     $canonical ??= url()->current();
+
+    $locale = App\Enums\Locale::current();
+    $noindex = $noindex || ! in_array($locale, $locales, true);
+    $localeUrl = fn (App\Enums\Locale $target): string => route(request()->route()->getName(), [...request()->route()->parameters(), 'locale' => $target->value]);
+    $alternates = count($locales) > 1 ? $locales : [];
     $image ??= asset('images/kebun/durian-matang-di-pohon.webp');
 
     $business = [
@@ -48,7 +54,7 @@
         '@context' => 'https://schema.org',
         '@graph' => [
             $business,
-            ['@type' => 'WebSite', '@id' => route('home').'#website', 'url' => route('home'), 'name' => $siteName, 'inLanguage' => 'id-ID', 'publisher' => ['@id' => route('home').'#store']],
+            ['@type' => 'WebSite', '@id' => route('home').'#website', 'url' => route('home'), 'name' => $siteName, 'inLanguage' => $locale->value, 'publisher' => ['@id' => route('home').'#store']],
             ...$schemas,
         ],
     ];
@@ -63,22 +69,22 @@
     ];
 
     $productNavigation = [
-        ['label' => 'Hasil Perkebunan', 'url' => route('products.index'), 'active' => request()->routeIs('products.*') && in_array($viewedType, [null, App\Enums\ProductType::Buah], true)],
-        ['label' => 'Bibit', 'url' => route('seedlings.index'), 'active' => request()->routeIs('seedlings.*') || $viewedType === App\Enums\ProductType::Bibit],
+        ['label' => __('Hasil Perkebunan'), 'url' => route('products.index'), 'active' => request()->routeIs('products.*') && in_array($viewedType, [null, App\Enums\ProductType::Buah], true)],
+        ['label' => __('Bibit'), 'url' => route('seedlings.index'), 'active' => request()->routeIs('seedlings.*') || $viewedType === App\Enums\ProductType::Bibit],
         $offeringItem(App\Enums\Offering::Pupuk),
         $offeringItem(App\Enums\Offering::ProdukKesehatan),
     ];
 
     $navigation = [
-        ['label' => 'Beranda', 'url' => route('home'), 'active' => request()->routeIs('home')],
-        ['label' => 'Produk', 'children' => $productNavigation, 'active' => in_array(true, array_column($productNavigation, 'active'), true)],
+        ['label' => __('Beranda'), 'url' => route('home'), 'active' => request()->routeIs('home')],
+        ['label' => __('Produk'), 'children' => $productNavigation, 'active' => in_array(true, array_column($productNavigation, 'active'), true)],
         $offeringItem(App\Enums\Offering::Service),
-        ['label' => 'Artikel', 'url' => route('articles.index'), 'active' => request()->routeIs('articles.*')],
-        ['label' => 'Tentang Kami', 'url' => route('about'), 'active' => request()->routeIs('about')],
+        ['label' => __('Artikel'), 'url' => route('articles.index'), 'active' => request()->routeIs('articles.*')],
+        ['label' => __('Tentang Kami'), 'url' => route('about'), 'active' => request()->routeIs('about')],
     ];
 @endphp
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ $locale->value }}">
 <head>
     <meta charset="utf-8">
     <script>document.documentElement.classList.add('js')</script>
@@ -86,6 +92,12 @@
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ Str::limit($description, 165) }}">
     <link rel="canonical" href="{{ $canonical }}">
+    @foreach ($alternates as $alternate)
+        <link rel="alternate" hreflang="{{ $alternate->value }}" href="{{ $localeUrl($alternate) }}">
+    @endforeach
+    @if ($alternates)
+        <link rel="alternate" hreflang="x-default" href="{{ $localeUrl(App\Enums\Locale::default()) }}">
+    @endif
     <meta name="robots" content="{{ $noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1' }}">
     <meta name="theme-color" content="#0f1c0a">
 
@@ -96,7 +108,12 @@
         <meta name="ICBM" content="{{ $site->get('latitude') }}, {{ $site->get('longitude') }}">
     @endif
 
-    <meta property="og:locale" content="id_ID">
+    <meta property="og:locale" content="{{ $locale->openGraph() }}">
+    @foreach ($alternates as $alternate)
+        @if ($alternate !== $locale)
+            <meta property="og:locale:alternate" content="{{ $alternate->openGraph() }}">
+        @endif
+    @endforeach
     <meta property="og:type" content="{{ $type }}">
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:title" content="{{ $pageTitle }}">
@@ -132,19 +149,19 @@
     @endif
 </head>
 <body class="overflow-x-clip bg-cream font-sans text-stone-800 antialiased">
-    <a href="#konten" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2">Langsung ke konten</a>
+    <a href="#konten" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2">{{ __('Langsung ke konten') }}</a>
 
     <header data-header @if ($transparentHeader) data-transparent @endif class="site-header fixed inset-x-0 top-0 z-50">
         <div class="header-inner mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-            <a href="{{ route('home') }}" class="group flex items-center gap-2.5" aria-label="{{ $siteName }} – Beranda">
+            <a href="{{ route('home') }}" class="group flex items-center gap-2.5" aria-label="{{ $siteName }} – {{ __('Beranda') }}">
                 <img src="{{ asset('images/logo.svg') }}" alt="" width="44" height="44" class="size-11 rounded-full shadow-lg shadow-husk-950/30 transition duration-500 group-hover:-rotate-12 group-hover:scale-105">
                 <span class="leading-none">
-                    <span class="block font-display text-xl font-bold tracking-tight">{{ $siteName }}</span>
-                    <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.25em] opacity-60">Hasil Perkebunan Bali</span>
+                    <span class="block font-display text-xl font-bold tracking-tight max-sm:text-lg">{{ $siteName }}</span>
+                    <span class="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.25em] opacity-60 max-sm:hidden">{{ __('Hasil Perkebunan Bali') }}</span>
                 </span>
             </a>
 
-            <nav aria-label="Menu utama" class="hidden items-center lg:flex">
+            <nav aria-label="{{ __('Menu utama') }}" class="hidden items-center lg:flex">
                 @foreach ($navigation as $item)
                     @isset($item['children'])
                         <details data-dropdown class="group relative">
@@ -173,16 +190,25 @@
             </nav>
 
             <div class="flex items-center gap-2">
-                <x-site.whatsapp-link class="max-sm:hidden" size="sm">Pesan Sekarang</x-site.whatsapp-link>
+                <nav aria-label="{{ __('Pilih bahasa') }}" class="flex items-center rounded-full bg-current/10 p-1 text-xs font-bold ring-1 ring-current/15 backdrop-blur">
+                    @foreach (App\Enums\Locale::cases() as $option)
+                        <a href="{{ $localeUrl($option) }}" hreflang="{{ $option->value }}" lang="{{ $option->value }}" title="{{ $option->label() }}" @class([
+                            'flex h-9 min-w-9 items-center justify-center rounded-full px-2 uppercase transition',
+                            'bg-flesh-400 text-husk-950 max-sm:hidden' => $option === $locale,
+                            'sm:opacity-70 sm:hover:opacity-100' => $option !== $locale,
+                        ]) @if ($option === $locale) aria-current="page" @endif>{{ $option->value }}<span class="sr-only"> – {{ $option->label() }}</span></a>
+                    @endforeach
+                </nav>
+                <x-site.whatsapp-link class="max-sm:hidden" size="sm">{{ __('Pesan Sekarang') }}</x-site.whatsapp-link>
 
                 <details class="group relative lg:hidden">
-                    <summary class="flex size-11 items-center justify-center rounded-full bg-current/10 ring-1 ring-current/15 backdrop-blur" aria-label="Buka menu">
+                    <summary class="flex size-11 items-center justify-center rounded-full bg-current/10 ring-1 ring-current/15 backdrop-blur" aria-label="{{ __('Buka menu') }}">
                         <span class="relative block h-3 w-5" aria-hidden="true">
                             <span class="absolute inset-x-0 top-0 h-0.5 rounded bg-current transition duration-300 group-open:top-1.5 group-open:rotate-45"></span>
                             <span class="absolute inset-x-0 bottom-0 h-0.5 rounded bg-current transition duration-300 group-open:bottom-1 group-open:-rotate-45"></span>
                         </span>
                     </summary>
-                    <nav aria-label="Menu seluler" class="mobile-menu absolute right-0 mt-3 w-72 origin-top-right rounded-3xl bg-white p-3 text-stone-800 shadow-2xl shadow-husk-950/20 ring-1 ring-stone-200">
+                    <nav aria-label="{{ __('Menu seluler') }}" class="mobile-menu absolute right-0 mt-3 w-72 origin-top-right rounded-3xl bg-white p-3 text-stone-800 shadow-2xl shadow-husk-950/20 ring-1 ring-stone-200">
                         @foreach ($navigation as $item)
                             @isset($item['children'])
                                 <p class="px-4 pb-1 pt-3 text-xs font-bold uppercase tracking-[0.2em] text-stone-500">{{ $item['label'] }}</p>
@@ -199,7 +225,7 @@
                                 </a>
                             @endforeach
                         @endforeach
-                        <x-site.whatsapp-link class="mt-2 w-full">Pesan via WhatsApp</x-site.whatsapp-link>
+                        <x-site.whatsapp-link class="mt-2 w-full">{{ __('Pesan via WhatsApp') }}</x-site.whatsapp-link>
                     </nav>
                 </details>
             </div>
@@ -217,15 +243,15 @@
         <div class="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6">
             <div class="flex flex-col items-start justify-between gap-8 border-b border-white/10 pb-14 md:flex-row md:items-end">
                 <p class="max-w-2xl font-display text-4xl font-bold leading-tight text-white sm:text-5xl">
-                    Buah segar dari kebun, <span class="text-gradient-gold italic">tinggal satu chat</span> lagi.
+                    {{ __('Buah segar dari kebun,') }} <span class="text-gradient-gold italic">{{ __('tinggal satu chat') }}</span> {{ __('lagi.') }}
                 </p>
-                <x-site.whatsapp-link size="lg">Chat WhatsApp</x-site.whatsapp-link>
+                <x-site.whatsapp-link size="lg">{{ __('Chat WhatsApp') }}</x-site.whatsapp-link>
             </div>
 
             <div class="grid gap-10 py-14 md:grid-cols-4">
                 <div class="md:col-span-2">
                     <p class="font-display text-2xl font-bold text-white">{{ $siteName }}</p>
-                    <p class="mt-3 max-w-md text-sm leading-relaxed text-husk-200/80">{{ $site->get('tagline') }}. Melayani pengiriman buah segar ke {{ $site->get('service_area') }}.</p>
+                    <p class="mt-3 max-w-md text-sm leading-relaxed text-husk-200/80">{{ $site->get('tagline') }}. {{ __('Melayani pengiriman buah segar ke :area.', ['area' => $site->get('service_area')]) }}</p>
                     <div class="mt-6 flex gap-3">
                         @foreach (['instagram_url' => 'Instagram', 'facebook_url' => 'Facebook', 'tiktok_url' => 'TikTok'] as $key => $label)
                             @if ($site->get($key))
@@ -236,14 +262,14 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Buah Kami</p>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">{{ __('Buah Kami') }}</p>
                     <ul class="mt-5 space-y-3 text-sm">
                         @foreach (App\Enums\FruitCategory::cases() as $fruit)
-                            <li><a href="{{ route('products.category', $fruit) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ $fruit->label() }} Bali</a></li>
+                            <li><a href="{{ route('products.category', $fruit) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ __(':fruit Bali', ['fruit' => $fruit->label()]) }}</a></li>
                         @endforeach
-                        <li><a href="{{ route('seedlings.index') }}" class="inline-block transition hover:translate-x-1 hover:text-white">Bibit Buah Unggul</a></li>
+                        <li><a href="{{ route('seedlings.index') }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ __('Bibit Buah Unggul') }}</a></li>
                     </ul>
-                    <p class="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Jelajahi</p>
+                    <p class="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">{{ __('Jelajahi') }}</p>
                     <ul class="mt-5 space-y-3 text-sm">
                         @foreach ($navigation as $item)
                             @foreach ($item['children'] ?? [$item] as $link)
@@ -254,7 +280,7 @@
                 </div>
 
                 <address class="not-italic">
-                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">Kontak</p>
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">{{ __('Kontak') }}</p>
                     <ul class="mt-5 space-y-3 text-sm">
                         <li>{{ $site->get('street_address') }}, {{ $site->get('city') }}, {{ $site->get('region') }} {{ $site->get('postal_code') }}</li>
                         <li>WhatsApp: <a href="{{ route('whatsapp.order') }}" rel="nofollow" class="font-semibold text-white hover:underline">{{ $site->get('phone_display') }}</a></li>
@@ -270,16 +296,16 @@
         <p class="relative select-none overflow-hidden whitespace-nowrap text-center font-display text-[18vw] font-bold leading-[0.8] text-white/[0.04]" aria-hidden="true">Kebun Sangkara</p>
 
         <div class="relative border-t border-white/10">
-            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. Buah segar &amp; bibit unggul dari kebun Bali – durian, alpukat &amp; manggis.</p>
+            <p class="mx-auto max-w-7xl px-4 py-6 text-xs text-husk-200/60 sm:px-6">&copy; {{ now()->year }} {{ $siteName }}. {{ __('Buah segar & bibit unggul dari kebun Bali – durian, alpukat & manggis.') }}</p>
         </div>
     </footer>
 
     <a href="{{ route('whatsapp.order') }}" rel="nofollow"
        class="group fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-whatsapp p-3.5 font-semibold text-white shadow-xl shadow-whatsapp/30 transition hover:scale-105 hover:bg-whatsapp-dark sm:py-3 sm:pl-3.5 sm:pr-5"
-       aria-label="Pesan buah via WhatsApp">
+       aria-label="{{ __('Pesan buah via WhatsApp') }}">
         <span class="absolute inset-0 animate-ping-slow rounded-full bg-whatsapp" aria-hidden="true"></span>
         <x-site.whatsapp-icon class="relative size-7 transition duration-500 group-hover:rotate-[360deg]" />
-        <span class="relative hidden sm:inline">Chat WhatsApp</span>
+        <span class="relative hidden sm:inline">{{ __('Chat WhatsApp') }}</span>
     </a>
 </body>
 </html>

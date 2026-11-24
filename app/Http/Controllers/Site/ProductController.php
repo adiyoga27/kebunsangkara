@@ -15,7 +15,7 @@ class ProductController extends Controller
     {
         return view('site.products.index', [
             'products' => Product::query()->withFruitCategory()->ordered()->get(),
-            'faqs' => Faq::query()->where('is_published', true)->orderBy('sort_order')->get(),
+            'faqs' => Faq::query()->where('is_published', true)->availableInCurrentLocale()->orderBy('sort_order')->get(),
         ]);
     }
 
@@ -35,14 +35,14 @@ class ProductController extends Controller
     {
         return view('site.products.seedlings', [
             'seedlings' => Product::query()->ofType(ProductType::Bibit)->ordered()->get(),
-            'faqs' => Faq::query()->where('is_published', true)->orderBy('sort_order')->get(),
+            'faqs' => Faq::query()->where('is_published', true)->availableInCurrentLocale()->orderBy('sort_order')->get(),
         ]);
     }
 
     public function show(Product $product): View
     {
         return view('site.products.show', [
-            'product' => $product,
+            'product' => $product->load('images'),
             'relatedProducts' => Product::query()
                 ->whereKeyNot($product->getKey())
                 ->orderByRaw('type = ? desc', [$product->type->value])

@@ -28,7 +28,7 @@ it('seeds every product type with pages that render', function () {
 
     Product::all()->each(fn (Product $product) => $this->get(route('products.show', $product))->assertOk()->assertSee($product->name));
 
-    foreach (['/', '/produk', '/bibit', '/pupuk', '/produk-kesehatan', '/sitemap.xml'] as $path) {
+    foreach (['/id', '/id/produk', '/id/bibit', '/id/pupuk', '/id/produk-kesehatan', '/sitemap.xml'] as $path) {
         $this->get($path)->assertOk();
     }
 });

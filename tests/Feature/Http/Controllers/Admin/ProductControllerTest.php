@@ -3,6 +3,7 @@
 use App\Enums\ActivityAction;
 use App\Models\ActivityLog;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -136,3 +137,138 @@ it('requires a fruit category for fruit and seedlings', function (string $type) 
         ->post(route('admin.products.store'), validProductPayload(['type' => $type, 'category' => '']))
         ->assertSessionHasErrors('category');
 })->with(['buah', 'bibit']);
+
+it('stores several gallery photos and uses the first one as the main photo when none is uploaded', function () {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload(['images' => [
+            UploadedFile::fake()->image('a.jpg'), UploadedFile::fake()->image('b.png'), UploadedFile::fake()->image('c.webp'),
+        ]]))
+        ->assertRedirect(route('admin.products.index'));
+
+    $product = Product::sole();
+    expect($product->images)->toHaveCount(2)
+        ->and($product->image_path)->not->toBeNull();
+    Storage::disk('public')->assertExists([$product->image_path, ...$product->images->pluck('path')]);
+});
+
+it('keeps the main photo and adds and removes gallery photos on update', function () {
+    $product = Product::factory()->create(['image_path' => 'products/utama.jpg']);
+    $removed = ProductImage::factory()->for($product)->create(['path' => 'products/hapus.jpg']);
+    $kept = ProductImage::factory()->for($product)->create(['path' => 'products/simpan.jpg']);
+    foreach (['utama', 'hapus', 'simpan'] as $name) {
+        Storage::disk('public')->put("products/{$name}.jpg", 'x');
+    }
+
+    $this->actingAs($this->editor)
+        ->put(route('admin.products.update', $product), validProductPayload([
+            'slug' => $product->slug,
+            'remove_images' => [$removed->id],
+            'images' => [UploadedFile::fake()->image('baru.jpg')],
+        ]))
+        ->assertRedirect(route('admin.products.index'));
+
+    $product->refresh();
+    expect($product->image_path)->toBe('products/utama.jpg')
+        ->and($product->images)->toHaveCount(2)
+        ->and($product->images->first()->is($kept))->toBeTrue();
+    $this->assertModelMissing($removed);
+    Storage::disk('public')->assertMissing('products/hapus.jpg');
+    Storage::disk('public')->assertExists(['products/utama.jpg', 'products/simpan.jpg', $product->images->last()->path]);
+});
+
+it('promotes a gallery photo when the main photo is removed', function () {
+    $product = Product::factory()->create(['image_path' => 'products/utama.jpg']);
+    ProductImage::factory()->for($product)->create(['path' => 'products/kedua.jpg']);
+    Storage::disk('public')->put('products/utama.jpg', 'x');
+    Storage::disk('public')->put('products/kedua.jpg', 'x');
+
+    $this->actingAs($this->editor)
+        ->put(route('admin.products.update', $product), validProductPayload(['slug' => $product->slug, 'remove_image' => '1']))
+        ->assertRedirect(route('admin.products.index'));
+
+    expect($product->fresh()->image_path)->toBe('products/kedua.jpg')
+        ->and($product->images()->count())->toBe(0);
+    Storage::disk('public')->assertMissing('products/utama.jpg');
+    Storage::disk('public')->assertExists('products/kedua.jpg');
+});
+
+it('rejects a gallery upload that is not an image', function () {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload(['images' => [UploadedFile::fake()->create('virus.php', 10, 'application/x-php')]]))
+        ->assertSessionHasErrors('images.0');
+
+    expect(Product::count())->toBe(0);
+});
+
+it('rejects more than ten photos including the existing ones', function () {
+    $product = Product::factory()->create(['image_path' => 'products/utama.jpg']);
+    ProductImage::factory()->for($product)->count(8)->create();
+
+    $this->actingAs($this->editor)
+        ->put(route('admin.products.update', $product), validProductPayload([
+            'slug' => $product->slug,
+            'images' => [UploadedFile::fake()->image('a.jpg'), UploadedFile::fake()->image('b.jpg')],
+        ]))
+        ->assertSessionHasErrors(['images' => 'Maksimal 10 foto per produk, termasuk foto utama.']);
+
+    expect($product->images()->count())->toBe(8);
+});
+
+it('does not remove a gallery photo of another product', function () {
+    $product = Product::factory()->create();
+    $other = ProductImage::factory()->create();
+
+    $this->actingAs($this->editor)
+        ->put(route('admin.products.update', $product), validProductPayload(['slug' => $product->slug, 'remove_images' => [$other->id]]))
+        ->assertSessionHasErrors('remove_images.0');
+
+    $this->assertModelExists($other);
+});
+
+it('deletes the gallery photos together with the product', function () {
+    $product = Product::factory()->create();
+    $image = ProductImage::factory()->for($product)->create(['path' => 'products/galeri.jpg']);
+    Storage::disk('public')->put('products/galeri.jpg', 'x');
+
+    $this->actingAs($this->editor)->delete(route('admin.products.destroy', $product))->assertRedirect();
+
+    $this->assertModelMissing($image);
+    Storage::disk('public')->assertMissing('products/galeri.jpg');
+});
+
+it('shows the gallery photos on the edit form', function () {
+    $image = ProductImage::factory()->create();
+
+    $this->actingAs($this->editor)
+        ->get(route('admin.products.edit', $image->product))
+        ->assertOk()
+        ->assertSee($image->url(), false)
+        ->assertSee('name="images[]"', false);
+});
+
+it('saves the English version and drops empty translations', function () {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload(['translations' => ['en' => ['name' => 'Bali Montong Durian', 'variety' => '']]]))
+        ->assertRedirect(route('admin.products.index'));
+
+    $product = Product::sole();
+    expect($product->name)->toBe('Durian Montong Bali')
+        ->and($product->translations)->toBe(['en' => ['name' => 'Bali Montong Durian']]);
+
+    $this->actingAs($this->editor)
+        ->get(route('admin.products.edit', $product))
+        ->assertSee('name="translations[en][name]"', false)
+        ->assertSee('value="Bali Montong Durian"', false);
+});
+
+it('rejects invalid translations', function (array $translations, string $error) {
+    $this->actingAs($this->editor)
+        ->post(route('admin.products.store'), validProductPayload(['translations' => $translations]))
+        ->assertSessionHasErrors($error);
+
+    expect(Product::count())->toBe(0);
+})->with([
+    'unknown language' => [['fr' => ['name' => 'Durian']], 'translations'],
+    'unknown attribute' => [['en' => ['price' => '1']], 'translations.en'],
+    'too long' => [['en' => ['name' => str_repeat('a', 151)]], 'translations.en.name'],
+]);

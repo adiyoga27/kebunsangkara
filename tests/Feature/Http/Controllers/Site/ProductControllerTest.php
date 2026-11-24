@@ -2,6 +2,7 @@
 
 use App\Enums\FruitCategory;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Support\Facades\DB;
 
 it('renders a product page with Product structured data and price', function () {
@@ -55,12 +56,28 @@ it('renders a product without a fruit category under its own listing page', func
         ->assertSeeInOrder(['href="'.url($path).'"', 'aria-current="page"'], false)
         ->assertDontSee('Produk Contoh Segar');
 })->with([
-    'pupuk' => ['fertilizer', '/pupuk', 'images/pupuk.svg'],
-    'produk kesehatan' => ['healthProduct', '/produk-kesehatan', 'images/produk-kesehatan.svg'],
+    'pupuk' => ['fertilizer', '/id/pupuk', 'images/pupuk.svg'],
+    'produk kesehatan' => ['healthProduct', '/id/produk-kesehatan', 'images/produk-kesehatan.svg'],
 ]);
 
+it('shows a slider with every photo when a product has a gallery', function () {
+    $product = Product::factory()->create(['image_path' => 'products/utama.jpg']);
+    ProductImage::factory()->for($product)->create(['path' => 'products/kedua.jpg']);
+
+    $this->get(route('products.show', $product))
+        ->assertOk()
+        ->assertSee('data-slider-track', false)
+        ->assertSeeInOrder([asset('storage/products/utama.jpg'), asset('storage/products/kedua.jpg')], false);
+});
+
+it('shows no slider when a product has a single photo', function () {
+    $this->get(route('products.show', Product::factory()->create()))
+        ->assertOk()
+        ->assertDontSee('data-slider', false);
+});
+
 it('returns 404 for an unknown product slug', function () {
-    $this->get('/produk/tidak-ada')->assertNotFound();
+    $this->get('/id/produk/tidak-ada')->assertNotFound();
 });
 
 it('shows only products of the requested fruit category', function () {
@@ -75,7 +92,7 @@ it('shows only products of the requested fruit category', function () {
 });
 
 it('returns 404 for an unknown fruit category', function () {
-    $this->get('/buah/rambutan')->assertNotFound();
+    $this->get('/id/buah/rambutan')->assertNotFound();
 });
 
 it('uses the category photo when a product has no uploaded image', function () {
@@ -112,7 +129,7 @@ it('hides products whose fruit category is no longer sold without deleting them'
 
     $this->get(route('products.index'))->assertOk()->assertDontSee('Jeruk Siam Bali');
     $this->get(route('products.show', $product->slug))->assertNotFound();
-    $this->get('/buah/jeruk')->assertNotFound();
+    $this->get('/id/buah/jeruk')->assertNotFound();
     $this->get(route('sitemap'))->assertOk()->assertDontSee($product->slug);
 
     $this->assertDatabaseHas('products', ['id' => $product->id]);

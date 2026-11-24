@@ -28,14 +28,13 @@ class WhatsappController extends Controller
         $offering = is_string($request->query('layanan')) ? Offering::tryFrom($request->query('layanan')) : null;
 
         $message = match (true) {
-            $product !== null => sprintf(
-                'Halo, saya ingin memesan *%s* (%s %s). Apakah masih tersedia? %s',
-                $product->name,
-                $product->formattedPrice(),
-                $product->price_unit,
-                route('products.show', $product),
-            ),
-            $offering !== null => sprintf('Halo, saya ingin bertanya tentang *%s*. %s', $offering->label(), route('offerings.show', $offering)),
+            $product !== null => __('Halo, saya ingin memesan *:name* (:price :unit). Apakah masih tersedia? :url', [
+                'name' => $product->name,
+                'price' => $product->formattedPrice(),
+                'unit' => $product->price_unit,
+                'url' => route('products.show', $product),
+            ]),
+            $offering !== null => __('Halo, saya ingin bertanya tentang *:topic*. :url', ['topic' => $offering->label(), 'url' => route('offerings.show', $offering)]),
             default => $site->get('whatsapp_message'),
         };
 

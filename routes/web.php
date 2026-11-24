@@ -1,9 +1,12 @@
 <?php
 
+use App\Enums\Locale;
 use App\Enums\Offering;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Site;
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\SetLocale;
+use App\Support\SiteMarkdown;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,22 +15,29 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', Site\HomeController::class)->name('home');
-Route::get('/produk', [Site\ProductController::class, 'index'])->name('products.index');
-Route::get('/produk/{product}', [Site\ProductController::class, 'show'])->name('products.show');
-Route::get('/bibit', [Site\ProductController::class, 'seedlings'])->name('seedlings.index');
-Route::get('/buah/{category}', [Site\ProductController::class, 'category'])->name('products.category');
-Route::get('/artikel', [Site\ArticleController::class, 'index'])->name('articles.index');
-Route::get('/artikel/{article}', [Site\ArticleController::class, 'show'])->name('articles.show');
-Route::get('/tentang-kami', [Site\PageController::class, 'about'])->name('about');
-Route::redirect('/kontak', '/tentang-kami#kontak', 301);
-Route::get('/{offering}', [Site\PageController::class, 'offering'])
-    ->whereIn('offering', Offering::cases())
-    ->name('offerings.show');
+Route::redirect('/', '/'.Locale::default()->value, 301);
 
-Route::get('/pesan/{product?}', Site\WhatsappController::class)
-    ->middleware('throttle:whatsapp')
-    ->name('whatsapp.order');
+Route::prefix('{locale}')->whereIn('locale', Locale::cases())->middleware(SetLocale::class)->group(function (): void {
+    Route::get('/', Site\HomeController::class)->name('home');
+    Route::get('/produk', [Site\ProductController::class, 'index'])->name('products.index');
+    Route::get('/produk/{product}', [Site\ProductController::class, 'show'])->name('products.show');
+    Route::get('/bibit', [Site\ProductController::class, 'seedlings'])->name('seedlings.index');
+    Route::get('/buah/{category}', [Site\ProductController::class, 'category'])->name('products.category');
+    Route::get('/artikel', [Site\ArticleController::class, 'index'])->name('articles.index');
+    Route::get('/artikel/{article}', [Site\ArticleController::class, 'show'])->name('articles.show');
+    Route::get('/tentang-kami', [Site\PageController::class, 'about'])->name('about');
+    Route::get('/{offering}', [Site\PageController::class, 'offering'])
+        ->whereIn('offering', Offering::cases())
+        ->name('offerings.show');
+
+    Route::get('/pesan/{product?}', Site\WhatsappController::class)
+        ->middleware('throttle:whatsapp')
+        ->name('whatsapp.order');
+});
+
+// Links from before the website had language prefixes.
+Route::get('/{path}', Site\LegacyRedirectController::class)
+    ->where('path', '('.implode('|', SiteMarkdown::PAGE_SEGMENTS).')(/.*)?');
 
 Route::get('/sitemap.xml', [Site\SitemapController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [Site\SitemapController::class, 'robots'])->name('robots');

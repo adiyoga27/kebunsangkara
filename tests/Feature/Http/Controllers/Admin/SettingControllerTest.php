@@ -34,3 +34,12 @@ it('rejects an invalid WhatsApp number', function () {
         ->put(route('admin.settings.update'), validSettingsPayload(['whatsapp_number' => 'bukan nomor']))
         ->assertSessionHasErrors('whatsapp_number');
 });
+
+it('shows English settings on English pages and falls back to Indonesian when empty', function () {
+    $this->actingAs(User::factory()->admin()->create())
+        ->put(route('admin.settings.update'), validSettingsPayload(['tagline' => 'Buah Kebun', 'tagline_en' => 'Farm Fruit', 'opening_hours' => 'Setiap hari', 'opening_hours_en' => '']))
+        ->assertSessionHasNoErrors();
+
+    $this->get('/en')->assertSee('Farm Fruit')->assertDontSee('Buah Kebun')->assertSee('Setiap hari');
+    $this->get('/id')->assertSee('Buah Kebun')->assertDontSee('Farm Fruit');
+});

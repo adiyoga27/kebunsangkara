@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
 use App\Models\Concerns\RecordsActivity;
 use Database\Factories\FaqFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class Faq extends Model
 {
     /** @use HasFactory<FaqFactory> */
-    use HasFactory, RecordsActivity;
+    use HasFactory, HasTranslations, RecordsActivity;
 
     /**
      * @return array<string, string>
@@ -23,6 +24,16 @@ class Faq extends Model
             'sort_order' => 'integer',
             'is_published' => 'boolean',
         ];
+    }
+
+    public static function translatableAttributes(): array
+    {
+        return ['question' => 255, 'answer' => 3000];
+    }
+
+    public static function requiredTranslations(): array
+    {
+        return ['question', 'answer'];
     }
 
     public function activitySubjectLabel(): string

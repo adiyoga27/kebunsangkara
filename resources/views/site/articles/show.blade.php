@@ -8,7 +8,7 @@
             'image' => [$articleImage],
             'datePublished' => $article->published_at?->toAtomString(),
             'dateModified' => $article->updated_at?->toAtomString(),
-            'inLanguage' => 'id-ID',
+            'inLanguage' => App\Enums\Locale::current()->value,
             'mainEntityOfPage' => route('articles.show', $article),
             'author' => $article->author
                 ? ['@type' => 'Person', 'name' => $article->author->name]
@@ -18,8 +18,8 @@
         [
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
-                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => route('home')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Artikel', 'item' => route('articles.index')],
+                ['@type' => 'ListItem', 'position' => 1, 'name' => __('Beranda'), 'item' => route('home')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => __('Artikel'), 'item' => route('articles.index')],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $article->title, 'item' => route('articles.show', $article)],
             ],
         ],
@@ -32,6 +32,7 @@
     :canonical="route('articles.show', $article)"
     :image="$articleImage"
     type="article"
+    :locales="$article->availableLocales()"
     :schemas="$schemas"
 >
     <x-slot:head>
@@ -42,8 +43,8 @@
     <article class="mx-auto max-w-3xl px-4 pt-6 sm:px-6">
         <div data-reveal>
             <x-site.breadcrumbs :items="[
-                ['label' => 'Beranda', 'url' => route('home')],
-                ['label' => 'Artikel', 'url' => route('articles.index')],
+                ['label' => __('Beranda'), 'url' => route('home')],
+                ['label' => __('Artikel'), 'url' => route('articles.index')],
                 ['label' => $article->title, 'url' => null],
             ]" />
         </div>
@@ -52,8 +53,8 @@
             <h1 class="font-display text-4xl font-bold leading-[1.08] tracking-tight text-husk-950 sm:text-6xl">{{ $article->title }}</h1>
             <p class="mt-4 text-sm text-stone-500">
                 <time datetime="{{ $article->published_at?->toDateString() }}">{{ $article->published_at?->translatedFormat('d F Y') }}</time>
-                @if ($article->author) · oleh {{ $article->author->name }} @endif
-                · {{ $article->readingMinutes() }} menit baca
+                @if ($article->author) · {{ __('oleh :name', ['name' => $article->author->name]) }} @endif
+                · {{ __(':minutes menit baca', ['minutes' => $article->readingMinutes()]) }}
             </p>
         </header>
 
@@ -68,7 +69,7 @@
         @if ($products->isNotEmpty())
             <aside data-reveal class="grain relative mt-16 overflow-hidden rounded-[2rem] bg-husk-950 p-8 text-white sm:p-10" aria-labelledby="produk-artikel">
                 <img src="{{ asset('images/logo.svg') }}" alt="" class="absolute -right-6 -top-6 w-32 rotate-12 animate-float-slow opacity-90">
-                <h2 id="produk-artikel" class="relative max-w-sm font-display text-3xl font-bold">Pesan Buah Segar dari Kebun Kami</h2>
+                <h2 id="produk-artikel" class="relative max-w-sm font-display text-3xl font-bold">{{ __('Pesan Buah Segar dari Kebun Kami') }}</h2>
                 <ul class="relative mt-6 divide-y divide-white/10">
                     @foreach ($products as $product)
                         <li class="flex items-center justify-between gap-4 py-3">
@@ -77,14 +78,14 @@
                         </li>
                     @endforeach
                 </ul>
-                <div class="relative mt-8"><x-site.whatsapp-link>Pesan via WhatsApp</x-site.whatsapp-link></div>
+                <div class="relative mt-8"><x-site.whatsapp-link>{{ __('Pesan via WhatsApp') }}</x-site.whatsapp-link></div>
             </aside>
         @endif
     </article>
 
     @if ($latestArticles->isNotEmpty())
         <section class="mx-auto mt-28 max-w-7xl px-4 sm:px-6" aria-labelledby="artikel-lain">
-            <h2 id="artikel-lain" data-reveal class="font-display text-4xl font-bold text-husk-950">Artikel Lainnya</h2>
+            <h2 id="artikel-lain" data-reveal class="font-display text-4xl font-bold text-husk-950">{{ __('Artikel Lainnya') }}</h2>
             <div class="mt-10 grid gap-6 md:grid-cols-3" data-reveal-stagger="120">
                 @foreach ($latestArticles as $latest)
                     <div data-reveal><x-site.article-card :article="$latest" /></div>

@@ -17,6 +17,13 @@
                 </div>
             </x-admin.card>
             <x-admin.seo-fields :model="$article" />
+            <x-admin.translation-fields :model="$article" :fields="[
+                ['title', 'Judul', 1],
+                ['excerpt', 'Ringkasan', 2],
+                ['body', 'Isi Artikel', 22],
+                ['meta_title', 'Meta Title', 1],
+                ['meta_description', 'Meta Description', 2],
+            ]" />
         </div>
 
         <div class="space-y-6">

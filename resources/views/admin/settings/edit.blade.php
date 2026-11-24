@@ -48,6 +48,21 @@
             </div>
         </x-admin.card>
 
+        <x-admin.card title="Versi Inggris (/en)">
+            <p class="mb-5 text-xs text-stone-500">Jika dikosongkan, halaman Inggris memakai teks Indonesia.</p>
+            <div class="grid gap-4 sm:grid-cols-2">
+                <x-admin.input name="tagline_en" label="Tagline (Inggris)" :value="$settings['tagline_en']" />
+                <x-admin.input name="opening_hours_en" label="Jam Buka (Inggris)" :value="$settings['opening_hours_en']" />
+                <div class="space-y-4 sm:col-span-2">
+                    <x-admin.textarea name="whatsapp_message_en" label="Pesan Otomatis WhatsApp (Inggris)" :value="$settings['whatsapp_message_en']" rows="2" />
+                    <x-admin.textarea name="service_area_en" label="Area Pengiriman (Inggris)" :value="$settings['service_area_en']" rows="2" />
+                    <x-admin.input name="home_meta_title_en" label="Meta Title Beranda (Inggris)" :value="$settings['home_meta_title_en']" maxlength="70" />
+                    <x-admin.textarea name="home_meta_description_en" label="Meta Description Beranda (Inggris)" :value="$settings['home_meta_description_en']" rows="2" maxlength="170" />
+                    <x-admin.textarea name="about_content_en" label="Isi Halaman Tentang Kami (Inggris, Markdown)" :value="$settings['about_content_en']" rows="8" />
+                </div>
+            </div>
+        </x-admin.card>
+
         <x-admin.card title="Google">
             <div class="grid gap-4 sm:grid-cols-2">
                 <x-admin.input name="google_site_verification" label="Kode Verifikasi Google Search Console" :value="$settings['google_site_verification']" help="Isi hanya kode content=&quot;...&quot; dari tag meta verifikasi." />

@@ -14,10 +14,10 @@
                 <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-husk-900 backdrop-blur">{{ $product->badge() }}</span>
             @endif
             @if ($product->is_featured)
-                <span class="rounded-full bg-husk-950/85 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-flesh-300 backdrop-blur">★ Terlaris</span>
+                <span class="rounded-full bg-husk-950/85 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-flesh-300 backdrop-blur">★ {{ __('Terlaris') }}</span>
             @endif
             @unless ($product->is_available)
-                <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-stone-700 backdrop-blur">Stok Habis</span>
+                <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-stone-700 backdrop-blur">{{ __('Stok Habis') }}</span>
             @endunless
         </span>
         @if ($product->origin)
@@ -39,11 +39,11 @@
 
         <div class="mt-auto flex flex-wrap items-end justify-between gap-3 pt-5">
             <p>
-                <span class="block text-xs font-medium text-stone-400">Harga {{ $product->price_unit }}</span>
+                <span class="block text-xs font-medium text-stone-400">{{ __('Harga :unit', ['unit' => $product->price_unit]) }}</span>
                 <span class="font-display text-2xl font-bold whitespace-nowrap text-husk-800">{{ $product->formattedPrice() }}</span>
             </p>
             @if ($product->is_available)
-                <x-site.whatsapp-link :product="$product" size="sm" class="relative z-10">Pesan</x-site.whatsapp-link>
+                <x-site.whatsapp-link :product="$product" size="sm" class="relative z-10">{{ __('Pesan') }}</x-site.whatsapp-link>
             @else
                 <span class="relative z-10 inline-flex size-10 items-center justify-center rounded-full bg-stone-100 text-stone-500 transition group-hover:bg-husk-700 group-hover:text-white" aria-hidden="true">&rarr;</span>
             @endif

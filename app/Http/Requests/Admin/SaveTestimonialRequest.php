@@ -2,11 +2,16 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\ValidatesTranslations;
+use App\Models\Testimonial;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SaveTestimonialRequest extends FormRequest
 {
+    use ValidatesTranslations;
+
     public function authorize(): bool
     {
         return true;
@@ -23,6 +28,8 @@ class SaveTestimonialRequest extends FormRequest
     public function rules(): array
     {
         return [
+            ...$this->translationRules(Testimonial::class),
+            'product_id' => ['nullable', 'integer', Rule::exists('products', 'id')],
             'name' => ['required', 'string', 'max:100'],
             'location' => ['nullable', 'string', 'max:100'],
             'content' => ['required', 'string', 'max:1000'],

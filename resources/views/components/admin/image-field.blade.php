@@ -1,7 +1,7 @@
-@props(['currentUrl' => null])
+@props(['currentUrl' => null, 'label' => 'Gambar'])
 
 <div>
-    <x-admin.input name="image" label="Gambar" type="file" accept="image/jpeg,image/png,image/webp"
+    <x-admin.input name="image" :label="$label" type="file" accept="image/jpeg,image/png,image/webp" :attributes="$attributes"
                    help="JPG/PNG/WEBP, maks. 4 MB. Gunakan foto asli (bukan dari internet) agar lebih dipercaya Google & pembeli." />
     @if ($currentUrl)
         <div class="mt-3 flex items-center gap-4">

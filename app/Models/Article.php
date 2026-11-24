@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
 use App\Models\Concerns\RecordsActivity;
+use App\Support\SiteMarkdown;
 use Database\Factories\ArticleFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -12,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 
 #[Fillable([
     'user_id', 'title', 'slug', 'excerpt', 'body', 'image_path', 'is_published', 'published_at',
@@ -21,7 +22,7 @@ use Illuminate\Support\Str;
 class Article extends Model
 {
     /** @use HasFactory<ArticleFactory> */
-    use HasFactory, RecordsActivity;
+    use HasFactory, HasTranslations, RecordsActivity;
 
     /**
      * @return array<string, string>
@@ -32,6 +33,16 @@ class Article extends Model
             'is_published' => 'boolean',
             'published_at' => 'datetime',
         ];
+    }
+
+    public static function translatableAttributes(): array
+    {
+        return ['title' => 150, 'excerpt' => 320, 'body' => 100000, 'meta_title' => 70, 'meta_description' => 170];
+    }
+
+    public static function requiredTranslations(): array
+    {
+        return ['title', 'excerpt', 'body'];
     }
 
     public function getRouteKeyName(): string
@@ -65,10 +76,7 @@ class Article extends Model
      */
     public function bodyHtml(): HtmlString
     {
-        return new HtmlString(Str::markdown($this->body, [
-            'html_input' => 'strip',
-            'allow_unsafe_links' => false,
-        ]));
+        return SiteMarkdown::render($this->body);
     }
 
     public function readingMinutes(): int

@@ -11,7 +11,7 @@
             <tbody class="divide-y divide-stone-100">
                 @forelse ($testimonials as $testimonial)
                     <tr>
-                        <td class="px-4 py-3 font-semibold">{{ $testimonial->name }}<p class="text-xs font-normal text-stone-500">{{ $testimonial->location }}</p></td>
+                        <td class="px-4 py-3 font-semibold">{{ $testimonial->name }}<p class="text-xs font-normal text-stone-500">{{ implode(' · ', array_filter([$testimonial->location, $testimonial->product?->name])) }}</p></td>
                         <td class="max-w-md px-4 py-3 text-stone-600">{{ Str::limit($testimonial->content, 100) }}</td>
                         <td class="px-4 py-3 text-flesh-500">{{ str_repeat('★', $testimonial->rating) }}</td>
                         <td class="px-4 py-3">{{ $testimonial->is_published ? 'Ya' : 'Tidak' }}</td>

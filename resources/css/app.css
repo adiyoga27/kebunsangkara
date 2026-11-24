@@ -194,6 +194,16 @@
         from { opacity: 0; transform: translateY(-10px) scale(0.97); }
     }
 
+    /* Product photo slider: swipeable without JavaScript, buttons only appear when they work. */
+    .slider-track {
+        scrollbar-width: none;
+    }
+
+    .slider-track::-webkit-scrollbar,
+    html:not(.js) .slider-control {
+        display: none;
+    }
+
     /* Shiny sweep across call-to-action buttons. */
     .btn-shine {
         position: relative;

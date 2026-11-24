@@ -2,11 +2,15 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\ValidatesTranslations;
+use App\Models\Faq;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveFaqRequest extends FormRequest
 {
+    use ValidatesTranslations;
+
     public function authorize(): bool
     {
         return true;
@@ -26,6 +30,7 @@ class SaveFaqRequest extends FormRequest
     public function rules(): array
     {
         return [
+            ...$this->translationRules(Faq::class),
             'question' => ['required', 'string', 'max:255'],
             'answer' => ['required', 'string', 'max:3000'],
             'sort_order' => ['integer', 'min:0', 'max:65000'],

@@ -36,10 +36,12 @@ class ProductController extends Controller
 
     public function store(SaveProductRequest $request): RedirectResponse
     {
-        Product::create([
-            ...$request->safe()->except(['image', 'remove_image']),
+        $product = Product::create([
+            ...$request->safe()->except(['image', 'remove_image', 'images', 'remove_images']),
             'image_path' => $this->resolveImagePath($request, 'products'),
         ]);
+
+        $this->syncGallery($request, $product);
 
         return redirect()->route('admin.products.index')->with('status', 'Produk berhasil ditambahkan.');
     }
@@ -52,18 +54,42 @@ class ProductController extends Controller
     public function update(SaveProductRequest $request, Product $product): RedirectResponse
     {
         $product->update([
-            ...$request->safe()->except(['image', 'remove_image']),
+            ...$request->safe()->except(['image', 'remove_image', 'images', 'remove_images']),
             'image_path' => $this->resolveImagePath($request, 'products', $product->image_path),
         ]);
+
+        $this->syncGallery($request, $product);
 
         return redirect()->route('admin.products.index')->with('status', 'Produk berhasil diperbarui.');
     }
 
     public function destroy(Product $product): RedirectResponse
     {
+        $paths = [$product->image_path, ...$product->images->pluck('path')];
+
         $product->delete();
-        $this->deleteImage($product->image_path);
+        array_map($this->deleteImage(...), $paths);
 
         return redirect()->route('admin.products.index')->with('status', 'Produk berhasil dihapus.');
+    }
+
+    /**
+     * Remove and add gallery photos. Without a main photo, the first gallery photo takes its place.
+     */
+    private function syncGallery(SaveProductRequest $request, Product $product): void
+    {
+        foreach ($product->images()->whereKey($request->validated('remove_images', []))->get() as $image) {
+            $image->delete();
+            $this->deleteImage($image->path);
+        }
+
+        foreach ($request->file('images', []) as $file) {
+            $product->images()->create(['path' => $file->store('products', 'public')]);
+        }
+
+        if (! $product->image_path && $image = $product->images()->first()) {
+            $product->update(['image_path' => $image->path]);
+            $image->delete();
+        }
     }
 }
