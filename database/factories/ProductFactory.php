@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\FruitCategory;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,7 +22,7 @@ class ProductFactory extends Factory
         return [
             'name' => $name = 'Durian '.fake()->unique()->words(2, true),
             'slug' => Str::slug($name),
-            'category' => FruitCategory::Durian,
+            'category' => 'durian',
             'type' => ProductType::Buah,
             'variety' => fake()->randomElement(['Montong', 'Lokal Bali', 'Musang King', 'Bawor']),
             'origin' => fake()->randomElement(['Pupuan, Tabanan', 'Munduk, Buleleng', 'Jembrana']),
@@ -37,11 +36,11 @@ class ProductFactory extends Factory
         ];
     }
 
-    public function category(FruitCategory $category): static
+    public function category(string $slug): static
     {
         return $this->state(fn (array $attributes): array => [
-            'category' => $category,
-            'name' => $name = $category->label().' '.fake()->unique()->words(2, true),
+            'category' => $slug,
+            'name' => $name = Str::ucfirst($slug).' '.fake()->unique()->words(2, true),
             'slug' => Str::slug($name),
         ]);
     }
@@ -66,6 +65,17 @@ class ProductFactory extends Factory
             'name' => $name = 'Pupuk '.fake()->unique()->words(2, true),
             'slug' => Str::slug($name),
             'price_unit' => 'per karung',
+        ]);
+    }
+
+    public function cropProtection(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'type' => ProductType::Obat,
+            'category' => null,
+            'name' => $name = 'Obat '.fake()->unique()->words(2, true),
+            'slug' => Str::slug($name),
+            'price_unit' => 'per botol',
         ]);
     }
 

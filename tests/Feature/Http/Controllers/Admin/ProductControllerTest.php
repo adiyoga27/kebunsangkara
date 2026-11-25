@@ -151,7 +151,7 @@ it('stores a product without a fruit category for types that have none', functio
 
     $this->get(route('admin.products.index', ['type' => $type]))->assertOk()->assertSee($product->name);
     $this->get(route('admin.products.edit', $product))->assertOk();
-})->with(['pupuk', 'kesehatan']);
+})->with(['pupuk', 'obat', 'kesehatan']);
 
 it('requires a fruit category for fruit and seedlings', function (string $type) {
     $this->actingAs($this->editor)
@@ -299,8 +299,9 @@ it('lists products of the chosen type only', function (string $type, string $vis
     Product::factory()->create(['name' => 'Durian Segar']);
     Product::factory()->seedling()->create(['name' => 'Bibit Durian']);
     Product::factory()->fertilizer()->create(['name' => 'Kompos Organik']);
+    Product::factory()->cropProtection()->create(['name' => 'Fungisida Nabati']);
     Product::factory()->healthProduct()->create(['name' => 'Madu Murni']);
-    $hidden = array_diff(['Durian Segar', 'Bibit Durian', 'Kompos Organik', 'Madu Murni'], [$visible]);
+    $hidden = array_diff(['Durian Segar', 'Bibit Durian', 'Kompos Organik', 'Fungisida Nabati', 'Madu Murni'], [$visible]);
 
     $this->actingAs($this->editor)
         ->get(route('admin.products.index', ['type' => $type]))
@@ -311,6 +312,7 @@ it('lists products of the chosen type only', function (string $type, string $vis
     'fruit' => ['buah', 'Durian Segar'],
     'seedlings' => ['bibit', 'Bibit Durian'],
     'fertilizer' => ['pupuk', 'Kompos Organik'],
+    'crop protection' => ['obat', 'Fungisida Nabati'],
     'health products' => ['kesehatan', 'Madu Murni'],
     'unknown type falls back to fruit' => ['lainnya', 'Durian Segar'],
 ]);
@@ -328,6 +330,7 @@ it('shows only the fields that fit the product type on the form', function (stri
     'fruit' => ['buah', true, false, 'per kg'],
     'seedlings' => ['bibit', true, true, 'per batang'],
     'fertilizer' => ['pupuk', false, false, 'per karung'],
+    'crop protection' => ['obat', false, false, 'per botol'],
     'health products' => ['kesehatan', false, false, 'per kemasan'],
 ]);
 
@@ -354,7 +357,7 @@ it('separates Indonesian and English fields into tabs and opens the Indonesian o
     expect(Str::before($englishPanel, '>'))->toContain('hidden');
     expect($html)->toContain('name="price"', 'name="slug"');
     expect(substr_count($html, 'name="price_unit"'))->toBe(1);
-})->with(['buah', 'bibit', 'pupuk', 'kesehatan']);
+})->with(['buah', 'bibit', 'pupuk', 'obat', 'kesehatan']);
 
 it('opens the English tab when only the translation has errors', function () {
     $html = $this->actingAs($this->editor)

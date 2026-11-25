@@ -21,7 +21,6 @@
 
     $featuredProduct = $products->firstWhere('is_featured', true) ?? $products->first();
     $lowestPrice = $products->min('price');
-    $categories = App\Enums\FruitCategory::cases();
     // One copy of the moving text must be wider than the screen, so a short list is repeated. Longer texts get more time to keep the speed equal.
     $marqueeWords = $site->get('home_marquee_enabled') === '1' ? $site->lines('home_marquee') : [];
     $marqueeLength = mb_strlen(implode('', $marqueeWords)) + 8 * count($marqueeWords);
@@ -86,7 +85,7 @@
                 <div data-reveal style="--reveal-delay: 400ms" class="mt-12 flex flex-wrap gap-2">
                     @foreach ($categories as $fruit)
                         <a href="{{ route('products.category', $fruit) }}" class="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold ring-1 ring-white/15 backdrop-blur transition hover:-translate-y-0.5 hover:bg-flesh-400 hover:text-husk-950">
-                            {{ $fruit->emoji() }} {{ $fruit->label() }}
+                            {{ $fruit->emoji }} {{ $fruit->name }}
                         </a>
                     @endforeach
                     <a href="{{ route('seedlings.index') }}" class="rounded-full bg-husk-500/40 px-4 py-2 text-sm font-semibold ring-1 ring-husk-300/40 backdrop-blur transition hover:-translate-y-0.5 hover:bg-flesh-400 hover:text-husk-950">🌱 {{ __('Bibit') }}</a>
@@ -147,24 +146,24 @@
                 <p class="text-sm font-bold uppercase tracking-[0.2em] text-flesh-500">{{ __('Hasil kebun kami') }}</p>
                 <h2 id="kategori-title" class="mt-3 font-display text-4xl font-bold leading-tight text-husk-950 sm:text-5xl">{{ __('Pilih Buah Favorit Anda') }}</h2>
             </div>
-            <p class="max-w-sm text-stone-600">{{ __('Tiga jenis buah unggulan yang kami tanam dan rawat sendiri di kebun Bali.') }}</p>
+            <p class="max-w-sm text-stone-600">{{ __('Buah unggulan yang kami tanam dan rawat sendiri di kebun Bali.') }}</p>
         </div>
 
         <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger="120">
             @foreach ($categories as $fruit)
                 <a data-reveal href="{{ route('products.category', $fruit) }}" @class([
                     'group relative isolate flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-[2rem] p-6 text-white shadow-lg transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-husk-900/30',
-                    'lg:translate-y-10' => $loop->odd,
+                    'lg:translate-y-10' => $loop->index % 3 !== 1,
                 ])>
-                    <img src="{{ asset($fruit->imagePath()) }}" alt="{{ __(':name segar dari kebun Bali', ['name' => $fruit->label()]) }}" width="400" height="530" loading="lazy"
+                    <img src="{{ $fruit->displayImageUrl() }}" alt="{{ __(':name segar dari kebun Bali', ['name' => $fruit->name]) }}" width="400" height="530" loading="lazy"
                          class="absolute inset-0 -z-10 size-full object-cover transition duration-1000 ease-out group-hover:scale-110">
                     <span class="absolute inset-0 -z-10 bg-gradient-to-t from-husk-950/95 via-husk-950/30 to-transparent transition duration-500 group-hover:from-husk-950"></span>
                     <span class="absolute right-5 top-5 flex size-12 items-center justify-center rounded-full bg-white/15 text-xl ring-1 ring-white/30 backdrop-blur transition duration-500 group-hover:rotate-[-45deg] group-hover:bg-flesh-400 group-hover:text-husk-950">&rarr;</span>
-                    <span class="text-3xl">{{ $fruit->emoji() }}</span>
-                    <h3 class="mt-2 font-display text-3xl font-bold">{{ $fruit->label() }}</h3>
-                    <p class="mt-1 text-sm text-husk-100/85">{{ $fruit->tagline() }}</p>
+                    <span class="text-3xl">{{ $fruit->emoji }}</span>
+                    <h3 class="mt-2 font-display text-3xl font-bold">{{ $fruit->name }}</h3>
+                    <p class="mt-1 text-sm text-husk-100/85">{{ $fruit->tagline }}</p>
                     <p class="mt-4 inline-flex w-fit rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
-                        {{ ($categoryCounts[$fruit->value] ?? 0) > 0 ? __(':count produk tersedia', ['count' => $categoryCounts[$fruit->value]]) : __('Tanya stok') }}
+                        {{ ($categoryCounts[$fruit->slug] ?? 0) > 0 ? __(':count produk tersedia', ['count' => $categoryCounts[$fruit->slug]]) : __('Tanya stok') }}
                     </p>
                 </a>
             @endforeach

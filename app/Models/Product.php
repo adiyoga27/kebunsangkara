@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\FruitCategory;
 use App\Enums\Locale;
 use App\Enums\Offering;
 use App\Enums\ProductType;
@@ -15,6 +14,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\HtmlString;
@@ -34,13 +34,20 @@ class Product extends Model
     public const MAX_PHOTOS = 10;
 
     /**
+     * The category is part of every badge, photo and link of a product.
+     *
+     * @var list<string>
+     */
+    protected $with = ['fruitCategory'];
+
+    /**
      * Hide fruit and seedlings whose category is no longer sold; their rows stay in the database.
      */
     protected static function booted(): void
     {
         static::addGlobalScope('sold_category', function (Builder $query): void {
             $query->where(fn (Builder $query) => $query
-                ->whereIn($query->qualifyColumn('category'), FruitCategory::cases())
+                ->whereIn($query->qualifyColumn('category'), FruitCategory::query()->select('slug'))
                 ->orWhereNotIn($query->qualifyColumn('type'), ProductType::withFruitCategory()));
         });
     }
@@ -51,7 +58,6 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'category' => FruitCategory::class,
             'type' => ProductType::class,
             'price' => 'integer',
             'is_available' => 'boolean',
@@ -91,6 +97,16 @@ class Product extends Model
     protected function ordered(Builder $query): void
     {
         $query->orderBy('sort_order')->orderBy('name');
+    }
+
+    /**
+     * The category column holds the slug of the category.
+     *
+     * @return BelongsTo<FruitCategory, $this>
+     */
+    public function fruitCategory(): BelongsTo
+    {
+        return $this->belongsTo(FruitCategory::class, 'category', 'slug');
     }
 
     /**
@@ -136,12 +152,13 @@ class Product extends Model
             return $this->imageUrl();
         }
 
-        return asset(match ($this->type) {
-            ProductType::Bibit => 'images/bibit.svg',
-            ProductType::Pupuk => 'images/pupuk.svg',
-            ProductType::Kesehatan => 'images/produk-kesehatan.svg',
-            default => ($this->category ?? FruitCategory::Durian)->imagePath(),
-        });
+        return match ($this->type) {
+            ProductType::Bibit => asset('images/bibit.svg'),
+            ProductType::Pupuk => asset('images/pupuk.svg'),
+            ProductType::Obat => asset('images/obat-pertanian.svg'),
+            ProductType::Kesehatan => asset('images/produk-kesehatan.svg'),
+            default => $this->fruitCategory->displayImageUrl(),
+        };
     }
 
     /**
@@ -170,8 +187,8 @@ class Product extends Model
     public function badge(): string
     {
         return match ($this->type) {
-            ProductType::Buah => $this->category->emoji().' '.$this->category->label(),
-            ProductType::Bibit => $this->type->emoji().' '.__('Bibit :fruit', ['fruit' => $this->category->label()]),
+            ProductType::Buah => $this->fruitCategory->emoji.' '.$this->fruitCategory->name,
+            ProductType::Bibit => $this->type->emoji().' '.__('Bibit :fruit', ['fruit' => $this->fruitCategory->name]),
             default => $this->type->emoji().' '.$this->type->label(),
         };
     }
@@ -184,9 +201,10 @@ class Product extends Model
     public function listingPage(): array
     {
         return match ($this->type) {
-            ProductType::Buah => ['label' => $this->category->label(), 'url' => route('products.category', $this->category)],
+            ProductType::Buah => ['label' => $this->fruitCategory->name, 'url' => route('products.category', $this->fruitCategory)],
             ProductType::Bibit => ['label' => __('Bibit'), 'url' => route('seedlings.index')],
             ProductType::Pupuk => ['label' => Offering::Pupuk->label(), 'url' => route('offerings.show', Offering::Pupuk)],
+            ProductType::Obat => ['label' => Offering::ObatPertanian->label(), 'url' => route('offerings.show', Offering::ObatPertanian)],
             ProductType::Kesehatan => ['label' => Offering::ProdukKesehatan->label(), 'url' => route('offerings.show', Offering::ProdukKesehatan)],
         };
     }

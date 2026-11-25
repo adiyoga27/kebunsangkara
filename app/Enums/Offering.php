@@ -8,6 +8,7 @@ namespace App\Enums;
 enum Offering: string
 {
     case Pupuk = 'pupuk';
+    case ObatPertanian = 'obat-pertanian';
     case ProdukKesehatan = 'produk-kesehatan';
     case Service = 'service';
 
@@ -15,6 +16,7 @@ enum Offering: string
     {
         return match ($this) {
             self::Pupuk => __('Pupuk'),
+            self::ObatPertanian => __('Obat Pertanian'),
             self::ProdukKesehatan => __('Produk Kesehatan'),
             self::Service => __('Layanan Kami'),
         };
@@ -32,6 +34,7 @@ enum Offering: string
     {
         return match ($this) {
             self::Pupuk => '🌾',
+            self::ObatPertanian => '🧴',
             self::ProdukKesehatan => '🌿',
             self::Service => '🛠️',
         };
@@ -44,6 +47,7 @@ enum Offering: string
     {
         return match ($this) {
             self::Pupuk => ProductType::Pupuk,
+            self::ObatPertanian => ProductType::Obat,
             self::ProdukKesehatan => ProductType::Kesehatan,
             self::Service => null,
         };
@@ -53,6 +57,7 @@ enum Offering: string
     {
         return match ($this) {
             self::Pupuk => __('Informasi pupuk dari Kebun Sangkara. Tanyakan jenis, harga, dan ketersediaan terbaru melalui WhatsApp.'),
+            self::ObatPertanian => __('Informasi obat pertanian dari Kebun Sangkara. Tanyakan jenis, harga, dan ketersediaan terbaru melalui WhatsApp.'),
             self::ProdukKesehatan => __('Informasi produk kesehatan dari Kebun Sangkara. Tanyakan pilihan produk, harga, dan ketersediaan terbaru melalui WhatsApp.'),
             self::Service => __('Informasi layanan dari Kebun Sangkara. Ceritakan kebutuhan Anda dan tanyakan layanan yang tersedia melalui WhatsApp.'),
         };

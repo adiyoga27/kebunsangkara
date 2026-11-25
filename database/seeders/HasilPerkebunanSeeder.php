@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\FruitCategory;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -21,7 +20,7 @@ class HasilPerkebunanSeeder extends Seeder
             [
                 'name' => 'Durian Lokal Bali',
                 'slug' => 'durian-lokal-bali-pupuan',
-                'category' => FruitCategory::Durian,
+                'category' => 'durian',
                 'variety' => 'Durian lokal Bali',
                 'origin' => 'Kebun Sangkara',
                 'short_description' => 'Durian lokal Bali dari kebun kami. Daging tebal, manis legit dengan sedikit rasa pahit dan aroma kuat khas durian kampung.',
@@ -35,7 +34,7 @@ class HasilPerkebunanSeeder extends Seeder
             [
                 'name' => 'Durian Montong Bali',
                 'slug' => 'durian-montong-bali',
-                'category' => FruitCategory::Durian,
+                'category' => 'durian',
                 'variety' => 'Montong',
                 'origin' => 'Kebun Sangkara',
                 'short_description' => 'Durian Montong dari kebun Bali. Daging tebal berwarna kuning, biji kecil, rasa manis lembut dan aroma tidak terlalu menyengat.',
@@ -47,7 +46,7 @@ class HasilPerkebunanSeeder extends Seeder
             [
                 'name' => 'Alpukat Mentega',
                 'slug' => 'alpukat-mentega-bali',
-                'category' => FruitCategory::Alpukat,
+                'category' => 'alpukat',
                 'variety' => 'Mentega',
                 'origin' => 'Kebun Sangkara',
                 'short_description' => 'Alpukat mentega dengan daging tebal berwarna kuning, tekstur lembut dan pulen seperti mentega. Pas untuk jus, salad, dan roti panggang.',
@@ -61,7 +60,7 @@ class HasilPerkebunanSeeder extends Seeder
             [
                 'name' => 'Manggis Bali',
                 'slug' => 'manggis-bali',
-                'category' => FruitCategory::Manggis,
+                'category' => 'manggis',
                 'variety' => 'Manggis lokal',
                 'origin' => 'Kebun Sangkara',
                 'short_description' => 'Manggis segar dengan kulit ungu mulus dan daging buah putih bersih. Rasa manis-asam yang menyegarkan, sang "ratu buah".',
@@ -73,7 +72,7 @@ class HasilPerkebunanSeeder extends Seeder
             [
                 'name' => 'Paket Buah Kebun',
                 'slug' => 'paket-buah-kebun',
-                'category' => FruitCategory::Durian,
+                'category' => 'durian',
                 'variety' => 'Campuran',
                 'origin' => 'Kebun Sangkara',
                 'short_description' => 'Paket campuran 1 durian lokal, 1 kg alpukat, dan 1 kg manggis. Pas untuk keluarga atau hantaran.',

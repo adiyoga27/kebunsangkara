@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Enums\FruitCategory;
 use App\Enums\ProductType;
 use App\Http\Requests\Admin\Concerns\ValidatesTranslations;
 use App\Models\Product;
@@ -48,7 +47,7 @@ class SaveProductRequest extends FormRequest
             ...$this->translationRules(Product::class),
             'name' => ['required', 'string', 'max:150'],
             'slug' => ['required', 'string', 'max:160', 'alpha_dash', Rule::unique('products', 'slug')->ignore($this->route('product'))],
-            'category' => [Rule::requiredIf($this->needsFruitCategory()), 'nullable', Rule::enum(FruitCategory::class)],
+            'category' => [Rule::requiredIf($this->needsFruitCategory()), 'nullable', 'string', Rule::exists('fruit_categories', 'slug')],
             'type' => ['required', Rule::enum(ProductType::class)],
             'propagation_method' => ['nullable', 'string', 'max:50'],
             'plant_height' => ['nullable', 'string', 'max:50'],

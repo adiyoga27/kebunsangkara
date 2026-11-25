@@ -12,6 +12,7 @@ it('renders an offering page that is marked active in the header', function (str
         ->assertSeeInOrder(['href="'.url($path).'"', 'aria-current="page"', $label], false);
 })->with([
     'pupuk' => ['/id/pupuk', 'Pupuk'],
+    'obat pertanian' => ['/id/obat-pertanian', 'Obat Pertanian'],
     'produk kesehatan' => ['/id/produk-kesehatan', 'Produk Kesehatan'],
     'service' => ['/id/service', 'Layanan Kami'],
 ]);
@@ -26,6 +27,7 @@ it('marks the Produk submenu as active on its pages only', function (string $pat
     'hasil perkebunan' => ['/id/produk', true],
     'bibit' => ['/id/bibit', true],
     'pupuk' => ['/id/pupuk', true],
+    'obat pertanian' => ['/id/obat-pertanian', true],
     'produk kesehatan' => ['/id/produk-kesehatan', true],
     'service' => ['/id/service', false],
     'beranda' => ['/id', false],
@@ -54,6 +56,15 @@ it('lists only health products on the produk kesehatan page', function () {
         ->assertDontSee('Kompos Organik');
 });
 
+it('lists only crop protection products on the obat pertanian page, in both languages', function () {
+    Product::factory()->cropProtection()->create(['name' => 'Fungisida Nabati']);
+    Product::factory()->fertilizer()->create(['name' => 'Kompos Organik']);
+
+    $this->get('/id/obat-pertanian')->assertOk()->assertSee('Fungisida Nabati')->assertDontSee('Kompos Organik');
+    $this->get('/en/obat-pertanian')->assertOk()->assertSee('<title>Crop Protection', false)->assertDontSee('Obat Pertanian');
+    $this->get('/id/pupuk')->assertOk()->assertDontSee('Fungisida Nabati');
+});
+
 it('shows a placeholder when an offering has no products', function () {
     $this->get('/id/pupuk')->assertOk()->assertSee('sedang disiapkan');
 });
@@ -65,7 +76,7 @@ it('returns 404 for an unknown offering', function () {
 it('groups the product pages under a Produk submenu without a separate contact item', function () {
     $this->get(route('home'))
         ->assertOk()
-        ->assertSeeInOrder(['Menu utama', 'Beranda', '<summary', 'Produk', 'Hasil Perkebunan', 'Bibit', 'Pupuk', 'Produk Kesehatan', '</details>', 'Layanan Kami', 'Artikel', 'Tentang Kami'], false)
+        ->assertSeeInOrder(['Menu utama', 'Beranda', '<summary', 'Produk', 'Hasil Perkebunan', 'Bibit', 'Pupuk', 'Obat Pertanian', 'Produk Kesehatan', '</details>', 'Layanan Kami', 'Artikel', 'Tentang Kami'], false)
         ->assertDontSee('href="'.url('/id/kontak').'"', false);
 });
 

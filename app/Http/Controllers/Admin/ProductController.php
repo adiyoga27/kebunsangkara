@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\FruitCategory;
 use App\Enums\ProductType;
 use App\Http\Controllers\Admin\Concerns\HandlesImageUploads;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SaveProductRequest;
+use App\Models\FruitCategory;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,10 +28,11 @@ class ProductController extends Controller
             'products' => Product::query()
                 ->ofType($type)
                 ->when($request->string('q')->trim()->value(), fn ($query, string $search) => $query->where('name', 'like', "%{$search}%"))
-                ->when($type->hasFruitCategory() ? FruitCategory::tryFrom($request->string('category')->value()) : null, fn ($query, FruitCategory $category) => $query->where('category', $category))
+                ->when($type->hasFruitCategory() ? $request->string('category')->value() : null, fn ($query, string $category) => $query->where('category', $category))
                 ->ordered()
                 ->paginate(20)
                 ->withQueryString(),
+            'categories' => FruitCategory::query()->ordered()->get(),
             'typeCounts' => Product::query()->toBase()->selectRaw('type, COUNT(*) as total')->groupBy('type')->pluck('total', 'type'),
             'trashedCount' => Product::onlyTrashed()->count(),
         ]);
@@ -41,12 +42,17 @@ class ProductController extends Controller
     {
         $type = $this->requestedType($request);
 
-        return view('admin.products.form', ['product' => new Product([
-            'is_available' => true,
-            'price_unit' => $type->defaultPriceUnit(),
-            'category' => $type->hasFruitCategory() ? FruitCategory::Durian : null,
-            'type' => $type,
-        ])]);
+        $categories = FruitCategory::query()->ordered()->get();
+
+        return view('admin.products.form', [
+            'product' => new Product([
+                'is_available' => true,
+                'price_unit' => $type->defaultPriceUnit(),
+                'category' => $type->hasFruitCategory() ? $categories->first()?->slug : null,
+                'type' => $type,
+            ]),
+            'categories' => $categories,
+        ]);
     }
 
     public function store(SaveProductRequest $request): RedirectResponse
@@ -63,7 +69,10 @@ class ProductController extends Controller
 
     public function edit(Product $product): View
     {
-        return view('admin.products.form', ['product' => $product]);
+        return view('admin.products.form', [
+            'product' => $product,
+            'categories' => FruitCategory::query()->ordered()->get(),
+        ]);
     }
 
     public function update(SaveProductRequest $request, Product $product): RedirectResponse

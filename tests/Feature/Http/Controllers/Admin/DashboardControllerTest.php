@@ -10,7 +10,7 @@ it('groups the sidebar menu and shows every section to administrators', function
     $this->actingAs($admin)
         ->get(route('admin.dashboard'))
         ->assertOk()
-        ->assertSeeInOrder(['Dashboard', 'Katalog', 'Hasil Perkebunan', 'Bibit', 'Pupuk', 'Produk Kesehatan', 'Sampah Produk', 'Konten', 'Artikel', 'Laporan', 'Klik WhatsApp', 'Sistem', 'Pengaturan']);
+        ->assertSeeInOrder(['Dashboard', 'Katalog', 'Hasil Perkebunan', 'Bibit', 'Pupuk', 'Obat Pertanian', 'Produk Kesehatan', 'Kategori Buah', 'Sampah Produk', 'Konten', 'Artikel', 'Laporan', 'Klik WhatsApp', 'Sistem', 'Pengaturan']);
 });
 
 it('hides the report and system menus from editors', function () {
@@ -36,6 +36,7 @@ it('marks exactly one sidebar menu as the current page', function (string $route
     'dashboard' => ['admin.dashboard', [], 'Dashboard'],
     'products without a type' => ['admin.products.index', [], 'Hasil Perkebunan'],
     'fertilizer' => ['admin.products.index', ['type' => 'pupuk'], 'Pupuk'],
+    'crop protection' => ['admin.products.index', ['type' => 'obat'], 'Obat Pertanian'],
     'new seedling' => ['admin.products.create', ['type' => 'bibit'], 'Bibit'],
     'trash' => ['admin.trashed-products.index', [], 'Sampah Produk'],
     'settings' => ['admin.settings.edit', [], 'Pengaturan'],

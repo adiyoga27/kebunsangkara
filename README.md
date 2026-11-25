@@ -29,6 +29,7 @@ Dibangun dengan Laravel 13, Blade, dan Tailwind CSS 4 — tanpa framework JavaSc
 | --- | :---: | :---: |
 | Dashboard (statistik & grafik klik WhatsApp) | ✅ | ✅ |
 | Produk (kategori buah, harga, stok, foto, SEO) | ✅ | ✅ |
+| Kategori buah (tambah, ubah, hapus) | ✅ | ✅ |
 | Artikel | ✅ | ✅ |
 | Testimoni & FAQ | ✅ | ✅ |
 | Klik WhatsApp (daftar calon pembeli) | — | ✅ |
@@ -147,7 +148,7 @@ vendor/bin/pint
 
 ```
 app/
-├── Enums/                  # FruitCategory, UserRole, ActivityAction
+├── Enums/                  # ProductType, UserRole, ActivityAction
 ├── Http/Controllers/Site/  # Halaman publik, sitemap, redirect WhatsApp
 ├── Http/Controllers/Admin/ # Panel admin
 ├── Listeners/              # Pencatat login/logout/login gagal

@@ -20,7 +20,7 @@
         ];
     }
 
-    $grouped = $seedlings->groupBy(fn ($seedling) => $seedling->category->value);
+    $grouped = $seedlings->groupBy('category');
 @endphp
 
 <x-layouts.site
@@ -38,12 +38,12 @@
     <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6">
         <x-site.seedling-services />
 
-        @forelse ($grouped as $categoryValue => $items)
-            @php($fruit = App\Enums\FruitCategory::from($categoryValue))
-            <section class="mt-20" aria-labelledby="bibit-{{ $fruit->value }}">
+        @forelse ($grouped as $items)
+            @php($fruit = $items->first()->fruitCategory)
+            <section class="mt-20" aria-labelledby="bibit-{{ $fruit->slug }}">
                 <div class="flex flex-wrap items-end justify-between gap-4" data-reveal>
-                    <h2 id="bibit-{{ $fruit->value }}" class="font-display text-3xl font-bold text-husk-950 sm:text-4xl">{{ __('Bibit :fruit', ['fruit' => $fruit->label()]) }}</h2>
-                    <a href="{{ route('products.category', $fruit) }}" class="text-sm font-semibold text-husk-700 hover:underline">{{ __('Lihat semua :fruit', ['fruit' => Str::lower($fruit->label())]) }} &rarr;</a>
+                    <h2 id="bibit-{{ $fruit->slug }}" class="font-display text-3xl font-bold text-husk-950 sm:text-4xl">{{ __('Bibit :fruit', ['fruit' => $fruit->name]) }}</h2>
+                    <a href="{{ route('products.category', $fruit) }}" class="text-sm font-semibold text-husk-700 hover:underline">{{ __('Lihat semua :fruit', ['fruit' => Str::lower($fruit->name)]) }} &rarr;</a>
                 </div>
                 <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-stagger="100">
                     @foreach ($items as $seedling)

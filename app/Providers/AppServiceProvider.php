@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Enums\Locale;
+use App\Models\FruitCategory;
 use App\Models\User;
 use App\Support\SiteSettings;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -43,6 +44,10 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer(['components.layouts.*', 'components.site.*', 'site.*', 'admin.*'], function (ViewInstance $view): void {
             $view->with('site', $this->app->make(SiteSettings::class));
+        });
+
+        View::composer(['components.layouts.site', 'components.site.category-nav'], function (ViewInstance $view): void {
+            $view->with('fruitCategories', FruitCategory::query()->ordered()->get());
         });
 
         Paginator::defaultView('pagination::tailwind');

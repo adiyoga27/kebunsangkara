@@ -17,6 +17,7 @@
             App\Enums\ProductType::Buah => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
             App\Enums\ProductType::Bibit => 'M12 20v-9m0 0c0-4-3-6-7-6 0 4 3 6 7 6zm0 2c0-3 2-5 6-5 0 4-2 6-6 6',
             App\Enums\ProductType::Pupuk => 'M6 8h12l1 12H5L6 8zm3 0a3 3 0 016 0',
+            App\Enums\ProductType::Obat => 'M9 8h5v3l2 2v7a1 1 0 01-1 1H8a1 1 0 01-1-1v-7l2-2V8zm0 0V4h6l1 2h-2v2M6 5H5M10 16h3',
             App\Enums\ProductType::Kesehatan => 'M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z',
         },
     ], App\Enums\ProductType::cases());
@@ -27,6 +28,7 @@
         ],
         'Katalog' => [
             ...$productMenu,
+            ['label' => 'Kategori Buah', 'route' => 'admin.categories.index', 'active' => 'admin.categories.*', 'icon' => 'M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v4H4zM14 15h6v4h-6z'],
             ['label' => 'Sampah Produk', 'route' => 'admin.trashed-products.index', 'active' => 'admin.trashed-products.*', 'icon' => 'M5 7h14M10 11v6m4-6v6M6 7l1 13h10l1-13M9 7V4h6v3'],
         ],
         'Konten' => [

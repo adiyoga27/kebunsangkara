@@ -40,7 +40,7 @@ test('every public page renders in both languages with matching alternates', fun
             ->assertSee('<link rel="alternate" hreflang="x-default" href="'.url("/id{$path}").'">', false)
             ->assertSee('content="index, follow', false);
     }
-})->with(['', '/produk', '/bibit', '/buah/durian', '/artikel', '/tentang-kami', '/pupuk', '/produk-kesehatan', '/service']);
+})->with(['', '/produk', '/bibit', '/buah/durian', '/artikel', '/tentang-kami', '/pupuk', '/obat-pertanian', '/produk-kesehatan', '/service']);
 
 test('interface texts and internal links follow the language', function () {
     $this->get('/en')

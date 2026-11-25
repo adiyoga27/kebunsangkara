@@ -42,7 +42,7 @@
                         @foreach ($products as $product)
                             <tr class="transition hover:bg-flesh-50">
                                 <td class="px-6 py-4 font-medium"><a href="{{ route('products.show', $product) }}" class="text-husk-800 hover:underline">{{ $product->name }}</a></td>
-                                <td class="px-6 py-4 text-stone-600">{{ $product->category->emoji() }} {{ $product->category->label() }}</td>
+                                <td class="px-6 py-4 text-stone-600">{{ $product->fruitCategory->emoji }} {{ $product->fruitCategory->name }}</td>
                                 <td class="whitespace-nowrap px-6 py-4 font-semibold">{{ $product->formattedPrice() }} <span class="font-normal text-stone-500">{{ $product->price_unit }}</span></td>
                                 <td class="px-6 py-4"><span @class(['rounded-full px-3 py-1 text-xs font-bold', 'bg-husk-100 text-husk-800' => $product->is_available, 'bg-stone-100 text-stone-500' => ! $product->is_available])>{{ $product->is_available ? __('Tersedia') : __('Habis') }}</span></td>
                             </tr>

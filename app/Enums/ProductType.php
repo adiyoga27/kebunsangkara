@@ -7,6 +7,7 @@ enum ProductType: string
     case Buah = 'buah';
     case Bibit = 'bibit';
     case Pupuk = 'pupuk';
+    case Obat = 'obat';
     case Kesehatan = 'kesehatan';
 
     public function label(): string
@@ -15,6 +16,7 @@ enum ProductType: string
             self::Buah => __('Hasil Perkebunan'),
             self::Bibit => __('Bibit'),
             self::Pupuk => __('Pupuk'),
+            self::Obat => __('Obat Pertanian'),
             self::Kesehatan => __('Produk Kesehatan'),
         };
     }
@@ -25,6 +27,7 @@ enum ProductType: string
             self::Buah => '🧺',
             self::Bibit => '🌱',
             self::Pupuk => '🌾',
+            self::Obat => '🧴',
             self::Kesehatan => '🌿',
         };
     }
@@ -38,6 +41,7 @@ enum ProductType: string
             self::Buah => 'per kg',
             self::Bibit => 'per batang',
             self::Pupuk => 'per karung',
+            self::Obat => 'per botol',
             self::Kesehatan => 'per kemasan',
         };
     }
@@ -51,6 +55,7 @@ enum ProductType: string
             self::Buah => 'Durian Montong Bali, Alpukat Mentega',
             self::Bibit => 'Bibit Durian Montong Okulasi',
             self::Pupuk => 'Pupuk Kompos Organik',
+            self::Obat => 'Fungisida Organik, Insektisida Nabati',
             self::Kesehatan => 'Madu Murni',
         };
     }
@@ -62,7 +67,7 @@ enum ProductType: string
     {
         return match ($this) {
             self::Buah, self::Bibit => true,
-            self::Pupuk, self::Kesehatan => false,
+            self::Pupuk, self::Obat, self::Kesehatan => false,
         };
     }
 

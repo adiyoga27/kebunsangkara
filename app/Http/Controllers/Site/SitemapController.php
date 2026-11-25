@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Enums\FruitCategory;
 use App\Enums\Locale;
 use App\Enums\Offering;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\FruitCategory;
 use App\Models\Product;
 use DateTimeInterface;
 use Illuminate\Http\Response;
@@ -23,7 +23,9 @@ class SitemapController extends Controller
             $this->page('products.index', [], $latestProductUpdate, '0.9'),
             $this->page('seedlings.index', [], $latestProductUpdate, '0.9'),
             $this->page('articles.index', [], Article::query()->published()->max('updated_at'), '0.7'),
-            ...collect(FruitCategory::cases())->map(fn (FruitCategory $category): Collection => $this->page('products.category', ['category' => $category], $latestProductUpdate, '0.9')),
+            ...FruitCategory::query()->ordered()->get()->map(fn (FruitCategory $category): Collection => $this->page(
+                'products.category', ['category' => $category], $latestProductUpdate, '0.9', $category->availableLocales(),
+            )),
             $this->page('about', [], null, '0.6'),
             ...collect(Offering::cases())->map(fn (Offering $offering): Collection => $this->page('offerings.show', ['offering' => $offering], null, '0.6')),
         ])

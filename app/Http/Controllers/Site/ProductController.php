@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Site;
 
-use App\Enums\FruitCategory;
 use App\Enums\ProductType;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
+use App\Models\FruitCategory;
 use App\Models\Product;
 use Illuminate\View\View;
 
@@ -21,13 +21,13 @@ class ProductController extends Controller
 
     public function category(FruitCategory $category): View
     {
-        $products = Product::query()->where('category', $category)->ordered()->get();
+        $products = Product::query()->where('category', $category->slug)->ordered()->get();
 
         return view('site.products.category', [
             'category' => $category,
             'products' => $products->reject->isSeedling()->values(),
             'seedlings' => $products->filter->isSeedling()->values(),
-            'otherCategories' => collect(FruitCategory::cases())->reject(fn (FruitCategory $other): bool => $other === $category),
+            'otherCategories' => FruitCategory::query()->whereKeyNot($category->getKey())->ordered()->get(),
         ]);
     }
 
@@ -46,7 +46,7 @@ class ProductController extends Controller
             'relatedProducts' => Product::query()
                 ->whereKeyNot($product->getKey())
                 ->orderByRaw('type = ? desc', [$product->type->value])
-                ->orderByRaw('category = ? desc', [$product->category?->value])
+                ->orderByRaw('category = ? desc', [$product->category])
                 ->where('is_available', true)
                 ->ordered()
                 ->limit(3)

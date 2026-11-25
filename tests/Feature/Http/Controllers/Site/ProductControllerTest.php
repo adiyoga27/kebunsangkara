@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\FruitCategory;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +56,7 @@ it('renders a product without a fruit category under its own listing page', func
         ->assertDontSee('Produk Contoh Segar');
 })->with([
     'pupuk' => ['fertilizer', '/id/pupuk', 'images/pupuk.svg'],
+    'obat pertanian' => ['cropProtection', '/id/obat-pertanian', 'images/obat-pertanian.svg'],
     'produk kesehatan' => ['healthProduct', '/id/produk-kesehatan', 'images/produk-kesehatan.svg'],
 ]);
 
@@ -81,12 +81,12 @@ it('returns 404 for an unknown product slug', function () {
 });
 
 it('shows only products of the requested fruit category', function () {
-    Product::factory()->category(FruitCategory::Alpukat)->create(['name' => 'Alpukat Mentega']);
-    Product::factory()->category(FruitCategory::Manggis)->create(['name' => 'Manggis Kaligesing']);
+    Product::factory()->category('alpukat')->create(['name' => 'Alpukat Mentega']);
+    Product::factory()->category('manggis')->create(['name' => 'Manggis Kaligesing']);
 
-    $this->get(route('products.category', FruitCategory::Alpukat))
+    $this->get(url('/id/buah/alpukat'))
         ->assertOk()
-        ->assertSee('<title>'.FruitCategory::Alpukat->seoTitle(), false)
+        ->assertSee('<title>'.'Jual Alpukat Mentega Bali Segar', false)
         ->assertSee('Alpukat Mentega')
         ->assertDontSee('Manggis Kaligesing');
 });
@@ -96,11 +96,11 @@ it('returns 404 for an unknown fruit category', function () {
 });
 
 it('uses the category photo when a product has no uploaded image', function () {
-    $product = Product::factory()->category(FruitCategory::Manggis)->create();
+    $product = Product::factory()->category('manggis')->create();
 
     $this->get(route('products.show', $product))
         ->assertOk()
-        ->assertSee(asset(FruitCategory::Manggis->imagePath()), false);
+        ->assertSee(asset('images/kebun/buah-manggis.webp'), false);
 });
 
 it('lists seedlings on the bibit page with their propagation details', function () {
@@ -115,10 +115,10 @@ it('lists seedlings on the bibit page with their propagation details', function 
 });
 
 it('separates seedlings from fruit on the category page', function () {
-    Product::factory()->category(FruitCategory::Manggis)->create(['name' => 'Manggis Kaligesing Segar']);
-    Product::factory()->category(FruitCategory::Manggis)->seedling()->create(['name' => 'Bibit Manggis Kaligesing']);
+    Product::factory()->category('manggis')->create(['name' => 'Manggis Kaligesing Segar']);
+    Product::factory()->category('manggis')->seedling()->create(['name' => 'Bibit Manggis Kaligesing']);
 
-    $this->get(route('products.category', FruitCategory::Manggis))
+    $this->get(url('/id/buah/manggis'))
         ->assertOk()
         ->assertSeeInOrder(['Manggis Kaligesing Segar', 'Bibit Manggis', 'Bibit Manggis Kaligesing']);
 });

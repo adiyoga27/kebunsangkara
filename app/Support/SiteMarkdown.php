@@ -15,7 +15,7 @@ class SiteMarkdown
      * First path segments of the public pages, as written in content without a language prefix.
      */
     public const PAGE_SEGMENTS = [
-        'produk', 'produk-kesehatan', 'bibit', 'buah', 'artikel', 'tentang-kami', 'kontak', 'pesan', 'pupuk', 'service',
+        'produk', 'produk-kesehatan', 'bibit', 'buah', 'artikel', 'tentang-kami', 'kontak', 'pesan', 'pupuk', 'obat-pertanian', 'service',
     ];
 
     public static function render(string $markdown): HtmlString

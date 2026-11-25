@@ -40,6 +40,12 @@ it('redirects to WhatsApp with a message about the requested offering', function
     expect(WhatsappClick::sole()->product_id)->toBeNull();
 });
 
+it('redirects to WhatsApp with a message about crop protection', function () {
+    $response = $this->get(route('whatsapp.order', ['layanan' => 'obat-pertanian']));
+
+    expect(rawurldecode($response->headers->get('Location')))->toContain('*Obat Pertanian*');
+});
+
 it('falls back to the default message for an invalid offering', function (array|string $offering) {
     app(SiteSettings::class)->update(['whatsapp_message' => 'Halo, mau pesan durian']);
 

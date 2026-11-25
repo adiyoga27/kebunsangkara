@@ -72,6 +72,7 @@
         ['label' => __('Hasil Perkebunan'), 'url' => route('products.index'), 'active' => request()->routeIs('products.*') && in_array($viewedType, [null, App\Enums\ProductType::Buah], true)],
         ['label' => __('Bibit'), 'url' => route('seedlings.index'), 'active' => request()->routeIs('seedlings.*') || $viewedType === App\Enums\ProductType::Bibit],
         $offeringItem(App\Enums\Offering::Pupuk),
+        $offeringItem(App\Enums\Offering::ObatPertanian),
         $offeringItem(App\Enums\Offering::ProdukKesehatan),
     ];
 
@@ -265,8 +266,8 @@
                 <div>
                     <p class="text-xs font-bold uppercase tracking-[0.2em] text-flesh-300">{{ __('Buah Kami') }}</p>
                     <ul class="mt-5 space-y-3 text-sm">
-                        @foreach (App\Enums\FruitCategory::cases() as $fruit)
-                            <li><a href="{{ route('products.category', $fruit) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ __(':fruit Bali', ['fruit' => $fruit->label()]) }}</a></li>
+                        @foreach ($fruitCategories as $fruit)
+                            <li><a href="{{ route('products.category', $fruit) }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ __(':fruit Bali', ['fruit' => $fruit->name]) }}</a></li>
                         @endforeach
                         <li><a href="{{ route('seedlings.index') }}" class="inline-block transition hover:translate-x-1 hover:text-white">{{ __('Bibit Buah Unggul') }}</a></li>
                     </ul>

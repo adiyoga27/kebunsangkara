@@ -22,8 +22,8 @@
         @if ($type->hasFruitCategory())
             <select name="category" onchange="this.form.submit()" class="rounded-xl border border-stone-300 bg-white px-3.5 py-2 text-sm" aria-label="Kategori">
                 <option value="">Semua kategori</option>
-                @foreach (App\Enums\FruitCategory::cases() as $fruit)
-                    <option value="{{ $fruit->value }}" @selected(request('category') === $fruit->value)>{{ $fruit->label() }}</option>
+                @foreach ($categories as $fruit)
+                    <option value="{{ $fruit->slug }}" @selected(request('category') === $fruit->slug)>{{ $fruit->name }}</option>
                 @endforeach
             </select>
         @endif

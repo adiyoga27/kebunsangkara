@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\FruitCategory;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -21,7 +20,7 @@ class BibitSeeder extends Seeder
             [
                 'name' => 'Bibit Durian Montong Okulasi',
                 'slug' => 'bibit-durian-montong-okulasi',
-                'category' => FruitCategory::Durian,
+                'category' => 'durian',
                 'variety' => 'Montong',
                 'propagation_method' => 'Okulasi',
                 'plant_height' => '60–80 cm',
@@ -44,7 +43,7 @@ Konsultasi gratis cara tanam dan perawatan via WhatsApp. Baca juga [panduan mena
             [
                 'name' => 'Bibit Alpukat Mentega Sambung Pucuk',
                 'slug' => 'bibit-alpukat-mentega-sambung-pucuk',
-                'category' => FruitCategory::Alpukat,
+                'category' => 'alpukat',
                 'variety' => 'Mentega',
                 'propagation_method' => 'Sambung pucuk',
                 'plant_height' => '50–70 cm',
@@ -64,7 +63,7 @@ Konsultasi gratis cara tanam via WhatsApp.',
             [
                 'name' => 'Bibit Manggis',
                 'slug' => 'bibit-manggis',
-                'category' => FruitCategory::Manggis,
+                'category' => 'manggis',
                 'variety' => 'Manggis lokal',
                 'propagation_method' => 'Sambung pucuk',
                 'plant_height' => '40–60 cm',

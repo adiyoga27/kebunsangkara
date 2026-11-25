@@ -51,10 +51,11 @@
                         <div>
                             <label for="category" class="block text-sm font-semibold text-stone-700">Kategori Buah</label>
                             <select id="category" name="category" class="mt-1.5 block w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm">
-                                @foreach (App\Enums\FruitCategory::cases() as $fruit)
-                                    <option value="{{ $fruit->value }}" @selected(old('category', $product->category?->value) === $fruit->value)>{{ $fruit->emoji() }} {{ $fruit->label() }}</option>
+                                @foreach ($categories as $fruit)
+                                    <option value="{{ $fruit->slug }}" @selected(old('category', $product->category) === $fruit->slug)>{{ $fruit->emoji }} {{ $fruit->name }}</option>
                                 @endforeach
                             </select>
+                            <p class="mt-1 text-xs text-stone-500">Belum ada di daftar? <a href="{{ route('admin.categories.create') }}" target="_blank" class="font-semibold text-husk-700 hover:underline">+ Tambah kategori</a>, lalu muat ulang halaman ini.</p>
                             @error('category')<p class="mt-1 text-xs font-medium text-red-600">{{ $message }}</p>@enderror
                         </div>
                     @endif

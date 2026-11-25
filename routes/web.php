@@ -64,6 +64,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::resource('products', Admin\ProductController::class)->except('show');
         Route::get('sampah-produk', [Admin\TrashedProductController::class, 'index'])->name('trashed-products.index');
         Route::patch('sampah-produk/{product}', [Admin\TrashedProductController::class, 'update'])->withTrashed()->name('trashed-products.update');
+        Route::resource('categories', Admin\FruitCategoryController::class)->except('show');
         Route::resource('articles', Admin\ArticleController::class)->except('show');
         Route::patch('testimonials/{testimonial}/publikasi', [Admin\TestimonialController::class, 'togglePublication'])->name('testimonials.toggle-publication');
         Route::resource('testimonials', Admin\TestimonialController::class)->except('show');
